@@ -1,0 +1,188 @@
+Deep Learning and Health Informatics for Smart Monitoring
+and Diagnosis
+Amin Gasmi
+30 Octobre 2020
+Abstract The connection between the design and delivery of health care services using information
+technology is known as health informatics. It involves data usage, validation, and transfer of an integrated
+medical analysis using neural networks of multi-layer deep learning techniques to analyze complex data. For
+instance, Google incorporated “DeepMind” health mobile tool that integrates & leverage medical data needed
+to enhance professional healthcare delivery to patients. Moorfield Eye Hospital London introduced DeepMind
+Research Algorithms with dozens of retinal scans attributes while DeepMind UCL handled the identification
+of cancerous tissues using CT & MRI Scan tools. Atomise analyzed drugs and chemicals with Deep Learning
+Neural Networks to identify accurate pre-clinical prescriptions. Health informatics makes medical care
+intelligent, interactive, cost-effective, and accessible; especially with DL application tools for detecting the
+actual cause of diseases. The extensive use of neural network tools leads to the expansion of different medical
+disciplines which mitigates data complexity and enhances 3-4D overlap images using target point label data
+detectors that support data augmentation, un-semi-supervised learning, multi-modality and transfer learning
+architecture. Health science over the years focused on artificial intelligence tools for care delivery, chronic
+care management, prevention/wellness, clinical supports, and diagnosis. The outcome of their research leads
+to cardiac arrest diagnosis through Heart Signal Computer-Aided Diagnostic tool (CADX) and other multi-
+functional deep learning techniques that offer care, diagnosis & treatment. Health informatics provides
+monitored outcomes of human body organs through medical images that classify interstitial lung disease,
+detects image nodules for reconstruction & tumor segmentation. The emergent medical research applications
+gave rise to clinical-pathological human-level performing tools for handling Radiological, Ophthalmological,
+and Dental diagnosis. This research will evaluate methodologies, Deep learning architectures, approaches,
+bio-informatics, specified function requirements, monitoring tools, ANN (artificial neural network), data
+labeling & annotation algorithms that control data validation, modeling, and diagnosis of different diseases
+using smart monitoring health informatics applications.
+Keywords: Health Informatics Diagnosis, DL Smart Monitoring App, DL/ML Health Informatics, Deep
+Learning Algorithms, Health Informatics Devices.
+1
+Introduction
+The fundamental use of deep learning in neural networks commenced as a result of experts
+study of complex neurons, layers, and its architectural paradigms. This study allowed to
+monitor data, its extended layer pipeline, and non-linear outputs generated from low-
+dimensional input space projection. Health informatics involve the generation of an
+automatic character set of human cells with expert intrusions. Medical imaging in health
+informatics can be elaborated to determine implicit internal organs like fibroids and polyps
+tissue irregularities. It can also be used to study morphological tumors (Fakoor et
+al.2013)[1]
+Biologically, health informatics have anticipated translational features utilized for
+nucleotide DNA & RNA sequential protein strands. Convolutional neural nets (CNNs) as a
+deep learning approach in health informatics have architectural layers and filters for
+reducing, rectifying, and modifying poohing layers. The layers help to originate abstract
+features found in the visual cortex and receptive fields while other architectures like
+restructured Boltzmann machines, deep belief networks DBNs, stacked autoencoders,
+extended network and recurrent neural nets (RNNs); assist the advancement of graphical
+process units (GPUs) that impact the growth of deep learning applications.
+Experts previously proposed pre-GPU and CNNs as parallel algebraic operations with
+matrixes needed for experiments in clinics. To integrate deep learning architectures in
+health informatics, its essential to label data and implement activation functions known as
+“transfer functions and weights”. The transfer function must classify linear patterns to
+adjust the weights. McClelland et a. 1987 [3] proposed neural networks with hidden layers
+of perceptrons, stages, and epochs for new data input samples & weights with neurons
+adjustable based learning process, named “Delta Rule”. The rule aids neural network
+training, exploitation, and backpropagation routines.
+Rumelhart et al.1988 [4] observed the random values given to the network weights to
+determine it’s iterative training processes and minimize the difference between network
+outputs and desired outcomes. Rumelhart et al.1988 [4] also furthered the study of
+iterative training using gradient descent techniques to reduce surface errors in the
+2
+experiment. Deep learning accelerates supervised and un-supervised labeled data,
+whereby supervised labeled data train deep neural network to understand its weight,
+minimize errors, and predict the targeted value for classifying the unsupervised labeled
+data. Meanwhile, unsupervised deep learning data are utilized for clustering, reduction of
+dimension and featured extraction (Ngiam et al.2011)[2].
+Artificial Neural network and its variants
+Four deep learning architectures such as Auto-encoder, RBM, CNN, and RNN are mentioned
+to assist health informatics prediction and diagnosis. The autoencoder is referred to as
+feed-forwarder two-phase network that handles encoder and decoder tasks using input X
+and hidden H which represents non-linear equations stated below;
+H - stand for non-linear activation functions that decodes maps hidden in the
+representation. Thus, the original hidden representation can also be calculated with
+Z -If the model parameters optimize and minimize errors in the auto-encoder variants, the
+reconstructing error collection data = N, the sample square error optimization = (Xi= f
+(xi))2
+Xi represents the ith sample of the unsupervised data, h stands for hidden representation
+and X for data sample (Bengio et al. 2007)[61].
+The image below demonstrates the difference between physical based, conventional data-
+driven, and deep learning auto-encoder algorithm.
+The conventional auto-encoder data-model requires handcrafting features for each
+individual trained module and cannot handle large datasets. Deep learning autoencoder
+methods provide end-to-end envisioned data structure without handcrafting features and
+train jointly large datasets;
+3
+Fig 1. Autoencoder schematic illustration [78]
+According to the diagram above, the learned transformation in the autoencoder must be
+sparse with constraints that implores the hidden unit with an optimizing function written
+below;
+(Xi= f (xi))2
+M= hidden layer size
+Ki=divergence hidden units and jth hidden neuron.
+The conventional auto-encoder has an additional denoising network that corrects corrupt
+version of the data input, reconstruct, clean and train sample data X. it also has staking
+structure which puts together output lth layers as input (L+1)t-th layer to represent higher
+level and provide solutions to deep neural network model (Vincent et al.2008)[62].
+4
+RBM variants
+Restricted Boltzmann machine has two-layers (NN) bipartite graph consisting of two
+visible groups known as units V and hidden unit h with an asymmetric link between both,
+but doesn’t connect their nodes.
+RBM model parameters = (w,b,a) energy functions.
+Where = Wij –Vi- hj.
+Wij -connecting weight between units
+Vi- total number 1 and hidden unit
+Hi -the total number of Ji bi and ai, which shows the joint RBM distribution over the unit
+based energy function equated as p(v, hj, Z -partitioned function/normalization factors).
+The conditional probabilities of the hidden & visible units h and V will be
+P (hj =I/Vj )
+P (Vi=I/Vj = logistic function
+The w-learning approach is achieved using a contrastive divergence tool (CD).
+Deep belief network variants
+DBN is made up of stack multiple RBM with output ith layer (hidden unit and input (L+1)-
+th visible layer. DBN has a common similarity with SDA due to its large layer unsupervised
+pattern in handling pre-trained data parameters.
+Deep Boltzmann machine learning approach contains hidden units grouped into layers of
+single connectivity constraints with its full connection found between subsequent and non-
+neighboring layers.
+5
+Convolutional neural network and its variants
+CNN was utilized to perform image spatial processing via weights & pooling properties.
+CNN serves the purpose of authenticating natural language & speech recognition. It helps
+to learn about the alternating abstract features, stack convolutions & pool operations. The
+two dimensional CNN can be compared to a one-dimensional model using input sequence
+data X=(Xi………………….Xt)where t represents lengths of sequence, Vi-d respectively.
+The convolutional dot production can be filtered with vector U
+Where Ci =
+Where XT stands for matrix x, b and the output Ci is seen as the activated filter U that
+correspond with Xi; I + m-1. The slide filtering window features a map vector of Cj =(C1, C2,
+……………………(l-M+1)
+The J represents the index J-th filter that corresponds with multi-windows (Xi; m, X2:
+m+1…………….X1-m + 1:1).
+CNN has a max-pooling layer that is capable of reducing the length of the featured map and
+minimized the numbers of modeled parameters. It has a hypermeter pooling layer
+denotation of MAX operation with consecutive value S and feature map Cj.
+The compressed feature h= (h, h2, --------- +1)
+Hj= max (c(j-1)s, C (J-1) S+1, …………….C, S-1).
+To predict data possibilities, the alternating CNN max-pooling layers can fully be connected
+to the softmax layer.
+Recurrent neural network and its variants
+Schmidhuber (2015)[63] highlights the arbitrary length sequence of pattern input, which
+builds the connection between direct cycle and multi-layer perceptron. RNN trains back-
+propagated supervised data with subsequent input and targeted datasets (Jaeger,
+6
+2002)[64]. It’s functional transition step T shows time information (Xt) moves from prior
+hidden output ht-1 to update the current hidden output ht = H (t,ht-1).
+H - non-linear & differential transforming function.
+Ht- learned representation showing input data and length T. Also, the conventional multi-
+layer perceptron mapped the obtainable ht representation to make the prediction
+successfully.
+The simple function “Vanilla RNN”, can be equated as-ht
+W and H that represent transformation matrixes while b =bias vector.
+Vanilla RNN suffers vanishing gradient problem due to back-propagation, but can easily be
+restored with LSTM and gate recurrent neural networks (GRU) to prevent errors and
+explosion. (Chung et al.2014)[65].
+The advanced version of LSTM & GRUs has a multi-layer recurrent bi-directional model
+capable of offering structural flexibility.
+Fig 2. One-layer CNN, pooling layers, fully connected one Softmax Layer [79]
+7
+Health monitoring applications and wearables
+Rose et al. 2010 [5] implemented hierarchical clustering methods to detect mammographic
+image data. The image below shows health monitoring applications necessary for capturing
+arrays of pervasive sensors worn or implanted in the body to capture ambient inertia
+motion, ECG patches, smart watches, EEG, and prosthetics (Johnson et al.2016) [6].
+Pervasive sensors are wearables implanted as ambient sensors that monitor human health
+and accurately estimate food intake, energy expenditure, tackles obesity, chronic diseases,
+and care for patients with disabilities. Patients undergoing rehabilitation and critical care
+situation are often implanted with assisting devices to check vital signs (Pouladzadeh et al.
+2016)[7].
+During epidemics, the escalation of health-related issues like obesity, and cardiovascular
+diseases are controlled with energy expenditure/activity recognition tool, since it controls
+the amount of diet by monitoring calorie intake. CNN can alternatively be used to recognize
+and monitor accurately food intake by adopting cloud computing, size-calibrating, and
+distance estimation tools.
+Pouladzadeh et al. 2016 [7] combined DL method with invariant hierarchical
+representation of video using two-layer 3D convolution & max-pooling large inputs to
+recognize human daily activities. Yalcin, 2016[9] used RGB D-video sequence to classify
+human activities and mount surveillance on elderly and child care clinics. CNN has
+furthered the detection of baby’s fall & crawls while alerting caregivers by raising an alarm.
+The RBMs work together on smartphones & watches (Assisting devices), with audio &
+tactile feedback application, specifically used to detect visual impairment. Some assistive
+device consists of CNN DL algorithms that recognize hand gestures, sign languages, sterile
+surroundings, and permits touch-less human-computer-interaction (HRI). Huang et
+al.2015[8] introduced a deep neural network (DNN) for sign language recognition using
+real-sense data that coordinates finger joints inputs without handcraft features. DL
+machine ensures that health monitoring is achieved with discrete targeted values applied
+through Softmax later (prognosis and linear regression layer), that limits human labor and
+expert’s skills.
+8

@@ -1,0 +1,342 @@
+Benchmark of Deep Learning Models on Large
+Healthcare MIMIC Datasets
+Sanjay Purushothama,∗, Chuizheng Mengb,∗, Zhengping Chea, Yan Liua
+aUniversity of Southern California, Los Angeles, CA 90089, US
+bTsinghua University, Beijing 100084, China
+Abstract
+Deeplearningmodels(akaDeepNeuralNetworks)haverevolutionizedmanyfields
+including computer vision, natural language processing, speech recognition, and
+is being increasingly used in clinical healthcare applications. However, few works
+exist which have benchmarked the performance of the deep learning models with
+respect to the state-of-the-art machine learning models and prognostic scoring
+systems on publicly available healthcare datasets. In this paper, we present
+the benchmarking results for several clinical prediction tasks such as mortality
+prediction, length of stay prediction, and ICD-9 code group prediction using
+Deep Learning models, ensemble of machine learning models (Super Learner
+algorithm),SAPSIIandSOFAscores. WeusedtheMedicalInformationMartfor
+Intensive Care III (MIMIC-III) (v1.4) publicly available dataset, which includes
+all patients admitted to an ICU at the Beth Israel Deaconess Medical Center
+from 2001 to 2012, for the benchmarking tasks. Our results show that deep
+learningmodelsconsistentlyoutperformalltheotherapproachesespeciallywhen
+the ‘raw’ clinical time series data is used as input features to the models.
+Keywords: deep learning models, super learner algorithm, mortality prediction,
+length of stay, ICD-9 code group prediction
+1. Introduction
+Quantifying patient health and predicting future outcomes is an important
+problem in critical care research. Patient mortality and length of hospital stay
+are the most important clinical outcomes for an ICU admission, and accurately
+predictingthemcanhelpwiththeassessmentofseverityofillness; anddetermin-
+ingthevalueofnoveltreatments,interventionsandhealthcarepolicies. Withthe
+goal of accurately predicting these clinical outcomes, researchers have developed
+novel machine learning models [1, 2] and scoring systems [3] while measuring the
+∗Co-firstauthors.
+Email addresses: spurusho@usc.edu(SanjayPurushotham),mengcz95thu@gmail.com
+(ChuizhengMeng),zche@usc.edu(ZhengpingChe),yanliu.cs@usc.edu(YanLiu)
+Preprint submitted to Journal of Biomedical Informatics October 25, 2017
+7102
+tcO
+32
+]GL.sc[
+1v13580.0171:viXra
+improvementusingperformancemeasuressuchassensitivity,specificityandArea
+under the ROC (AUROC). The availability of large healthcare databases such as
+MedicalInformationMartforIntensiveCare(MIMIC-IIandIII)databases[4,5]
+hasacceleratedtheresearchinthisimportantareaasevidencedbyalotofrecent
+publications [6, 7, 8, 2, 9, 10, 11, 1, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22].
+Severity scores such as SAPS-II [3], SOFA [23], and APACHE [24] have
+been developed with the objective of predicting hospital mortality from baseline
+patient characteristics, defined as the measurements obtained within the first 24
+hoursafterICUadmission. Mostofthesescoringsystemschooseasmallnumber
+of hand-picked explanatory predictors and use simple models such as logistic
+regression to predict mortality, while making linear and additive relationship
+assumptionsbetweentheoutcomevariable(mortality)andthepredictors. Earlier
+studies [25, 26] have shown that such assumptions are unrealistic and that
+nonparametric methods might perform better than standard logistic regression
+models in predicting ICU mortality.
+With the recent advances and success of machine learning and deep learning,
+many researchers have adopted these models for clinical prediction tasks for
+ICU admissions. Early works [27, 28, 29] showed that machine learning models
+obtain good results on mortality prediction and forecasting length of stay in
+ICU. Recently, Pirracchio [30] showed that a Super Learner algorithm [31]-an
+ensembleofmachinelearningmodels, offersimprovedperformanceforpredicting
+hospital mortality in ICU patients and compared its performance to several
+severity scores on the MIMIC-II dataset. Johnson et al. [6] compared several
+published works against gradient boosting and logistic regression models using a
+simple set of features extracted from MIMIC-III dataset [5] for ICU mortality
+prediction. Harutyunyan et al. [2] empirically validated four clinical prediction
+benchmarking tasks on the MIMIC-III dataset using deep models. Even though
+some of these recent efforts have attempted to benchmark the machine learning
+models on MIMIC datasets, they do not provide a consistent and exhaustive
+set of benchmark comparison results of deep learning models for a variety of
+prediction tasks on the large healthcare datasets. Thus, in this paper, we report
+an exhaustive set of benchmarking results of applying deep learning models
+for MIMIC-III dataset and compare it with state-of-the art machine learning
+approaches and scoring systems. Table 1 shows the comparison of benchmarking
+works. We summarize the main contributions of this work below:
+• We present detailed benchmarking results of deep learning models on
+MIMIC-III dataset for three clinical prediction tasks including mortality
+prediction, forecasting length of stay, and ICD-9 code group prediction.
+Our experiments show that deep learning models consistently perform
+better than the several existing machine learning models and severity
+scoring systems.
+• We present benchmarking results on different feature sets including ‘pro-
+cessed’ and ‘raw’ clinical time series. We show that deep learning models
+obtain better results on ‘raw’ features which indicates that rule-based
+preprocessing of clinical features is not necessary for deep learning models.
+2
+The remainder of this paper is arranged as follows: in Section 2, we provide
+an overview of the related work; in Section 3, we describe MIMIC-III dataset
+and the pre-processing steps we employed to obtain the benchmark datasets;
+the benchmarking experiments is discussed in Section 4; and we conclude with
+summary in Section 5.
+Table 1: Comparison of benchmarking works.
+Pirracchio Harutyunyanetal. Johnsonetal.
+ThisWork
+2016 2017 2017
+Time 24hours (cid:88) (cid:88) (cid:88)
+Durations 48hours (cid:88) (cid:88) (cid:88)
+Numberof Smallerfeatureset (cid:88) (cid:88) (cid:88) (cid:88)
+Features Largerfeatureset (cid:88)
+Feature Non-timeseries (cid:88) (cid:88) (cid:88)
+Type Time-series (cid:88) (cid:88)
+MIMIC-II (cid:88)
+Databases MIMIC-III (cid:88) (cid:88) (cid:88)
+MIMIC-III(CareVue) (cid:88)
+Scoring SAPS-II (cid:88) (cid:88)
+Systems SOFA (cid:88) (cid:88)
+Prediction Machinelearningmodels (cid:88) (cid:88) (cid:88)
+Algorithms Deeplearningmodels (cid:88) (cid:88)
+In-hospitalmortality (cid:88) (cid:88) (cid:88) (cid:88)
+Short-termmortality (cid:88)
+Prediction Long-termmortality (cid:88)
+Tasks Lengthofstay (cid:88) (cid:88)
+Phenotyping (cid:88)
+ICD-9codegroup (cid:88) (cid:88)
+2. Related Work
+We first provide a brief review of machine learning and deep learning models
+forhealthcareapplications,andthendiscusstheexistingworksonbenchmarking
+healthcare datasets.
+Early works [32, 33] have shown that machine learning models obtain good
+resultsonmortalitypredictionandmedicalriskevaluation. Physionetchallenge1-
+afriendlycompetitionplatform-hasresultedindevelopmentofmachinelearning
+models for addressing some of the open healthcare problems. With the recent
+advances in deep learning techniques, there is a growing interest in applying
+these techniques to healthcare applications due to the increasing availability of
+large-scalehealthcaredata[34,7,35,36]. Forexample,Cheetal.[7]developeda
+1https://physionet.org/challenge/
+3
+scalabledeeplearningframeworkwhichmodelstheprior-knowledgefrommedical
+ontologies to learn clinically relevant features for disease diagnosis. A recent
+study [37] showed that a neural network model can improve the prediction of
+several psychological conditions such as anxiety, behavioral disorders, depression,
+andpost-traumaticstressdisorder. Otherrecentworks[38,39,40]haveleveraged
+the power of deep learning approaches to model diseases and clinical time series
+data. These previous work have demonstrated the strong performance by deep
+learning models in health care applications, which significantly alleviates the
+tedious work on feature engineering and extraction.
+The availability of deidentified public datasets such as Medical Information
+MartforIntensiveCare(MIMIC-II[4]andMIMIC-III[5])hasenabledresearchers
+to benchmark machine learning models for studying ICU clinical outcomes such
+as mortality and length of hospital stay. Pirracchio [30] used MIMIC II clinical
+data [4] to predict mortality in the ICU and showed that the Super Learner
+algorithm - an ensemble of machine learning models, performs better than
+SAPS II, APACHE II and SOFA scores. Their work showed that machine
+learning models outperform the prognostic scores, but they did not compare
+their results with the recent deep learning models. Harutyunyan et al. [2]
+proposed a deep learning model called multi-task Recurrent Neural Networks to
+empirically validate four clinical prediction benchmarking tasks on the MIMIC-
+III database. While, their work showed promising benchmark results of deep
+learning models, they compared their proposed model only with a standard
+Logistic Regression model and a Long Short Term Memory Network [41], and
+omitted comparison with scoring systems (SAPS-II) or other machine learning
+models (such as Super Learner). Johnson et al. [6] studied the challenge of
+reproducing the published results on the public MIMIC-III dataset using a
+case-studyonmortalitypredictiontask. Theyreviewed28publicationsandthen
+comparedtheperformancereportedinthesestudiesagainstgradientboostingand
+logisticregressionmodelsusingasimplesetoffeaturesextractedfromMIMIC-III
+dataset. They demonstrated that the large heterogeneity in studies highlighted
+the need for improvements in the way that prediction tasks are reported to
+enable fairer comparison between models. Our work advances the efforts of
+these previous benchmark works by providing a consistent and exhaustive set of
+benchmarking results of deep learning models on several prediction tasks.
+3. MIMIC-III Dataset
+In this section, we describe the MIMIC-III dataset and discuss the steps
+we employed to preprocess and extract the features for our benchmarking
+experiments.
+3.1. Dataset Description
+MIMIC III [5] is a publicly available critical care database maintained by the
+Massachusetts Institute of Technology (MIT)’s Laboratory for Computational
+Physiology. This database integrates deidentified, comprehensive clinical data of
+4
+patients admitted to an Intensive Care Unit (ICU) at the Beth Israel Deaconess
+Medical Center (BIDMC) in Boston, Massachusetts during 2001 to 2012.
+MIMIC-III contains data associated with 53423 distinct hospital admissions
+for adult patients (aged 15 years or above) and 7870 neonates admitted to an
+ICU at the BIDMC. The data covers 38597 distinct adult patients with 49785
+hospital admissions. To obtain consistent benchmarking datasets, in this paper
+we only include the first ICU admission of the patients. Table 2 shows the
+statistics of our dataset, and Table 3 shows the baseline characteristics and
+outcome measures of our dataset. We observe that the median age of adult
+patients is 65.86years (Quartile Q1 to Q3: 52.72 to 77.97) with 56.76% patients
+are male, in-hospital mortality around 10.49% and the median length of an
+hospital stay is 7.08 days (Q1 to Q3: 4.32 to 12.03).
+Table 2: Summary statistics of MIMIC-III dataset.
+Data Total
+#admissionsintheMIMIC-III(v1.4)database 58576
+#admissionswhicharethefirstadmissionofthepatient 46283
+#admissionswhicharethefirstadmissionofanadultpatient(>15yearsold) 38425
+#admissionswhereadultpatientdied24hoursafterthefirstadmission 35627
+3.2. Dataset Preprocessing
+In this section, we describe in detail the cohort selection, data extraction,
+data cleaning and feature extraction methods we employed to preprocess our
+MIMIC-III dataset.
+3.2.1. Cohort Selection
+The first step of dataset preprocessing includes cohort selection. We used
+two sets of inclusion criterion to select the patients to prepare the benchmark
+datasets. First, we identified all the adult patients by using the age recorded at
+the time of ICU admission. Following previous studies [6], in our work, all the
+patients whose age was >15 years at the time of ICU admission is considered
+as an adult 2. Second, for each patient, we only use their first admission in our
+benchmark datasets and for subsequent analysis, and dropped all their later
+admissions. Thiswasdonetopreventpossibleinformationleakageintheanalysis,
+and to ensure similar experimental settings compared to the related works [6].
+3.2.2. Data Extraction
+There are 26 tables in the MIMIC-III (v1.4) relational database. Charted
+events such as laboratory tests, doctor notes and fluids into/out of patients are
+2NotethatinMIMICIII(v1.4),allthepatientsundertheageof15yearsarereferredto
+asneonates.
+5
+Table 3: Baseline characteristics and in-hospital mortality outcome measures. Con-
+tinuous variables are presented as Median [InterQuartile Range Q1-Q3]; binary or
+categorical variables as Count (%).
+Overall Deadathospital Aliveathospital
+General
+#admissions 35627 3738 31889
+Age 65.86[52.72-77.97] 73.85[60.16-82.85] 64.98[52.04-77.21]
+Gender(female) 15409(43.24%) 1731(46.31%) 13678(42.88%)
+FirstSAPS-II 33.00[25.00-42.00] 48.00[38.00-59.00] 32.00[24.00-40.00]
+FirstSOFA 3.00[2.00-6.00] 6.00[4.00-9.00] 3.00[2.00-5.00]
+Origin
+Medical 24720(69.37%) 2969(79.43%) 21751(68.19%)
+Emergencysurgery 6134(17.21%) 663(17.74%) 5471(17.15%)
+Scheduledsurgery 4783(13.42%) 106(2.84%) 4677(14.66%)
+Site
+MICU 12621(35.42%) 1814(48.53%) 10807(33.88%)
+MSICU 5821(16.33%) 691(18.49%) 5130(16.08%)
+CCU 5180(14.54%) 523(13.99%) 4657(14.60%)
+CSRU 7264(20.38%) 245(6.55%) 7019(22.00%)
+TSICU 4751(13.33%) 465(12.44%) 4286(13.44%)
+HR(bpm) 84.00[73.00-97.00] 90.00[75.00-107.00] 84.00[72.00-96.00]
+MAP(mmhg) 76.00[67.33-87.00] 74.00[64.67-86.00] 77.00[68.00-87.00]
+RR(cpm) 18.00[14.00-22.00] 20.00[16.00-24.00] 18.00[14.00-21.00]
+Na(mmol/l) 138.00[136.00-141.00] 139.00[135.00-142.00] 138.00[136.00-141.00]
+K(mmol/l) 4.10[3.80-4.60] 4.20[3.70-4.70] 4.10[3.80-4.60]
+HCO3(mmol/l) 24.00[21.00-26.00] 22.00[18.00-25.00] 24.00[21.00-26.00]
+WBC(103/mm3) 11.00[7.90-14.90] 12.30[8.00-17.20] 10.80[7.90-14.60]
+P/Fratio 257.50[180.00-352.50] 218.66[140.00-331.86] 262.50[187.00-355.00]
+Ht(%) 31.00[26.00-36.00] 31.00[27.00-36.00] 31.00[26.00-36.00]
+Urea(mmol/l) 1577.00[968.00-2415.00] 1020.00[518.50-1780.00] 1640.00[1035.00-2470.00]
+Bilirubine(mg/dl) 0.70[0.40-1.70] 1.00[0.50-3.50] 0.70[0.40-1.50]
+HospitalLOS(days) 7.08[4.32-12.03] 7.21[3.31-14.44] 7.07[4.40-11.88]
+ICUdeath(%) 2860(8.03%) 2860(76.51%) –
+Hospitaldeath(%) 3738(10.49%) – –
+stored in a series of ’events’ tables. For the purpose of preparing benchmark
+datasets to predict clinical tasks, we extracted data for the selected cohort from
+the following tables: inputevents (inputevents cv/inputevents mv) (intake for
+patients monitored using Philips CareVue system/iMDSoft MetaVision system),
+outputevents (output information for patients while in the ICU), chartevents
+(all charted observations for patients), labevents (laboratory measurements for
+patients both within the hospital and in outpatient clinics), and prescriptions
+(medications ordered, and not necessarily administered, for a given patient).
+We selected these tables as they provide the most relevant clinical features for
+the prediction tasks considered in this work. We obtained the following two
+benchmark datasets:
+6
+• MIMIC-III: This includes the data extracted from all the above tables for
+all the selected cohorts in the entire MIMIC-III database.
+• MIMIC-III (CareVue): This includes the data extracted from all the above
+tables for the selected cohorts who are included in the inputevents cv table
+(inputevents datarecordedusingPhilipsCareVuesystem)intheMIMIC-III
+database. MIMIC-III (CareVue) is a subset of MIMIC-III dataset and it
+roughly corresponds to the MIMIC-II [4] dataset.
+3.2.3. Data Cleaning
+The data extracted from MIMIC-III database has lots of erroneous entries
+due to noise, missing values, outliers, duplicate or incorrect records, clerical
+mistakes etc. We identified and handled the following three issues with the
+extracted data. First, we observed that there is inconsistency in the recording
+(units) of certain variables. For example, some of the prescriptions are recorded
+in ‘dose’ and in ‘mg’ units; while some variables in chartevents and labevents
+tablesarerecordedinbothnumericandstringdatatype. Second,somevariables
+have multiple values recorded at the same time. Third, for some variables the
+observation was recorded as a range rather than a single measurement. We
+addressed these issues by these procedures:
+• To handle inconsistent units: We first obtain the percentage of each unit
+appearing in the database for a variable. If there is only one unit, we do
+nothing. For variables with multiple and inconsistent units, if a major unit
+accounts for ≥90% of the total number of records then we just keep all
+the records with the major unit and drop the other ones. For the rest of
+the variables/features which do not have a major unit, we convert all the
+units to a single unit based on accepted rules in literature 3 (For example:
+convert ‘mg’ to ‘grams’, ‘dose’ to ‘ml’ or ‘mg’ based on the variable). We
+drop the features for which we cannot find correct rules for conversion.
+• Tohandlemultiplerecordingsatthesametime: Dependingonthevariable,
+we either take the average or the summation of the multiple recordings
+present at the same time.
+• To handle range of feature values: We take the median of the range to
+represent the value of the feature at a certain time point.
+3.2.4. Feature Selection and Extraction
+We process the extracted benchmark datasets to obtain the features which
+will be used for the prediction tasks. To enable an exhaustive benchmarking
+comparison study, we select three sets of features as described below.
+3https://www.drugs.com/dosage/
+7
+Table 4: Feature Set A: 17 features used in SAPS-II scoring system.
+Feature Itemid Name of Item Table
+723 GCSVerbal chartevents
+454 GCSMotor chartevents
+glasgow coma 184 GCSEyes chartevents
+scale 223900 Verbal Response chartevents
+223901 Motor Response chartevents
+220739 Eye Opening chartevents
+51 Arterial BP [Systolic] chartevents
+442 Manual BP [Systolic] chartevents
+systolic blood 455 NBP [Systolic] chartevents
+pressure 6701 Arterial BP #2 [Systolic] chartevents
+220179 Non Invasive Blood Pressure systolic chartevents
+220050 Arterial Blood Pressure systolic chartevents
+211 Heart Rate chartevents
+heart rate
+220045 Heart Rate chartevents
+678 Temperature F chartevents
+body tempera- 223761 Temperature Fahrenheit chartevents
+ture 676 Temperature C chartevents
+223762 Temperature Celsius chartevents
+50821 PO2 labevents
+50816 Oxygen labevents
+223835 Inspired O2 Fraction (FiO2) chartevents
+pao2/fio2ratio
+3420 FiO2 chartevents
+3422 FiO2 [Meas] chartevents
+190 FiO2 set chartevents
+40055 Urine Out Foley outputevents
+43175 Urine outputevents
+40069 Urine Out Void outputevents
+40094 Urine Out Condom Cath outputevents
+40715 Urine Out Suprapubic outputevents
+40473 Urine Out IleoConduit outputevents
+40085 Urine Out Incontinent outputevents
+40057 Urine Out Rt Nephrostomy outputevents
+40056 Urine Out Lt Nephrostomy outputevents
+40405 Urine Out Other outputevents
+40428 Orine Out Straight Cath outputevents
+40086 Urine Out Incontinent outputevents
+40096 Urine Out Ureteral Stent #1 outputevents
+urine output
+40651 Urine Out Ureteral Stent #2 outputevents
+226559 Foley outputevents
+226560 Void outputevents
+226561 Condom Cath outputevents
+226584 Ileoconduit outputevents
+226563 Suprapubic outputevents
+226564 R Nephrostomy outputevents
+8

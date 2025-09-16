@@ -1,0 +1,50 @@
+{
+  "query": "transformer attention mechanisms neural networks",
+  "response": {
+    "query_language": "en",
+    "intent": "general",
+    "entities": {
+      "domain": [
+        "cross-attention multi-scale vision transformer",
+        "class-attention in image transformers"
+      ],
+      "methods": [
+        "attention mechanism",
+        "multi-head attention"
+      ],
+      "datasets": [],
+      "metrics": [],
+      "keywords": []
+    },
+    "expanded_query": "attention class-attention cross-attention image mechanism mechanisms multi-head multi-scale networks neural transformer transformers vision",
+    "api_used": "arxiv",
+    "processing_mode": "abstracts_only_auto",
+    "summary_method": "auto",
+    "timestamp": "2025-09-11T17:33:35.026602",
+    "results": [
+      {
+        "paper_id": "http://arxiv.org/abs/2104.06399v2",
+        "title": "Co-Scale Conv-Attentional Image Transformers",
+        "link": "http://arxiv.org/pdf/2104.06399v2",
+        "year": 2021,
+        "authors": [
+          "Weijian Xu",
+          "Yifan Xu",
+          "Tyler Chang",
+          "Zhuowen Tu"
+        ],
+        "score": 0.6515893936157227,
+        "summaries": {
+          "tfidf": "First, the co-scale mechanism maintains the\nintegrity of Transformers' encoder branches at individual scales, while\nallowing representations learned at different scales to effectively communicate\nwith each other; we design a series of serial and parallel blocks to realize\nthe co-scale mechanism. On\nImageNet, relatively small CoaT models attain superior classification results\ncompared with similar-sized convolutional neural networks and image/vision\nTransformers.",
+          "lsa": "Second, we devise a conv-attentional mechanism by\nrealizing a relative position embedding formulation in the factorized attention\nmodule with an efficient convolution-like implementation. The effectiveness of CoaT's backbone is also illustrated on\nobject detection and instance segmentation, demonstrating its applicability to\ndownstream computer vision tasks.",
+          "abstractive": "co-scale conv-attentional image Transformers (CoaT) is a transformer-based image classifier. the mechanism maintains the integrity of Transformer's encoder branches at individual scales, while allowing representations learned at different scalings to effectively communicate with each other. we devise an efficient convolution-like implementation by realizing an integrated formulation in the factorized attention module.",
+          "combined": "co-scale conv-attentional image Transformers (CoaT) is a transformer-based image classifier. the mechanism maintains the integrity of Transformer's encoder branches at individual scales, while allowing representations learned at different scalings to effectively communicate with each other. we devise an efficient convolution-like implementation by realizing an integrated formulation in the factorized attention module."
+        },
+        "final_response": "This paper 'Co-Scale Conv-Attentional Image Transformers' by Weijian Xu, Yifan Xu, Tyler Chang... (2021) presents important research findings. The analysis suggests significant contributions to the field based on the available summaries.",
+        "method": "abstractive",
+        "abstract_summary": "In this paper, we present Co-scale conv-attentional image Transformers\n(CoaT), a Transformer-based image classifier equipped with co-scale and\nconv-attentional mechanisms. First, the co-scale mechanism maintains the\nintegrity of Transformers' encoder branches at individual scales, while\nallowing representations learned at different scales to effectively communicate\nwith each other; we design a series of serial and parallel blocks to realize\nthe co-scale mechanism. Second, we devise a conv-attentional mechanism by\nrealizing a relative position embedding formulation in the factorized attention\nmodule with an efficient convolution-like implementation. CoaT empowers image\nTransformers with enriched multi-scale and contextual modeling capabilities. On\nImageNet, relatively small CoaT models attain superior classification results\ncompared with similar-sized convolutional neural networks and image/vision\nTransformers. The effectiveness of CoaT's backbone is also illustrated on\nobject detection and instance segmentation, demonstrating its applicability to\ndownstream computer vision tasks.",
+        "abstractive_summary": "co-scale conv-attentional image Transformers (CoaT) is a transformer-based image classifier. the mechanism maintains the integrity of Transformer's encoder branches at individual scales, while allowing representations learned at different scalings to effectively communicate with each other. we devise an efficient convolution-like implementation by realizing an integrated formulation in the factorized attention module."
+      }
+    ]
+  }
+}

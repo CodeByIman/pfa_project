@@ -1,0 +1,713 @@
+Optimizing Memory Efficiency for Convolution Kernels on
+Kepler GPUs
+Xiaoming Chen, Jianxu Chen, Danny Z. Chen, and Xiaobo Sharon Hu
+DepartmentofComputerScienceandEngineering,UniversityofNotreDame
+NotreDame,IN46556,USA
+{xchen7, jchen16, dchen, shu}@nd.edu
+ABSTRACT invariouscomputervisionapplications,suchasimagerecog-
+nition [4], image classification [5], object detection [6], etc.
+Convolution is a fundamental operation in many applica-
+State-of-the-art CNNs typically have quite a few convolu-
+tions,suchascomputervision,naturallanguageprocessing,
+tional layers. Propagating through these convolutional lay-
+image processing, etc. Recent successes of convolutional
+ers is always a computation bottleneck in both the training
+neural networks in various deep learning applications put
+and inference phases of CNNs.
+even higher demand on fast convolution. The high com-
+With the rapid development of many-core parallel pro-
+putation throughput and memory bandwidth of graphics
+cessors, new methods have been developed by leveraging
+processing units (GPUs) make GPUs a natural choice for
+high computation throughput and memory bandwidth of
+accelerating convolution operations. However, maximally
+graphics processing units (GPUs) to accelerate convolution
+exploiting the available memory bandwidth of GPUs for
+operations. These methods can be roughly classified into
+convolution is a challenging task. This paper introduces
+four categories: (1) general matrix multiplication (GEMM)
+ageneralmodeltoaddressthemismatchbetweenthemem-
+basedconvolution[7,8],(2)directconvolution[9–11],(3)fast
+ory bank width of GPUs and computation data width of
+Fouriertransform(FFT)basedconvolution[12–14],and(4)
+threads. Based on this model, we develop two convolution
+the Winograd algorithm [15,16].
+kernels, one for the general case and the other for a special
+Convolution can be easily converted into a multiplica-
+case with one input channel. By carefully optimizing mem-
+tion of two matrices by unrolling all the involved convolu-
+ory access patterns and computation patterns, we design
+tion operations [7]. Highly optimized GEMM kernels (e.g.,
+a communication-optimized kernel for the special case and
+cuBLAS [17]) can be invoked to compute matrix multipli-
+a communication-reduced kernel for the general case. Ex-
+cations. This is the default method in Caffe [18], a popular
+perimentaldatabasedonimplementationsonKeplerGPUs
+deep learning framework. Although good performance can
+showthatourkernelsachieve5.16×and35.5%averageper-
+be attained, it requires a huge amount of additional mem-
+formance improvement over the latest cuDNN library, for
+ory. Recently, cuDNN [8] adopted a GEMM-like method,
+the special case and the general case, respectively.
+inwhichsub-blocksoftheinputmatricesareconstructedin
+CCSConcepts
+on-chipmemoryatrun-time,andthusnoadditionalmemory
+•Computing methodologies→Massively parallel al- is needed. A direct method was proposed in [9], but the re-
+gorithms; portedperformanceisnotgoodenoughwhentherearemore
+Keywords than 100 channels. In [10], optimization techniques were
+discussedfordirectconvolutiononGPUs,buttheproposed
+Convolution; graphics processing unit; memory bandwidth method was not compared with any public library. Cuda-
+convnet2[11]alsoimplementeddirectconvolutiononGPUs,
+1. INTRODUCTION butthereisnodetaileddocumenttodescribeitsmethodol-
+ogyorperformance. FFT-basedconvolution[12–14]canre-
+Convolution is a fundamental operation in many image
+ducethearithmeticcomplexitycomparedwithdirectmeth-
+processing and computer vision applications. For example,
+ods. However,thefiltersneedtobepaddedtothesamesize
+imageconvolutionisakeycomponentinnumerousbasicim-
+as the input image, which incurs additional memory and
+age processing routines, such as edge detection [1], smooth-
+computationtime. Inaddition,inordertoreusetheFourier
+ing [1], template-based object detection [2], etc. Recently,
+transformofthefilters,thebatchsizeshouldbebigenough.
+convolutional neural networks (CNNs) [3] have become a
+RecentstudieshaveshownthattheWinogradalgorithmcan
+powerfuldeeplearningmodelwhichhasbeenwidelyadopted
+significantly reduce the arithmetic complexity for the 3×3
+filter [15,16], at the cost of increased memory usage and
+Permissiontomakedigitalorhardcopiesofallorpartofthisworkforpersonalor
+filter size dependent specialized processing.
+classroomuseisgrantedwithoutfeeprovidedthatcopiesarenotmadeordistributed
+forprofitorcommercialadvantageandthatcopiesbearthisnoticeandthefullcita- Although FFT-based methods and the Winograd algo-
+tiononthefirstpage. Copyrightsforcomponentsofthisworkownedbyothersthan rithmcanbefasterthandirectmethodsinsomecases,they
+ACMmustbehonored.Abstractingwithcreditispermitted.Tocopyotherwise,orre-
+are not universal. Direct convolution is still fundamental
+publish,topostonserversortoredistributetolists,requirespriorspecificpermission
+and/orafee.Requestpermissionsfrompermissions@acm.org. and considered the best in general. In this paper, we aim
+DAC’17,June18-22,2017,Austin,TX,USA to improve the memory efficiency of direct convolution on
+(cid:13)c 2017ACM.ISBN978-1-4503-4927-7/17/06...$15.00 GPUs, targeting at two cases: (1) a special case with one
+DOI:http://dx.doi.org/10.1145/3061639.3062297
+7102
+yaM
+92
+]CD.sc[
+1v19501.5071:viXra
+inputchannel,whichappearsinnumerousimageprocessing 1000 800
+applicationsandtheinputlayerofCNNs(forgrayscaleim- 600
+ages), and (2) the general case for CNNs. Specifically, we 400
+200
+introduceageneralmodeltoaddressthemismatchbetween 0
+2K 3K 4K 5K 6K 7K 8K
+the shared memory bank width of GPUs and computation
+data width of threads. Based on this model, by carefully
+optimizing the memory access patterns and computation
+patterns, we design a communication-optimized kernel for
+thespecialcaseandacommunication-reducedkernelforthe
+general case. Experimental data based on implementations
+on Kepler GPUs show that our convolution kernels achieve
+5.16× and 35.5% average performance improvement com-
+pared with the latest cuDNN library, for the special case
+and the general case, respectively.
+2. PROBLEMFORMULATION
+Inthissection,wepresenttheproblemformulation,which
+illustrates the main challenges and the general model that
+we propose to overcome such challenges.
+2.1 GPUMemoryConstraintsandModeling
+MostGPUprogramsarememorybandwidthhungry. GPUs
+usually have a complex memory hierarchy subject to differ-
+ent constraints. Global memory (GM) accesses should be
+coalesced in order to reduce latency. Bank conflict should
+be avoided when accessing the shared memory (SM). For
+the constant memory (CM), all the access addresses within
+one warp should be identical to take full advantage of the
+broadcastmechanism. ThesearebasicconstraintsthatGPU
+programs should satisfy to achieve good performance.
+TheSMbankwidth,whichalsoplaysanimportantrolein
+GPUperformance,however,hasreceivedlessattentionfrom
+programmers and researchers. We elaborate this problem
+below. LetW betheSMbankwidth. (W is8(bytes)
+SMB SMB
+on Kepler and 4 on other GPU architectures.) Further, let
+W be the computation data width for each thread. For
+CD
+example, if each thread takes float as the minimum unit
+fort computation, then W = 4. The relation between
+CD
+W and W can be described by
+SMB CD
+W =n·W . (1)
+SMB CD
+If n=1, the SM bank width and computation data width
+are matched; otherwise, they are unmatched. Mismatch be-
+tween W and W frequently occurs in practice. Even
+SMB CD
+whenW is4,W canbe2(forshortorfp16)or1(for SMB CD
+char). Fig. 1 illustrates the impact of a mismatch. Con-
+sidermultiplethreadsreadingfromorwritingtotheSM.A
+conventional method shown in Fig. 1a is often used, where
+contiguous threads access contiguous elements, as it is easy
+toprogram. But,suchamethodmayfailtofullyutilizethe
+available SM bandwidth. For example, if n=2, as shown
+in Fig. 1a, any two accesses that fall into the same bank
+havetobeserialized. Yet,ifwecandoublethecomputation
+Element in shared memory (size WCD) Thread
+(a) Bank Bank Bank Bank (b) Bank Bank Bank Bank
+0 1 2 3 0 1 2 3
+0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7
+0 1 2 3 4 5 6 7 0 1 2 3
+Figure 1: Different SM access patterns. (a) Conventional
+approach. (b) Matched approach.
+noitucexE )sm(
+emit
+cuBLAS
+MAGMA
+MAGMA mod.
+Matrix dimension
+Figure2: Executiontimecomparisonforthesingle-precision
+GEMM on a Kepler K40m GPU.
+Channel 0 +
++
+Channel C-1
+...
+Output feature map 0
+K
+Reused pixels
+Output feature map F-1
+(a) (b)
+Figure 3: Basics of convolution. (a) A general convolution
+operationinCNN(Cisthe#ofchannels,Kisthefiltersize,
+andF isthe#offilters). (b)Datareuseinconvolution(the
+solidcirclesmarkpixelsthatarebeingusedforconvolution).
+data width through intelligent thread layout and computa-
+tion pattern redesign so that W =W , as in Fig. 1b,
+SMB CD
+then each thread can obtain 2 elements together in a single
+access,resultingina2×improvementintheSMbandwidth.
+To demonstrate the importance of this problem, we com-
+paretheperformanceofthesingle-precisionGEMMonaKe-
+plerK40mGPU,asshowninFig.2. MAGMAishighlyop-
+timizedforFermiandisfasterthancuBLASontheFermiar-
+chitecture[19];however,itbecomes2.4×slowerthancuBLAS
+on the Kepler architecture. The SM bank width of the Ke-
+pler architecture is twice of that of Fermi, causing a mis-
+matchbetweenW andW fortheMAGMAkernelthat
+CD SMB
+operatesonfloat,whichresultsinthelossofhalfoftheSM
+bandwidth. Yet, a modification to the MAGMA kernel by
+matchingW withW saves36%oftheexecutiontime
+CD SMB
+on average.
+Consequently, for applications that are sensitive to the
+SM bandwidth, memory access patterns and computation
+patterns should be reorganized to match W with W .
+CD SMB
+Thatis,eachthreadshouldbedesignedsuchthatitaccesses
+andcomputesnbasicelementsasasingleunit. Inthisway,
+we can obtain an n× improvement in the SM bandwidth.
+2.2 DataSharinginConvolution
+One key aspect in developing highly efficient convolution
+operations on GPUs is to maximize data sharing, which is
+alsoakeyfactorforcommunicationreduction. Considerthe
+general case of convolution in CNNs (see Fig. 3a). Fig. 3b
+illustrates a simple data reuse method, in which pixels can
+be reused in both the horizontal and vertical directions as
+indicated by the solid circles within the dashed boxes. A
+simple analysis shows that an input pixel can be used up
+to K×K×F times, where K is the filter size and F is the
+number of filters. This feature should be fully exploited to
+reduce both GM and SM accesses. For this aim, elaborate
+memory access patterns and computation patterns need to
+be used, while still satisfying the basic constraints of the
+GPU memory hierarchy.
+Another challenge arises from the SM bank width model
+presented in the previous subsection. As convolution is SM
+bandwidthbounded,whendesigningconvolutionkernelson
+GPUs, we must strive to match W and W , in order
+CD SMB
+to fully utilize the SM bandwidth.
+W
+H
+Pixels required for block
+Figure 4: Image partitioning.
+...
+Thread 0 Thread 1 Thread 2
+...
+Block
+...
+...
+Block
+(a)
+...
+Thread 0 Thread 1 Thread 2
+...
+Block
+...
+...
+illustratedinFig.5a. Oncearowisfinished,theW threads
+move down to compute the next row. Thus we read a new
+row from the input image for each down movement. This
+process continues until reaching the bottom of the block.
+3.2 OptimizingMemoryAccesses
+Wenowdiscusshowweschedulememoryaccessesincoor-
+dinationwiththethreadlayoutdesigninSection3.1. Since
+thefiltersinthespecialcase(withonly1inputchannel)are
+typically small, they can reside in the CM and no further
+2 convolutions scheduling is needed. We focus our discussion on accessing
+theinputimageintheGMtominimizeGMcommunication.
+We first consider the simple case of W =W . For
+CD SMB
+each row of the block, we first read it into the SM (includ-
+ing the needed pixels outside the block boundaries), and
+then the W threads read their corresponding pixels into re-
+Block
+spectiveregisters. Thisprocessallowshorizontaldatashar-
+(b)
+ing and avoids redundant reads from the GM as adjacent
+Figure5: Ourconvolutionmethodforthespecialcase(K =
+threads share some common pixels. Hence, our 2D data
+3 in this example). (a) For matched W and W . (b)
+CD SMB sharing method works as follows: in the horizontal direc-
+ForunmatchedW andW (n=2inthisillustration).
+CD SMB tion, the SM provides inter-thread data sharing; in the ver-
+ticaldirection,intra-threaddatasharingisachievedthrough
+Takingalltheserequirementsintoconsideration,thegoal the private registers of the threads.
+of this paper is to develop general solutions for convolution Asimpleanalysisshowsthateachpixelinablockisread
+on GPUs, such that (i) the memory communication is re- from the GM only once, which is, of course, the theoret-
+duced as much as possible, (ii) the basic constraints of the ical lower bound. For the entire image, only those pixels
+GPUmemoryhierarchyaresatisfied,and(iii)theSMbank which are needed by a block and outside the block bound-
+width and the computation data width are matched. aries are read more than once. But, the proportion of such
+halo pixels is small. As a result, this method is (almost)
+3. CONVOLUTIONFORSPECIALCASE communication-optimal for GM accesses.
+This section presents our convolution kernel for the spe- When considering the SM bank width model presented
+cial case, in which the input has only one channel (C =1 in Section 2.1, the above thread layout and memory access
+in Fig. 3a). This case arises at the first layer of CNNs (for schedule are suitable only when n=1, i.e., W CD =W SMB .
+grayscale images) and in many image processing applica- On the Kepler architecture, n=2 if we use float as the
+tions. We first show how we design the thread layout and basiccomputationunit. Followingthegeneralideadepicted
+then discuss how we achieve optimal memory accesses. in Fig. 1b, we propose to have each thread read, write, and
+computenpixelstogether(usingbuilt-indatatypessuchas
+3.1 ThreadLayout float2 or float4). Each thread is responsible for n con-
+The goal of thread layout is to judiciously allocate com- tiguous output pixels in each row and n×H output pixels
+putation to thread blocks (TBs) and individual threads to in the block (for one output feature map). The number of
+maximize both coarse-grained and fine-grained parallelism. threadsinaTBisreducedto W n . Withthisapproach,each
+Fig. 3b depicts the general concept for our parallelization thread needs a few more registers (O(K×(n−1))) to store
+methodology,inwhicheachthreadkeepsK×K pixelsofthe K×(K+n−1)pixelsthatareusedbytheconvolutionsforn
+inputimageusedbyaconvolutionoperationintheregister. contiguous output pixels. Fig. 5b shows our modified con-
+However,directlyapplyingthismethodwouldcauseaprob- volution method specifically for the Kepler architecture.
+lem. Athreadcannotmoverightanddownsimultaneously.
+3.3 Implementation
+Inotherwords,onceathreadmovestotherighttocompute
+thenextconvolution,itlosessomepixelsneededbythecon- Algorithm1outlinestheflowofourspecialcaseconvolu-
+volution below. One could use additional registers to store tionmethodattheTBlevel. Thealgorithmstartsbyread-
+such lost pixels, but a lot more registers would be required. ing K image rows of the block into the SM (line 1). After
+To resolve this issue, we propose an alternative scheme to that, the first K−1 rows are read into the threads’ regis-
+maximize both parallelism and 2D data sharing. ters(line3). Thenconvolutionisperformedonalltherows
+Toachievecoarse-grainedparallelism,wepartitionthein- within the block iteratively in a loop (lines 4-11). For each
+put image into blocks of size H×W each (see Fig. 4). Such row, the data are first read from the SM into the threads’
+partitioning enables data sharing along the vertical direc- registers (line 6), and then each thread computes convolu-
+tion, since one row of the input image can be used by the tions for all the filters (lines 7 and 8). We use a prefetch-
+convolutionsofK rows. ATBwithW threadshandlesone ing mechanism to overlap computations and GM accesses.
+image block. Different image blocks are assigned to differ- Before the threads’ computation tasks, the next image row
+ent TBs so that they are computed in parallel. Each block of the block is prefetched into the threads’ registers (line
+needs some additional pixels outside its right and bottom 5). Although this operation may take a long time, it can
+boundaries to compute convolutions. be overlapped with convolution computations, since they
+In terms of fine-grained parallelism, all the W threads have no data dependency. After prefetching is finished, the
+in a TB compute convolutions of one row in parallel, as prefetched data are written into the SM (line 10).
+Algorithm 1: ConvolutionforthespecialcaseonGPUs.
+1 Loadrows0toK−1(thefirstK rows)oftheblockintotheSM;
+2 __syncthreads();
+3 Eachthreadloads(K−1)×(K+n−1)pixelsfromtheSMinto
+register;
+4 fork=K−1;k<H+K−1;++kdo
+5 Prefetchrowk+1oftheblockintoregister;
+6 EachthreadloadsthelatestrowfromtheSMintoregister;
+7 forf=0;f<F;++f do
+8 Eachthreadcomputesnconvolutionsforfilterf and
+writestheresultsbacktotheGM;
+9 __syncthreads();
+10 StoretheprefetchedrowintotheSM;
+11 __syncthreads();
+The above algorithm is quite memory efficient. When
+computing convolutions, the involved pixels are in registers
+so the latency can be ignored. The filters are fetched from
+the CM. In our method, all the threads within a warp al-
+wayscomputeconvolutionsusingthesamefilteratthesame
+time, so they always access the identical address, which is
+the best case for the CM. As the filters are quite small in
+the special case, a high hit rate of the constant cache can
+be expected. When accessing the SM and GM, contiguous
+threads always read or write contiguous addresses (at the
+granularity of n pixels as a single unit), so both coalesced
+GM access and conflict-free SM access are achieved. Our
+experimental results in Section 5 support our analysis here.
+4. CONVOLUTIONFORGENERALCASE
+This section presents our convolution kernel for the gen-
+eralcase,wheretheinputhasmultiplechannels(seeFig.3a).
+Notethatthemethodforthespecialcasecannotbeapplied
+here for the following reasons. For the special case, we can
+keeptheneededpixelsinthethreads’registerssincethefil-
+ters are small. Thus, we can finish one convolution at once
+withK×Kfusedmultiply-add(FMA)operations. Withmul-
+tiplechannels,theinvolvedpixelsofoneconvolutioncannot
+entirely reside in the registers. Hence, the computation of
+one convolution must be divided into multiple steps, and
+theintermediateresultsshouldbeaccumulatedintheregis-
+ters. In addition, the filters (proportional to the number of
+channels) become larger and may no longer fit in the CM.
+Instead, the GM needs to store both the filters and the in-
+putimage. Ourbasicideaforthegeneralcaseisinspiredby
+theblockedGEMMmethodforGPUs[19],butweoptimize
+memory communication by maximally sharing data.
+4.1 ThreadLayout
+Similar to the special case, each input channel of the in-
+put image is partitioned into blocks of size H×W each
+(see Fig. 4). We use a 2D TB layout which is similar to
+that adopted by the blocked GEMM method [19]. Since in
+the general case, a TB cannot be responsible for all the fil-
+ters,wedividethecomputationintoa2DTBlayoutofsize
+TB ×TB . In the X dimension, a TB is responsible for
+X Y
+F contiguous filters, where TB = (cid:100)F/F (cid:101). In the Y
+TB X TB
+dimension, a TB is responsible for C image blocks at the
+same location of all the C channels. Within a TB, we use
+a 2D thread layout of size T ×T . Each thread is respon-
+X Y
+sible for W output pixels and F filters, where T = FTB
+T T X FT
+and T = W×H. Each thread keeps F ×W pixels in the Y WT T T
+registertostoretheintermediateconvolutionresultsforthe
+...
+Thread 1 (Y)
+W+K-1
+CSH channels of image
+blocks in shared memory
+H+K-1
+Thread 0 (Y)
+...
+WT
+WT+K-1
+...
+Thread 1 (X)
+FTB
+CSH channels of filters
+in shared memory
+K*K
+Thread 0 (X)
+... ...
+... ...
+FT*WT
+pixels in
+register
+in register
+FT
+filter
+values
+Padding
+Storage order
+WT+K-1 pixels
+in register
+* *
+Storage order
+...
+Shared memory
+Register
+1st round 2nd round
+Figure6: Ourconvolutionmethodforthegeneralcase(n=2
+in this illustration).
+W pixels and F filters. In the following subsections, our
+T T
+discussion will focus on optimizing memory access patterns
+to reduce memory communication.
+4.2 OptimizingMemoryAccesses
+Fig.6depictsourconvolutionmethodforthegeneralcase
+attheTBlevel. ToimprovetheGMefficiency,westoreC
+SH
+channels of image blocks (including the needed halo pixels
+outside the block) and the filters in the SM (shown as the
+two blue boxes in Fig. 6). When reading filter values from
+the GM to the SM, since the block is transposed, padding
+(thegrayboxinFig.6)isrequiredfortheSMtoavoidbank
+conflict. For the image blocks, pixels are directly read into
+the SM without transposition, so padding is not needed.
+To increase data sharing within a thread, the W out-
+T
+put pixels computed by one thread are contiguous along
+the horizontal direction. This is a major difference from
+the blocked GEMM method [19] where contiguous output
+pixels are computed by contiguous threads. Computing
+W contiguous output pixels by one thread involves read-
+T
+ing (W +K−1)×K×C pixels from the SM, instead of
+T
+W ×K×K×C iftheyarecomputedbydifferentthreads. As
+T
+C may be large, it is impossible to put all of these involved
+pixels in the register. So we only keep a row of W +K−1
+T
+input pixels in each thread’s register, and the convolution
+results are accumulated iteratively. The W +K−1 input
+T
+pixels are used in K rounds of computation of W output
+T
+pixels. AroundofcomputationreferstoanFMAoperation
+in a convolution.
+WhenreadingfiltervaluesfromtheSM,weusethesame
+threadlayoutasthatusedintheblockedGEMMmethod[19].
+However, in order to meet the requirement of the SM bank
+width model, each thread should read n contiguous values
+asasingleunitalongthehorizontaldirection,asillustrated
+in Fig. 6 (the upper blue box). This method is conflict-free
+as contiguous threads in the X dimension read contiguous
+units from the SM.
+Ourthreadlayoutandmemoryaccesspatternsalsoavoid
+bank conflict when accessing the SM for image blocks. As
+the X dimension of the 2D thread layout is assigned along
+thefeaturedirection,T contiguousthreadsintheXdimen-
+X
+sionaccesstheidenticaladdressoftheSMforimageblocks,
+which benefits from the broadcast mechanism of the SM.
+The only issue of this approach is at the writing back
+Algorithm 2: ConvolutionforthegeneralcaseonGPUs. 100
+80
+1 Register: rAcc[FT][WT],rImg[WT+K−1],rFlt[FT]; 60
+2 Sh sh ar F e l d t[ m CS em H o ][ r K y: × sh K I ] m [F g T [C B S + H p ] a [H dd + in K g] − ; 1][W+K−1], 2 4 0 0 0
+3 ClearrAcc;
+4 LoadCSH channelsofimageblocksintoshImg;
+5 LoadCSH channelsoffiltersintoshFlt;
+6 __syncthreads();
+7 forc=0;c<C;c+=CSH do
+8 PrefetchnextCSH channelsofimageblocksintoregister;
+9 PrefetchnextCSH channelsoffiltersintoregister;
+10 fori=0;i<CSH;++ido
+11 forj=0;j<K;++j do
+12 EachthreadloadsWT+K−1pixelsintorImg;
+13 fork=0;k<K;++kdo
+14 EachthreadloadsFT filtervaluesintorFlt;
+15 rAcc[0,···,FT−1][0,···,WT−1]+=
+rFlt[0,···,FT−1]×rImg[k,···,WT+k−1];
+16 __syncthreads();
+17 StoreprefetchedimageblocksintoshImg;
+18 StoreprefetchedfiltersintoshFlt;
+19 __syncthreads();
+20 WriterAccbacktotheGM;
+phase. WritingtheresultsbacktotheGMisnotcoalesced,
+ascontiguousthreadsintheXdimensioncomputedifferent
+output feature maps. However, we have found that in the
+general case convolution, the writing back phase consumes
+verylittletime,sowedonotoptimizetheuncoalescedwrit-
+ing back operations. If one wants to make the writing back
+coalesced, the SM can be used as a buffer to reorganize the
+data layout. However, this would lead to additional cost
+including the SM latency and TB barriers.
+4.3 Implementation
+Algorithm2outlinesourgeneralcaseconvolutionmethod
+attheTBlevel. Thealgorithmstartsbyclearingtheresults
+(line 3) and loading the first C channels of image blocks
+SH
+and filters into the SM (lines 4 and 5). After that, a loop
+iterativelyaccumulatestheresultsforallthechannels(lines
+7–19). For each channel, a thread needs to conduct K rows
+of computations (lines 11–15), and for each row, K rounds
+ofcomputationareconducted(lines13–15). Theimagedata
+areloadedintoeachthread’sregisteronlyforeachrow(line
+12), and these data are used by K rounds of computation.
+The filter data are loaded into the register in each round
+(line 14). We also use a prefetching method to overlap GM
+accesses and computation (lines 8, 9, 17 and 18). After the
+intermediateresultsofallthechannelsareaccumulated,the
+final results are written back to the GM (line 20).
+Fig. 6 illustrates the first two rounds of computation for
+thread(0,0). ThethreadfirstloadsarowofW +K−1pixels
+T
+fromtheSMintotheregister. Inthefirstround,itloadsF
+T
+filter values from the first row of the SM storing the filters,
+andthenupdatestheintermediateresultsbymultiplyingthe
+F filter values and the first W pixels (the green dashed
+T T
+lines). In the second round, the F filter values are loaded
+T
+fromthesecondrowoftheSM,butthepixelsarenotloaded
+again, as they are already in the row of W +K−1 pixels
+T
+with an offset (the purple dashed lines).
+Compared with direct GEMM-based convolution meth-
+ods, our method reduces GM communication by approxi-
+mately 1,sinceoneimagerowisusedbytheconvolutionof
+K
+K rows. The SM communication for fetching image pixels
+is reduced by WT+K−1.
+WT·K
+s/polFG
+cuDNN Our kernel
+800
+600
+400
+200
+0
+s/polFG
+cuDNN Our kernel Unmatched kernel
+1200
+900
+600
+300
+0
+s/polFG
+(a)
+(b)
+(c) cuDNN Our kernel
+Figure 7: Performance of the special case convolution for
+different convolution parameters (N,K,F). (a) 1×1 filter.
+(b) 3×3 filter. (c) 5×5 filter.
+5. EXPERIMENTALRESULTS
+We have implemented our proposed methods and con-
+ductedexperimentsonaKeplerK40mGPUwithpeakper-
+formance of 4290 giga floating-point operations per second
+(GFlop/s) for single-precision. Our code is compiled with
+compute capability 3.5. As we aim at direct convolution,
+wecompareourkernelswiththeGEMM-basedconvolution
+provided by cuDNN [8] (version 5.1).
+5.1 ResultsofSpecialCase
+Through design space exploration, we determined that
+the best block size for the special case convolution kernel is
+W=256 and H=8. The performance comparison between
+our kernel and cuDNN for different convolution parameters
+(image size N, filter size K, and number of filters F) is
+showninFig.7. Forthe1×1filter,actuallythereisnodata
+sharing; however, our kernel still obtains an average 6.16×
+performancegain,duetothewell-designedcommunication-
+optimal kernel. For the 3×3 and 5×5 filters, our kernel
+obtains 6.43× and 2.90× average performance gains over
+cuDNN, respectively. The average performance gain of the
+three filters we have tested is 5.16×. The performance is
+lower when F=1, due to the low overlap between commu-
+nication and computation, as the computation workload is
+quite low for F=1. However, our kernel can be more than
+10× faster than cuDNN when F=1.
+Forthe3×3filter,wehavealsoimplementedanotherker-
+nel in which W and W are unmatched, i.e., the basic
+CD SMB
+unit for computation is float. As seen from Fig. 7b, the
+performance is reduced by 19% if W and W are un-
+CD SMB
+matched. Itcanbeexpectedthattheperformancedegrada-
+tion will be higher for the general case if W and W
+CD SMB
+are unmatched, as the SM is used to store both the input
+image andthe filtersinthe generalcase. If we comparethe
+unmatchedkernelwithcuDNN,evenifW andW are
+CD SMB
+unmatched, our parallelization strategy is still much better
+than cuDNN for the special case.
+5.2 ResultsofGeneralCase
+Table1: Bestconfigurationsofourgeneralcaseconvolutionker-
+nelfordifferentfiltersizesforKeplerK40m.
+Filtersize 3×3 5×5 7×7
+W 32 32 64
+H 4 8 4
+FTB 64 32 32
+WT 16 8 8
+FT 4 8 8
+CSH 2 1 1
+2000
+1500
+1000
+500
+0
+s/polFG
+cuDNN Our kernel
+2000
+1500
+1000
+500
+0
+s/polFG
+(a)
+2500
+2000
+1500
+1000
+500
+0
+(c) cuDNN Our kernel
+s/polFG
+16-or8-bitfixed-points,toreduceboththestoragerequire-
+ment and execution time. For these data types, mismatch
+betweentheSMbankwidthandthecomputationdatawidth
+existsevenforarchitectureswith4-byteSMbankwidth. As
+aresult,ourproposedmodelandmethodwillbenefitappli-
+cations using these data types.
+7. ACKNOWLEDGMENTS
+ThisprojectwassupportedbytheNationalScienceFoundation
+under grants 1640081, 1217906, 1629914 and 1617735, and the
+Nanoelectronics Research Corporation (NERC), a wholly owned
+subsidiary of the Semiconductor Research Corporation (SRC),
+through Extremely Energy Efficient Collective Electronics (EX-
+CEL),anSRC-NRINanoelectronicsResearchInitiativeunderRe-
+searchTaskIDs2698.004and2698.005.
+8. REFERENCES
+[1] RafaelCGonzalezandRichardEWoods.DigitalImage
+(b) cuDNN Our kernel Processing.Pearson,3rdedition,2007.
+[2] S.Chaudhuri,S.Chatterjee,N.Katz,M.Nelson,and
+M.Goldbaum.DetectionofBloodVesselsinRetinalImages
+UsingTwo-dimensionalMatchedFilters.IEEETransactions
+onMedicalImaging,8(3):263–269,1989.
+[3] Y.LeCun,B.Boser,J.S.Denker,D.Henderson,R.E.Howard,
+W.Hubbard,andL.D.Jackel.BackpropagationAppliedto
+HandwrittenZipCodeRecognition.NeuralComput.,
+1(4):541–551,1989.
+[4] KarenSimonyanandAndrewZisserman.VeryDeep
+ConvolutionalNetworksforLarge-ScaleImageRecognition.
+CoRR,abs/1409.1556,2014.
+[5] AlexKrizhevsky,IlyaSutskever,andGeoffreyEHinton.
+ImagenetClassificationwithDeepconvolutionalNeural
+Networks.InNIPS,pages1097–1105,2012.
+[6] RossGirshick,JeffDonahue,TrevorDarrell,andJitendra
+Malik.RichFeatureHierarchiesforAccurateObjectDetection
+andSemanticSegmentation.InCVPR,pages580–587,2014.
+[7] KumarChellapilla,SiddPuri,andPatriceSimard.High
+Figure 8: Performance of the general case convolution for PerformanceConvolutionalNeuralNetworksforDocument
+different convolution parameters (N,K,C,F). (a) 3×3 fil- Processing.InICFHR,2006.
+[8] SharanChetlur,CliffWoolley,PhilippeVandermersch,
+ter. (b) 5×5 filter. (c) 7×7 filter.
+JonathanCohen,JohnTran,BryanCatanzaro,andEvan
+Shelhamer.cuDNN:EfficientPrimitivesforDeepLearning.
+Table 1 lists the best configurations of our general case CoRR,abs/1410.0759,2014.
+convolution kernel for different filter sizes for the Kepler [9] S.Li,Y.Zhang,C.Xiang,andL.Shi.FastConvolution
+OperationsonMany-CoreArchitectures.InHPCC,pages
+K40mGPU.Theperformancecomparisonbetweenourker- 316–323,2015.
+nelandcuDNNfordifferentconvolutionparameters(image [10] BenVanWerkhoven,JasonMaassen,HenriE.Bal,and
+size N, filter size K, number of channels C, and number FrankJ.Seinstra.OptimizingConvolutionOperationson
+GPUsUsingAdaptiveTiling.FutureGener.Comput.Syst.,
+of filters F) is shown in Fig. 8. For the three filter sizes
+30:14–26,2014.
+we tested, we get 30.5%, 45.3%, and 30.8% average im- [11] cuda-convnet2.Url:
+provementsovercuDNN.Onlywhentheimageisverysmall https://code.google.com/archive/p/cuda-convnet2/.
+(32×32),ourkernelmaybealittleslowerthancuDNN.Inall [12] Micha¨elMathieu,MikaelHenaff,andYannLeCun.Fast
+TrainingofConvolutionalNetworksthroughFFTs.CoRR,
+theothercases,ourkernelisalwaysfasterthancuDNN.The
+abs/1312.5851,2013.
+averageperformanceimprovementofthethreefiltersizesis [13] NicolasVasilache,JeffJohnson,Micha¨elMathieu,Soumith
+35.5%. The highest performance we have achieved is 2020 Chintala,SerkanPiantino,andYannLeCun.Fast
+GFlop/s, which is 47% of the hardware peak performance. ConvolutionalNetsWithfbfft: AGPUPerformance
+Evaluation.CoRR,abs/1412.7580,2014.
+[14] TylerHighlanderandAndresRodriguez.VeryEfficient
+6. CONCLUSIONS TrainingofConvolutionalNeuralNetworksusingFastFourier
+TransformandOverlap-and-Add.CoRR,abs/1601.06815,2016.
+In this paper, we introduced a general model to address [15] AndrewLavinandScottGray.FastAlgorithmsforConvolu-
+themismatchbetweentheSMbankwidthandcomputation tionalNeuralNetworks.InCVPR,pages4013–4021,2016.
+data width of threads. Based on this model, we designed [16] HyunsunPark,DongyoungKim,JunwhanAhn,andSungjoo
+Yoo.ZeroandDataReuse-awareFastConvolutionforDeep
+and optimized two convolution kernels on GPUs. By care- NeuralNetworksonGPU.InCODES,pages33:1–33:10,2016.
+fully optimizing the thread layout and memory access pat- [17] cuBLAS.Url: http://docs.nvidia.com/cuda/cublas/.
+terns, we attained 5.16× and 35.5% average performance [18] YangqingJia,EvanShelhamer,JeffDonahue,SergeyKarayev,
+improvementsoverthelatestcuDNNlibrary,forthespecial JonathanLong,RossB.Girshick,SergioGuadarrama,and
+TrevorDarrell.Caffe: ConvolutionalArchitectureforFast
+case and the general case, respectively. FeatureEmbedding.CoRR,abs/1408.5093,2014.
+Althoughwehaveonlyimplementedourconvolutionker- [19] RajibNath,StanimireTomov,andJackDongarra.An
+nels on the Kepler architecture, our proposed ideas can be ImprovedMAGMAGemmForFermiGraphicsProcessing
+Units.Int.J.HighPerform.Comput.Appl.,24(4):511–515,
+applied to other applications and architectures. For exam-
+2010.
+ple,oneoftherecentdevelopmenttrendsofCNNsistouse
+shorterdatatypes,suchashalf-precisionfloating-pointsand

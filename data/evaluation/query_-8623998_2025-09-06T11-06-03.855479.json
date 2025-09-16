@@ -1,0 +1,62 @@
+{
+  "query": "État de l'art en apprentissage profond pour le diagnostic médical",
+  "response": {
+    "query_language": "fr",
+    "intent": "survey",
+    "entities": {
+      "domain": [
+        "medical diagnosis",
+        "radiology"
+      ],
+      "methods": [],
+      "datasets": [],
+      "metrics": [],
+      "keywords": []
+    },
+    "expanded_query": "apprentissage art de diagnosis diagnostic en l le medical médical pour profond radiology état",
+    "api_used": "arxiv",
+    "processing_mode": "abstracts_only",
+    "timestamp": "2025-09-06T11:06:03.855479",
+    "results": [
+      {
+        "paper_id": "http://arxiv.org/abs/astro-ph/9605105v1",
+        "title": "Les Microlentilles Gravitationnelles",
+        "link": "http://arxiv.org/pdf/astro-ph/9605105v1",
+        "year": 1996,
+        "authors": [
+          "Andrew Gould"
+        ],
+        "score": 0.37192511558532715,
+        "abstract_summary": "Dans un premier temps, je discute la theorie des microlentilles dans le\ncontexte general des lentilles, en incluant les effets de la taille finie des\nsources, de la parallaxe, et du retard temporel entre les images. Je montre qu'il n'est pas\npossible d'expliquer les evenements observes avec les etoiles connues, que ce\nsoit en direction du bulbe ou du Grand Nuage de Magellan.\nJe montre qu'il n'est pas\npossible d'expliquer les evenements observes avec les etoiles connues, que ce\nsoit en direction du bulbe ou du Grand Nuage de Magellan. Ce texte est publie sous forme de\nrapport interne du Laboratoire de Physique Corpusculaire du College de France\n(LPC 96-23).",
+        "abstractive_summary": "je discute la theorie des microlentilles dans le contexte general des lentilles . je montre qu'il n'est pas possible d'expliquer les evenements observes avec les etoiles connues, que ce soit en direction du bulbe ou du Grand Nuage de Magellan ."
+      },
+      {
+        "paper_id": "http://arxiv.org/abs/2405.02679v1",
+        "title": "Prévisions météorologiques basées sur l'intelligence artificielle : une révolution peut en cacher une autre",
+        "link": "http://arxiv.org/pdf/2405.02679v1",
+        "year": 2024,
+        "authors": [
+          "Zied Ben-Bouallegue",
+          "Mariana C A Clare",
+          "Matthieu Chevallier"
+        ],
+        "score": 0.36572110652923584,
+        "abstract_summary": "-- L'intelligence artificielle (IA) bouleverse aujourd'hui le\nmonde de la pr\\'evision m\\'et\\'eorologique avec l'utilisation d'algorithmes\nd'apprentissage profond nourris par des champs de r\\'eanalyses. Dans ce\ncontexte, le Centre Europ\\'een pour les Pr\\'evisions M\\'et\\'eorologiques \\`a\nMoyen Terme (CEPMMT) a d\\'ecid\\'e de d\\'evelopper un nouveau syst\\`eme de\npr\\'evisions resposant sur l'IA.\nHowever,\nthe realism of weather forecasts based on AI is often questioned. Toutefois, le r\\'ealisme\nde ce type de pr\\'evisions reposant sur l'IA est souvent questionn\\'e.",
+        "abstractive_summary": "the realism of weather forecasts based on AI is often questioned . le r'ealisme de ce type de pr’evisions reposant sur l'IA est souvent questionn's ."
+      },
+      {
+        "paper_id": "http://arxiv.org/abs/1104.3694v1",
+        "title": "Removing bias due to finite measurement of dynamic systems: case study on P2P systems",
+        "link": "http://arxiv.org/pdf/1104.3694v1",
+        "year": 2011,
+        "authors": [
+          "Lamia Benamara",
+          "Clémence Magnien"
+        ],
+        "score": 0.2988608479499817,
+        "abstract_summary": "Mesurer avec pr\\'ecision la dynamique des graphes de terrain est une t\\^ache\ndifficile, car les propri\\'et\\'es observ\\'ees peuvent \\^etre biais\\'ees pour\ndiff\\'erentes raisons, en particulier le fait que la p\\'eriode de mesure soit\nfinie. Dans ce papier, nous introduisons une m\\'ethodologie g\\'en\\'erale qui\nnous permet de savoir si la fen\\^etre d'observation est suffisamment longue\npour caract\\'eriser une propri\\'et\\'e donn\\'ee dans n'importe quel syst\\`eme\ndynamique.\nDans ce papier, nous introduisons une m\\'ethodologie g\\'en\\'erale qui\nnous permet de savoir si la fen\\^etre d'observation est suffisamment longue\npour caract\\'eriser une propri\\'et\\'e donn\\'ee dans n'importe quel syst\\`eme\ndynamique. Par contre, pour les dur\\'ees de vie\ndes fichiers, nous montrons que cette propri\\'et\\'e ne peut pas \\^etre\ncaract\\'eris\\'ee, soit parce qu'elle n'est pas stationnaire, soit parce que la\ndur\\'ee de notre mesure est trop courte.",
+        "abstractive_summary": "m'ethodologie g'en'erale qui nous permet de savoir si la fenetre d'observation est suffisamment longue pour caract'eriser une propri''et’e donnee dans n'importe quel systeme dynamique . par contre, pour les dur' ees de vie des fichiers, nous montrons que cette propriétée n"
+      }
+    ]
+  }
+}

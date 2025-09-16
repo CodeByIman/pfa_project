@@ -1,0 +1,71 @@
+{
+  "query": "biotech",
+  "response": {
+    "query_language": "en",
+    "intent": "general",
+    "entities": {
+      "domain": [
+        "synthetic biology",
+        "fintech"
+      ],
+      "methods": [],
+      "datasets": [],
+      "metrics": [],
+      "keywords": []
+    },
+    "expanded_query": "biology biotech fintech synthetic",
+    "api_used": "arxiv",
+    "processing_mode": "abstracts_only",
+    "timestamp": "2025-09-06T11:06:34.160744",
+    "results": [
+      {
+        "paper_id": "http://arxiv.org/abs/2205.00993v1",
+        "title": "A systematic analysis of biotech startups that went public in the first half of 2021",
+        "link": "http://arxiv.org/pdf/2205.00993v1",
+        "year": 2022,
+        "authors": [
+          "Sebastian G. Huayamares",
+          "Melissa P. Lokugamage",
+          "Alejandro J. Da Silva Sanchez",
+          "James E. Dahlman"
+        ],
+        "score": 0.5576475262641907,
+        "abstract_summary": "By analyzing leadership, technological focus, clinical\ntrials, and financing, we found that advanced degrees among the leadership,\nclinical trials, and intellectual property are important factors for biotech\nstartups. Notably, these traits were\noften exhibited by the 138 biotech IPOs in 2018-2019, suggesting 2021 data were\nnot driven by COVID.\nBiotechnologies are being commercialized at historic rates. By analyzing leadership, technological focus, clinical\ntrials, and financing, we found that advanced degrees among the leadership,\nclinical trials, and intellectual property are important factors for biotech\nstartups.",
+        "abstractive_summary": "these traits were often exhibited by the 138 biotech IPOs in 2018-2019, suggesting 2021 data were not driven by COVID . biotechnologies are being commercialized at historic rates ."
+      },
+      {
+        "paper_id": "http://arxiv.org/abs/2306.17547v1",
+        "title": "Spaces of innovation and venture formation: the case of biotech in the United Kingdom",
+        "link": "http://arxiv.org/pdf/2306.17547v1",
+        "year": 2023,
+        "authors": [
+          "Francesco Marzolla",
+          "Przemysław Nowak",
+          "Rohit Sahasrabuddhe",
+          "Chakresh Singh",
+          "Matteo Straccamore",
+          "Erik Zhivkoplias",
+          "Elsa Arcaute"
+        ],
+        "score": 0.5413495302200317,
+        "abstract_summary": "In\nthis study, we utilise patent data to examine the dynamics of innovation and\nventure formation in the biotech sector across the United Kingdom (UK). These insights contribute to our understanding of the historical development\nand future prospects of the biotech sector in the UK, emphasising the\nimportance of promoting innovation diversity and fostering inclusive enterprise\nfor achieving equitable economic growth.\nOur findings highlight the crucial role of biotech incubators in\nfacilitating knowledge exchange between scientific research and industry. These insights contribute to our understanding of the historical development\nand future prospects of the biotech sector in the UK, emphasising the\nimportance of promoting innovation diversity and fostering inclusive enterprise\nfor achieving equitable economic growth.",
+        "abstractive_summary": "in this study, we utilise patent data to examine the dynamics of innovation and venture formation in the biotech sector across the united kingdom (UK) . these insights contribute to our understanding of the historical development and future prospects of biotech industry in the UK ."
+      },
+      {
+        "paper_id": "http://arxiv.org/abs/2401.11011v1",
+        "title": "BioFinBERT: Finetuning Large Language Models (LLMs) to Analyze Sentiment of Press Releases and Financial Text Around Inflection Points of Biotech Stocks",
+        "link": "http://arxiv.org/pdf/2401.11011v1",
+        "year": 2024,
+        "authors": [
+          "Valentina Aparicio",
+          "Daniel Gordon",
+          "Sebastian G. Huayamares",
+          "Yuhuai Luo"
+        ],
+        "score": 0.4662069082260132,
+        "abstract_summary": "The stocks of biotech\ncompanies developing highly innovative and risky therapeutic drugs tend to\nrespond very positively or negatively upon a successful or failed clinical\nreadout or regulatory approval of their drug, respectively. Our\nfinetuned model, termed BioFinBERT, was then used to perform financial\nsentiment analysis of various biotech-related press releases and financial text\naround inflection points that significantly affected the price of biotech\nstocks.\nLarge language models (LLMs) are deep learning algorithms being used to\nperform natural language processing tasks in various fields, from social\nsciences to finance and biomedical sciences. Developing and training a new LLM\ncan be very computationally expensive, so it is becoming a common practice to\ntake existing LLMs and finetune them with carefully curated datasets for\ndesired applications in different fields.",
+        "abstractive_summary": "our finetuned model, termed BioFinBERT, was then used to perform financial sentiment analysis of various biotech-related press releases and financial text around inflection points . a new LLM can be very computationally expensive, so it is becoming a common practice to take existing LLMs and finetun them with carefully curated datasets for desired applications in different fields ."
+      }
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "query": "data science in medical field",
+  "response": {
+    "query_language": "en",
+    "intent": "general",
+    "entities": {
+      "domain": [
+        "clinical informatics",
+        "healthcare informatics"
+      ],
+      "methods": [],
+      "datasets": [],
+      "metrics": [],
+      "keywords": []
+    },
+    "expanded_query": "clinical data field healthcare informatics medical science",
+    "api_used": "arxiv",
+    "processing_mode": "pdfs",
+    "timestamp": "2025-09-05T19:23:30.144276",
+    "results": [
+      {
+        "paper_id": "http://arxiv.org/abs/2004.09010v1",
+        "title": "Leveraging Big Data Analytics in Healthcare Enhancement: Trends, Challenges and Opportunities",
+        "link": "http://arxiv.org/pdf/2004.09010v1",
+        "year": 2020,
+        "authors": [
+          "Arshia Rehman",
+          "Saeeda Naz",
+          "Imran Razzak"
+        ],
+        "score": 0.424778550863266,
+        "abstract_summary": "medical informatics like Proteomics DB  contains\nWith the advancement in information technology\ndata volume of 5.17 TB covering 92% of human genes\nandemergenceofdigitizedcomputerizedsystems,hard\ninformationexplainedinSwiss-Protdatabase.Vastamount\ncopy medical data is tend to move towards Electronic\nof volume is produced from medical images like Visible\nHealthRecords(EHR)andElectronicMedicalRecords\nHumanProjectcomprehendsfemaledata-setsof39GB\n(EMR) systems. As afore-\nunpublished2001research.Inshort,thetermBig\nmentionedbigdataisintegratedfrommultiplesources,\ndata is attributed to Weiss and Indurkhya, Diebold,\nandLaney.Bigdataisthenamegiventothelargerand\n1 Http://www.zdnet.com/blog/virtualization/what-is-big-\nenormous data-sets that are usually complex so that data/1708\ntraditional information processing techniques are not 2 Https://www.techopedia.com/definition/27745/big-data\n4 ArshiaRehmanet al. Verity of data\nDespitethestrongperformanceoftraditionalmethods,\nincludes Electronic Healthcare Records (EHRs), clini-\ntheir predictive power is limited as traditional analysis\ncalimagesandhealthmonitoringdeviceslogsetc.After\nonly deals with primary analysis whereas data analyt-\nthe collection of data, next step is Data processing in\nicsdealswithsecondaryanalysis.Datamininginvolves\nwhich healthcare data is stored, extract and load in\nthe digging or mining of data from many dimensions\nthedatawarehouses,middle-wareorintraditionalfor-\nor perspectives through data analysis tools to find pre-\nmats like CSV, tables etc.\nFig. Fig. 5 and Fig.",
+        "abstractive_summary": "medical informatics like Proteomics DB contain 5.17 TB data volume covering 92% of human genes andemergenceofdigitizedcomputerizedsystems . data is produced from medical images like Visible HealthRecords(EHRs) andElectronicMedicalrecords HumanProjectcomprehendsfemaledata-setsof39GB (EMR) systems ."
+      },
+      {
+        "paper_id": "http://arxiv.org/abs/1807.08841v2",
+        "title": "Characterizing health informatics journals by subject-level dependencies: a citation network analysis",
+        "link": "http://arxiv.org/pdf/1807.08841v2",
+        "year": 2018,
+        "authors": [
+          "Arezo Bodaghi",
+          "Didi Surian"
+        ],
+        "score": 0.4035383462905884,
+        "abstract_summary": "Characterizing health informatics journals by subject-level dependencies: a citation\nnetwork analysis\nArezo Bodaghi\nSchool of Industrial and Systems Engineering,\nTarbiat Modares University, Iran\narezo.bodaghi@modares.ac.ir\nDidi Surian\nCentre for Health Informatics, Australian Institute of Health Innovation,\nMacquarie University, Australia\n1\nABSTRACT\nCitation network analysis has become one of methods to study how scientific knowledge flows\nfrom one domain to another. 3\nA wide array of studies have considered the journal citation networks with regard to structural\ncharacteristics such as density, average and largest node distances, percolation robustness,\ndistributions of incoming and outgoing edges, reciprocity, and assortative mixing by node\ndegrees . Health informatics journals Available Number of Number of\npublication available articles with\nyears articles reference data\nJournal of Medical Internet Research (JMIR) 1999- 2018 2779 525\nJournal of the American Medical Informatics 1994- 2018 3021 524\nAssociation (JAMIA)\nJournal of Medical Systems (JMS) 1977- 2018 2843 470\nBMC Medical Informatics and Decision Making 2001- 2018 1410 287\n(BMC MIDM)\nJournal of Medical Internet Research - Mobile Health 2013- 2018 663 138\nand Ubiquitous Health (JMU)\n7\nblue; JMS; green; MIDM: red; JMIR: purple; JMU: dark green).\nWith a similar number of articles\nused in our analysis, we show that the Journal of the American Medical Informatics Association\n(JAMIA) has more in-citations than the Journal of Medical Internet Research (JMIR); while\nJMIR has a higher number of out-citations and self-citations. From the 10,716 articles, the reference lists were\navailable for about 1,944 articles. In terms of relations across subjects, we investigated the behavior of five health informatics\njournals (Journal of Medical Internet Research; Journal of the American Medical Informatics\nAssociation; Journal of Medical Systems; BMC Medical Informatics and Decision Making;\nJournal of Medical Internet Research - Mobile Health and Ubiquitous Health) in the citations to\nother journals of different subjects (health informatics, computer science, medicine, other fields).",
+        "abstractive_summary": "a citation network analysis has become one of methods to study how scientific knowledge flows from one domain to another . a wide array of studies have considered the journal citation networks with regard to structural characteristics such as density, average and largest node distances, percolation robustness, distribution of incoming and outgoing edges ."
+      },
+      {
+        "paper_id": "http://arxiv.org/abs/2306.17188v1",
+        "title": "Decentralized Healthcare Systems with Federated Learning and Blockchain",
+        "link": "http://arxiv.org/pdf/2306.17188v1",
+        "year": 2023,
+        "authors": [
+          "Abdulrezzak Zekiye",
+          "Öznur Özkasap"
+        ],
+        "score": 0.3751859664916992,
+        "abstract_summary": "Decentralized Healthcare Systems with\nFederated Learning and Blockchain\nAbdulrezzak Zekiye and O¨znur O¨zkasap\nDepartment of Computer Engineering, Ko¸c University, I˙stanbul, Tu¨rkiye\n{azakieh22, oozkasap}@ku.edu.tr\nAbstract. Such data encompasses a wide range of information, includ-\ningtreatments,drugs,prescriptions,tests,images,andvitalsigns.Nevertheless,\nmedical data is often dispersed across multiple entities, and the availability of\nlarge-scale medical datasets is limited. Fig.1.Ageneralrepresentationofblockchainandfederatedlearning-enabledsystems\nDecentralized Healthcare Systems with Federated Learning and Blockchain 3\nRef Blockchain Type Aggregation Solution Application Type\nBlockchain-managed Security and Prove-\n Permissioned Decentralized\nFederated Learning nance in IoHT\nBlockchain-based FLforNon-IIDData\n Permissioned Centralized\ntwo-stage platform in IoMT\nBlockchain & feder- Privacy-preserving\n Public Centralized ated learning with clinician collabora-\nencryption tion\nBlockchain as com- Building large medi-\n Public Not Mentioned\nputing architecture cal datasets\nRisk-Based autho- Access control to\n Permissioned Decentralized\nrization middleware IoMT data\nUsing federated learning has a problem when dealing with non-independent\nidentically distributed (non-IID) data.\nthe used model and dataset. The blockchain here is\nused to share the composed dataset. Blockchain was used to make the system decentralized,\ni.e.",
+        "abstractive_summary": "medical data is often dispersed across multiple entities . federated learning has a problem when dealing with non-independent identically distributed (non-IID) data ."
+      }
+    ]
+  }
+}

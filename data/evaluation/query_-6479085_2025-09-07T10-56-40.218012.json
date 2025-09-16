@@ -1,0 +1,95 @@
+{
+  "query": "data",
+  "response": {
+    "query_language": "en",
+    "intent": "general",
+    "entities": {
+      "domain": [
+        "alternative data",
+        "linked data"
+      ],
+      "methods": [],
+      "datasets": [
+        "sensor data",
+        "tu datasets"
+      ],
+      "metrics": [],
+      "keywords": []
+    },
+    "expanded_query": "alternative data datasets linked sensor tu",
+    "api_used": "arxiv",
+    "processing_mode": "abstracts_only",
+    "timestamp": "2025-09-07T10:56:40.218012",
+    "results": [
+      {
+        "paper_id": "http://arxiv.org/abs/1504.01987v1",
+        "title": "Designing a Linked Data Migrational Framework for Singapore Government Datasets",
+        "link": "http://arxiv.org/pdf/1504.01987v1",
+        "year": 2015,
+        "authors": [
+          "Aravind Sesagiri Raamkumar",
+          "Muthu Kumaar Thangavelu",
+          "Sudarsan Kaleeswaran amd Christopher S. G. Khoo"
+        ],
+        "score": 0.35064172744750977,
+        "summaries": {
+          "tfidf": "Governments around the world have started publishing their data in this format\nto assist citizens in making better use of public services. This report\nprovides an eight step migrational framework for converting Singapore\nGovernment data from legacy systems to Linked Data format.",
+          "lsa": "Governments around the world have started publishing their data in this format\nto assist citizens in making better use of public services. The framework can be evaluated by building a Proof of\nConcept (POC) application.",
+          "abstractive": "this report provides an eight step migrational framework for converting Singapore Government data from legacy systems to Linked Data format. the framework formulation is based on a study of the Singapore data ecosystem with help from Infocomm Development Authority (iDA) of Singapore.",
+          "combined": "this report provides an eight step migrational framework for converting Singapore Government data from legacy systems to Linked Data format. the framework formulation is based on a study of the Singapore data ecosystem with help from Infocomm Development Authority (iDA) of Singapore."
+        },
+        "abstract_summary": "The subject area of this report is Linked Data and its application to the\nGovernment domain. Linked Data is an alternative method of data representation\nthat aims to interlink data from varied sources through relationships.\nGovernments around the world have started publishing their data in this format\nto assist citizens in making better use of public services. This report\nprovides an eight step migrational framework for converting Singapore\nGovernment data from legacy systems to Linked Data format. The framework\nformulation is based on a study of the Singapore data ecosystem with help from\nInfocomm Development Authority (iDA) of Singapore. Each step in the migrational\nframework has been constructed with objectives, recommendations, best practices\nand issues with entry and exit points. This work builds on the existing Linked\nData literature, implementations in other countries and cookbooks provided by\nLinked Data researchers. iDA can use this report to gain an understanding of\nthe effort and work involved in the implementation of Linked Data system on top\nof their legacy systems. The framework can be evaluated by building a Proof of\nConcept (POC) application.",
+        "abstractive_summary": "this report provides an eight step migrational framework for converting Singapore Government data from legacy systems to Linked Data format. the framework formulation is based on a study of the Singapore data ecosystem with help from Infocomm Development Authority (iDA) of Singapore."
+      },
+      {
+        "paper_id": "http://arxiv.org/abs/1710.01832v2",
+        "title": "Track Xplorer: A System for Visual Analysis of Sensor-based Motor Activity Predictions",
+        "link": "http://arxiv.org/pdf/1710.01832v2",
+        "year": 2017,
+        "authors": [
+          "Marco Cavallo",
+          "Çağatay Demiralp"
+        ],
+        "score": 0.3042566478252411,
+        "summaries": {
+          "tfidf": "Through coordinated track\nvisualizations, Track Xplorer enables users to interactively explore and\ncompare the results of different classifiers, assess their accuracy with\nrespect to the ground truth labels and video. We demonstrate how our\ntool helps data scientists debug misclassifications and improve the prediction\nperformance in developing activity classifiers for real-world, multi-sensor\ndata gathered from Parkinson's patients.",
+          "lsa": "Track Xplorer visualizes the results\nof different classifiers as well as the ground truth labels and the video of\nactivities as temporally-aligned linear tracks. Through coordinated track\nvisualizations, Track Xplorer enables users to interactively explore and\ncompare the results of different classifiers, assess their accuracy with\nrespect to the ground truth labels and video.",
+          "abstractive": "to detect activities, data scientists iteratively experiment with different classifiers before deciding on a single model. to improve these limitations, we introduce track Xplorer, an interactive visualization system to query, analyze and compare the classification output of activity detection in multi-sensor data. we also visualize the ground truth labels and the video of activities as temporally-aligned linear linear.",
+          "combined": "to detect activities, data scientists iteratively experiment with different classifiers before deciding on a single model. to improve these limitations, we introduce track Xplorer, an interactive visualization system to query, analyze and compare the classification output of activity detection in multi-sensor data. we also visualize the ground truth labels and the video of activities as temporally-aligned linear linear."
+        },
+        "abstract_summary": "Detecting motor activities from sensor datasets is becoming increasingly\ncommon in a wide range of applications with the rapid commoditization of\nwearable sensors. To detect activities, data scientists iteratively experiment\nwith different classifiers before deciding on a single model. Evaluating,\ncomparing, and reasoning about prediction results of alternative classifiers is\na crucial step in the process of iterative model development. However, standard\naggregate performance metrics (such as accuracy score) and textual display of\nindividual event sequences have limited granularity and scalability to\neffectively perform this critical step.\n  To ameliorate these limitations, we introduce Track Xplorer, an interactive\nvisualization system to query, analyze and compare the classification output of\nactivity detection in multi-sensor data. Track Xplorer visualizes the results\nof different classifiers as well as the ground truth labels and the video of\nactivities as temporally-aligned linear tracks. Through coordinated track\nvisualizations, Track Xplorer enables users to interactively explore and\ncompare the results of different classifiers, assess their accuracy with\nrespect to the ground truth labels and video. Users can brush arbitrary regions\nof any classifier track, zoom in and out with ease, and playback the\ncorresponding video segment to contextualize the performance of the classifier\nwithin the selected region.\n  Track Xplorer also contributes an algebra over track representations to\nfilter, compose, and compare classification outputs, enabling users to\neffectively reason about the performance of classifiers. We demonstrate how our\ntool helps data scientists debug misclassifications and improve the prediction\nperformance in developing activity classifiers for real-world, multi-sensor\ndata gathered from Parkinson's patients.",
+        "abstractive_summary": "to detect activities, data scientists iteratively experiment with different classifiers before deciding on a single model. to improve these limitations, we introduce track Xplorer, an interactive visualization system to query, analyze and compare the classification output of activity detection in multi-sensor data. we also visualize the ground truth labels and the video of activities as temporally-aligned linear linear."
+      },
+      {
+        "paper_id": "http://arxiv.org/abs/2303.07601v2",
+        "title": "V2V4Real: A Real-world Large-scale Dataset for Vehicle-to-Vehicle Cooperative Perception",
+        "link": "http://arxiv.org/pdf/2303.07601v2",
+        "year": 2023,
+        "authors": [
+          "Runsheng Xu",
+          "Xin Xia",
+          "Jinlong Li",
+          "Hanzhao Li",
+          "Shuo Zhang",
+          "Zhengzhong Tu",
+          "Zonglin Meng",
+          "Hao Xiang",
+          "Xiaoyu Dong",
+          "Rui Song",
+          "Hongkai Yu",
+          "Bolei Zhou",
+          "Jiaqi Ma"
+        ],
+        "score": 0.289059042930603,
+        "summaries": {
+          "tfidf": "To\nfacilitate the development of cooperative perception, we present V2V4Real, the\nfirst large-scale real-world multi-modal dataset for V2V perception. Our V2V4Real dataset covers a driving area of 410\nkm, comprising 20K LiDAR frames, 40K RGB frames, 240K annotated 3D bounding\nboxes for 5 classes, and HDMaps that cover all the driving routes.",
+          "lsa": "However,\nthe lack of a real-world dataset hinders the progress of this field. The data\nis collected by two vehicles equipped with multi-modal sensors driving together\nthrough diverse scenarios.",
+          "abstractive": "V2V4Real is the first large-scale real-world multi-modal dataset for perception. it covers a driving area of 410 km, comprising 20K LiDAR frames, 40K RGB frames and 240K annotated 3D bounding boxes for 5 classes, and HDMaps that cover all the driving routes. the data is collected by two vehicles equipped with multiple sensors driving together through diverse scenarios.",
+          "combined": "V2V4Real is the first large-scale real-world multi-modal dataset for perception. it covers a driving area of 410 km, comprising 20K LiDAR frames, 40K RGB frames and 240K annotated 3D bounding boxes for 5 classes, and HDMaps that cover all the driving routes. the data is collected by two vehicles equipped with multiple sensors driving together through diverse scenarios."
+        },
+        "abstract_summary": "Modern perception systems of autonomous vehicles are known to be sensitive to\nocclusions and lack the capability of long perceiving range. It has been one of\nthe key bottlenecks that prevents Level 5 autonomy. Recent research has\ndemonstrated that the Vehicle-to-Vehicle (V2V) cooperative perception system\nhas great potential to revolutionize the autonomous driving industry. However,\nthe lack of a real-world dataset hinders the progress of this field. To\nfacilitate the development of cooperative perception, we present V2V4Real, the\nfirst large-scale real-world multi-modal dataset for V2V perception. The data\nis collected by two vehicles equipped with multi-modal sensors driving together\nthrough diverse scenarios. Our V2V4Real dataset covers a driving area of 410\nkm, comprising 20K LiDAR frames, 40K RGB frames, 240K annotated 3D bounding\nboxes for 5 classes, and HDMaps that cover all the driving routes. V2V4Real\nintroduces three perception tasks, including cooperative 3D object detection,\ncooperative 3D object tracking, and Sim2Real domain adaptation for cooperative\nperception. We provide comprehensive benchmarks of recent cooperative\nperception algorithms on three tasks. The V2V4Real dataset can be found at\nhttps://research.seas.ucla.edu/mobility-lab/v2v4real/.",
+        "abstractive_summary": "V2V4Real is the first large-scale real-world multi-modal dataset for perception. it covers a driving area of 410 km, comprising 20K LiDAR frames, 40K RGB frames and 240K annotated 3D bounding boxes for 5 classes, and HDMaps that cover all the driving routes. the data is collected by two vehicles equipped with multiple sensors driving together through diverse scenarios."
+      }
+    ]
+  }
+}

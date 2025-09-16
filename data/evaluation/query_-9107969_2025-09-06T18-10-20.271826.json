@@ -1,0 +1,91 @@
+{
+  "query": "medical peaper",
+  "response": {
+    "query_language": "en",
+    "intent": "general",
+    "entities": {
+      "domain": [
+        "medical"
+      ],
+      "methods": [],
+      "datasets": [],
+      "metrics": [],
+      "keywords": []
+    },
+    "expanded_query": "medical peaper",
+    "api_used": "arxiv",
+    "processing_mode": "abstracts_only",
+    "timestamp": "2025-09-06T18:10:20.271826",
+    "results": [
+      {
+        "paper_id": "http://arxiv.org/abs/2403.04290v1",
+        "title": "MedM2G: Unifying Medical Multi-Modal Generation via Cross-Guided Diffusion with Visual Invariant",
+        "link": "http://arxiv.org/pdf/2403.04290v1",
+        "year": 2024,
+        "authors": [
+          "Chenlu Zhan",
+          "Yu Lin",
+          "Gaoang Wang",
+          "Hongwei Wang",
+          "Jian Wu"
+        ],
+        "score": 0.3083837032318115,
+        "summaries": {
+          "tfidf": "medical generative models have accelerated the fast growth of medical applications. but recent works concentrate on separate medical generation models for distinct medical tasks and are restricted to inadequate medical multi-modal knowledge, constraining medical comprehensive diagnosis. in this paper, we propose MedM2G, a Medical Multi-Modal Generative framework, with the key innovation to align, extract, and generate medical multimedia modal within the unified space.",
+          "lsa": "medical generative models have accelerated the fast growth of medical applications. but recent works concentrate on separate medical generation models for distinct medical tasks and are restricted to inadequate medical multi-modal knowledge, constraining medical comprehensive diagnosis. in this paper, we propose MedM2G, a Medical Multi-Modal Generative framework, with the key innovation to align, extract, and generate medical multimedia modal within the unified space.",
+          "abstractive": "medical generative models have accelerated the fast growth of medical applications. but recent works concentrate on separate medical generation models for distinct medical tasks and are restricted to inadequate medical multi-modal knowledge, constraining medical comprehensive diagnosis. in this paper, we propose MedM2G, a Medical Multi-Modal Generative framework, with the key innovation to align, extract, and generate medical multimedia modal within the unified space.",
+          "combined": "medical generative models have accelerated the fast growth of medical applications. but recent works concentrate on separate medical generation models for distinct medical tasks and are restricted to inadequate medical multi-modal knowledge, constraining medical comprehensive diagnosis. in this paper, we propose MedM2G, a Medical Multi-Modal Generative framework, with the key innovation to align, extract, and generate medical multimedia modal within the unified space."
+        },
+        "abstract_summary": "medical generative models have accelerated the fast growth of medical applications. but recent works concentrate on separate medical generation models for distinct medical tasks and are restricted to inadequate medical multi-modal knowledge, constraining medical comprehensive diagnosis. in this paper, we propose MedM2G, a Medical Multi-Modal Generative framework, with the key innovation to align, extract, and generate medical multimedia modal within the unified space.",
+        "abstractive_summary": "medical generative models have accelerated the fast growth of medical applications. but recent works concentrate on separate medical generation models for distinct medical tasks and are restricted to inadequate medical multi-modal knowledge, constraining medical comprehensive diagnosis. in this paper, we propose MedM2G, a Medical Multi-Modal Generative framework, with the key innovation to align, extract, and generate medical multimedia modal within the unified space."
+      },
+      {
+        "paper_id": "http://arxiv.org/abs/2002.00481v1",
+        "title": "Assessment of Amazon Comprehend Medical: Medication Information Extraction",
+        "link": "http://arxiv.org/pdf/2002.00481v1",
+        "year": 2020,
+        "authors": [
+          "Benedict Guzman",
+          "MS",
+          "Isabel Metzger",
+          "MS",
+          "Yindalon Aphinyanaphongs",
+          "M. D.",
+          "Ph. D.",
+          "Himanshu Grover",
+          "Ph. D"
+        ],
+        "score": 0.28864848613739014,
+        "summaries": {
+          "tfidf": "Amazon Comprehend Medical (ACM) is a deep learning based system that automatically extracts clinical concepts from clinical text notes. the system was evaluated using the official test sets from the 2009 i2b2 Medication Extraction Challenge and 2018 n2c2 Track 2: Adverse Drug Events and medication extraction in EHRs. overall, ACM achieved F-scores of 0.768 and 0.828 compared to the three best systems in the respective challenges.",
+          "lsa": "Amazon Comprehend Medical (ACM) is a deep learning based system that automatically extracts clinical concepts from clinical text notes. the system was evaluated using the official test sets from the 2009 i2b2 Medication Extraction Challenge and 2018 n2c2 Track 2: Adverse Drug Events and medication extraction in EHRs. overall, ACM achieved F-scores of 0.768 and 0.828 compared to the three best systems in the respective challenges.",
+          "abstractive": "Amazon Comprehend Medical (ACM) is a deep learning based system that automatically extracts clinical concepts from clinical text notes. the system was evaluated using the official test sets from the 2009 i2b2 Medication Extraction Challenge and 2018 n2c2 Track 2: Adverse Drug Events and medication extraction in EHRs. overall, ACM achieved F-scores of 0.768 and 0.828 compared to the three best systems in the respective challenges.",
+          "combined": "Amazon Comprehend Medical (ACM) is a deep learning based system that automatically extracts clinical concepts from clinical text notes. the system was evaluated using the official test sets from the 2009 i2b2 Medication Extraction Challenge and 2018 n2c2 Track 2: Adverse Drug Events and medication extraction in EHRs. overall, ACM achieved F-scores of 0.768 and 0.828 compared to the three best systems in the respective challenges."
+        },
+        "abstract_summary": "Amazon Comprehend Medical (ACM) is a deep learning based system that automatically extracts clinical concepts from clinical text notes. the system was evaluated using the official test sets from the 2009 i2b2 Medication Extraction Challenge and 2018 n2c2 Track 2: Adverse Drug Events and medication extraction in EHRs. overall, ACM achieved F-scores of 0.768 and 0.828 compared to the three best systems in the respective challenges.",
+        "abstractive_summary": "Amazon Comprehend Medical (ACM) is a deep learning based system that automatically extracts clinical concepts from clinical text notes. the system was evaluated using the official test sets from the 2009 i2b2 Medication Extraction Challenge and 2018 n2c2 Track 2: Adverse Drug Events and medication extraction in EHRs. overall, ACM achieved F-scores of 0.768 and 0.828 compared to the three best systems in the respective challenges."
+      },
+      {
+        "paper_id": "http://arxiv.org/abs/2009.05394v1",
+        "title": "A Review on Security and Privacy of Internet of Medical Things",
+        "link": "http://arxiv.org/pdf/2009.05394v1",
+        "year": 2020,
+        "authors": [
+          "Mohan Krishna Kagita",
+          "Navod Thilakarathne",
+          "Thippa Reddy Gadekallu",
+          "Praveen Kumar Reddy Maddikunta"
+        ],
+        "score": 0.28687942028045654,
+        "summaries": {
+          "tfidf": "sensors, wearable devices, medical devices and clinical devices are all connected to form an ecosystem of the Internet of Medical Things. the different applications of healthcare are enabled by the internet of medical Things to reduce the healthcare costs, to attend the medical responses on time and it also helps in increasing the quality of a medical treatment. ioMT are working to get an interconnection with each other by using the digital healthcare system by contributing the researchers.",
+          "lsa": "sensors, wearable devices, medical devices and clinical devices are all connected to form an ecosystem of the Internet of Medical Things. the different applications of healthcare are enabled by the internet of medical Things to reduce the healthcare costs, to attend the medical responses on time and it also helps in increasing the quality of a medical treatment. ioMT are working to get an interconnection with each other by using the digital healthcare system by contributing the researchers.",
+          "abstractive": "sensors, wearable devices, medical devices and clinical devices are all connected to form an ecosystem of the Internet of Medical Things. the different applications of healthcare are enabled by the internet of medical Things to reduce the healthcare costs, to attend the medical responses on time and it also helps in increasing the quality of a medical treatment. ioMT are working to get an interconnection with each other by using the digital healthcare system by contributing the researchers.",
+          "combined": "sensors, wearable devices, medical devices and clinical devices are all connected to form an ecosystem of the Internet of Medical Things. the different applications of healthcare are enabled by the internet of medical Things to reduce the healthcare costs, to attend the medical responses on time and it also helps in increasing the quality of a medical treatment. ioMT are working to get an interconnection with each other by using the digital healthcare system by contributing the researchers."
+        },
+        "abstract_summary": "sensors, wearable devices, medical devices and clinical devices are all connected to form an ecosystem of the Internet of Medical Things. the different applications of healthcare are enabled by the internet of medical Things to reduce the healthcare costs, to attend the medical responses on time and it also helps in increasing the quality of a medical treatment. ioMT are working to get an interconnection with each other by using the digital healthcare system by contributing the researchers.",
+        "abstractive_summary": "sensors, wearable devices, medical devices and clinical devices are all connected to form an ecosystem of the Internet of Medical Things. the different applications of healthcare are enabled by the internet of medical Things to reduce the healthcare costs, to attend the medical responses on time and it also helps in increasing the quality of a medical treatment. ioMT are working to get an interconnection with each other by using the digital healthcare system by contributing the researchers."
+      }
+    ]
+  }
+}

@@ -1,0 +1,456 @@
+- Journal manuscript No.
+(will be inserted by the editor)
+Leveraging Big Data Analytics in Healthcare Enhancement:
+Trends, Challenges and Opportunities
+Arshia Rehman · Saeeda Naz · Imran Razzak
+thedateofreceiptandacceptanceshouldbeinsertedlater
+Abstract Clinicians decisions are becoming more and ends with the notable applications and challenges in
+more evidence-based meaning in no other field the big adoption of big data analytics in healthcare.
+dataanalyticssopromisingasinhealthcare.Duetothe
+Keywords Big Data Analytics · , Medical Image
+sheer size and availability of healthcare data, big data
+Processing and Imaging Informatics · Bioinformatics
+analyticshasrevolutionizedthisindustryandpromises
+and Genomics · Clinical informatics · Public Health
+us a world of opportunities. It promises us the power
+informatics · Medical Signal Analytics
+of early detection, prediction, prevention and helps us
+to improve the quality of life. Researchers and clini-
+cians are working to inhibit big data from having a
+1 Introduction
+positive impact on health in the future. Different tools
+andtechniquesarebeingusedtoanalyze,process,accu- Due to the sheer size and availability of multidimen-
+mulate, assimilate and manage large amount of health- sional data, the rate of technological innovation have
+care data either in structured or unstructured form. In the huge potential to make a an extra ordinary im-
+this paper, we would like to address the need of big pact on our daily life in different disciplines especially
+data analytics in healthcare: why and how can it help inhealthcaresector.Therapidlygrowingandexploited
+to improve life?. We present the emerging landscape data will refer to introduce a new gigantic term known
+of big data and analytical techniques in the five sub- as big data. Uncovering information from such com-
+disciplines of healthcare i.e.medical image analysis and plicated nature of data is often complex process. The
+imaging informatics, bioinformatics, clinical informat- developmentandanalysisoftoolsandmethodsforanal-
+ics, public health informatics and medical signal ana- ysisofsuchlargequantitiesofdataprovidesuswithan
+lytics. We presents different architectures, advantages opportunitytomakethetransitionintothisnewerafar
+and repositories of each discipline that draws an inte- easier.Havingdata-driven,real-timeinsightsaccessible
+grated depiction of how distinct healthcare activities to the organization through analytics can be a critical
+areaccomplishedinthepipelinetofacilitateindividual enabler for executing the organization strategies. Big
+patients from multiple perspectives. Finally the paper data analytics greatest asset is its possibilities and its
+need to find new ways to provide the services that we
+A.Rehman are looking for.
+Computer Science Department, Govt. Girls Postgraduate Unlike other field, big data analytics is so promis-
+CollegeNo.1,Abbottabad,KPK,Pakistan
+ing in healthcare sector and received much more at-
+E-mail:arshiar29@gmail.com
+tention in the last few years. Clinicians decisions are
+S.Naz
+becoming evidence-based, meaning that they are rely-
+Computer Science Department, Govt. Girls Postgraduate
+ing more on large swathes of research and clinical data
+CollegeNo.1,Abbottabad,KPK,Pakistan
+E-mail:saeedanaz292@gmail.com as opposed to solely their schooling and professional
+opinion. Big data in terms of healthcare is defined as
+I.Razzak
+DeakinUniversity,Geelong,Australia thenamegiventolargerandcomplexelectronichealth-
+E-mail:imran.razzak@ieee.org caredatasetsthatareproblematicoralmostimpossible
+0202
+rpA
+5
+]TO.tats[
+1v01090.4002:viXra
+2 ArshiaRehmanet al.
+to manage by employing common traditional methods,
+tools or software [83,204,17]. Big data in healthcare is
+generatedbyhealthcarerecord(suchaspatientsrecord,
+diseasesurveillance,hospital,medicine,healthmanage-
+ment, doctor, clinical decision support or feedback of
+patient [36,65,81,82]) and clinical data (like imaging,
+personal, financial record, genetic and pharmaceutical
+data and Electronic Medical Records (EMR) etc. [259,
+183]). The generation and management of these enor-
+mous healthcare records is considered to be very com-
+plex thus, big data analytics is introduced [278,272].
+With the rise of technological innovation and person-
+alised medicine, big data analytics has the potential
+to make a huge impact on our life i.e. how it helps to
+predict, prevent, manage, treat and cure disease. Fur- Fig.1 HealthcareEcosystemassistedBybigdataandCloud
+thermore, it helps, government agencies, policy maker Computing[168]
+and hospital to manage resources, improving medical
+research,planningpreventativemethodsandmanaging
+epidemic.
+medical informatics like Proteomics DB [275] contains
+With the advancement in information technology
+data volume of 5.17 TB covering 92% of human genes
+andemergenceofdigitizedcomputerizedsystems,hard
+informationexplainedinSwiss-Protdatabase.Vastamount
+copy medical data is tend to move towards Electronic
+of volume is produced from medical images like Visible
+HealthRecords(EHR)andElectronicMedicalRecords
+HumanProjectcomprehendsfemaledata-setsof39GB
+(EMR) systems. These systems generated exponential
+[3].Itisestimatedthatvolumeofbigdatainhealthcare
+growth of data [237,212]. Health data is not only col-
+increased to 35 zeta-bytes by 2020 [102,214].
+lected from clinical record, tele-monitoring or medical
+tests but there are also a larger number of healthcare Variety inhealthcaredivulgesthatthereisagigan-
+apps.Theseappshavetremendousamountofsubscrip- tic amount of healthcare record either it is structured,
+tions. According to the Ericsson Mobility Report of unstructured or semi structured. There is a verity of
+2018, in Q4 of 2017, there were a total of 7.8 billion unstructuredhealthcarerecordgenerateddailylikepa-
+mobilesubscriptions,with53millionnewsubscriptions tientinformation,doctornotes,prescriptions,clinicalor
+addedduringthequarterasthegrowthofpeopleonthis official medical records, images of MRI, CT and radio
+planet subscribe new and valuable data about health films etc. Furthermore, structured and semi structured
+and well-being everyday. These apps contain volumi- verity regarding to EMS and EHS comprises actuarial
+nous data due to the world of social media. There are data, electronic apps and automated databases infor-
+more than two billions people who use internet for the mation like physician name, hospital name, treatment
+purpose of mailing, downloading, surfing, blogging and reimbursementcodes,patientname,addressetc.,infor-
+entertainment etc. This amount of data also tend to mation of electronic billings and accounting and some
+move towards the concept of big data. Fig. 1 depicts oftheclinicalandlaboratoryinstrumentreadingobser-
+the ecosystem of healthcare assisted by big data and vations. For the conversion of unstructured data into
+cloud computing approaches. structured data-sets, data analytics provides different
+facilities; one of them is natural language processing in
+Moving towards the five characteristics of big data
+health fidelity.
+inhealthcaresector,Volumereferstothemedicalrecord
+ofpersonaldata,clinicaldata,radiologyimages,genet- Anotherimportantcharacteristicisvelocity thatcan
+ics and population information, resource intensive ap- be at rest or motion pace. At rest velocity, healthcare
+plications like 3D imaging genomics and biological se- recordencompassesdoctorornursenotes,scripts,docu-
+quences. Likewise rapid increase in diseases and medi- mentaryfiles,rendersrecord,X-rayfilmsetc.Moreover,
+cationsproduceexponentialgrowthofdatathatistobe medium velocity healthcare data includes blood pres-
+stored,manipulateandmanaged.Fortheeffectivecap- sure readings, measurement of daily diabetic glucose
+turing, management and manipulation of data, mod- by insulin pumps and EKGs etc. However, sometimes
+erntechniqueslikeadvancesindatamanagement,cloud highvelocityisrequired,asitbecomeastapleoflifeor
+computingandvisualizationetc.playavibrantrolefor death.Thistypeofdataembroilsonrealtimedatalike
+healthcaresystems.Volumeisrapidlyincreasinginbio- monitoring of inside heart, anesthesia and trauma for
+Leveraging BigDataAnalyticsinHealthcare Enhancement:Trends,ChallengesandOpportunities 3
+bloodpressure,roomoperations,detectinginfectionsor enough to deal with them. Mostly the difficulties or
+diseases like cancer etc. at early stage. challenges regarding to big data are how to capture,
+Value describeshowmuchdataisbeneficialorhcare store, share and analyze data, how to visualize, update
+ecosystem. For example raw data like paper prescrip- or query information privacy. From the view of Radar
+tions, official record or patient information is less valu- [191],BigDatadealswiththehugeamountofdatathat
+able than diagnostics record, medicines and laboratory is not fit into the conventional databases thus alterna-
+instrumentsreadingrecord.Veracity tellsthereliability tivewayischosentoextractandprocessthedatafrom
+or understandability of healthcare record that explains it. According to ZDNet 1 big data involves techniques
+the capturing of diagnosis, procedures, treatments etc. and procedures for the creation, formation, manipula-
+andtoverifyingtheinformationofpatient,hospitaland tion and organization of larger data-sets and facilities
+reimbursement code etc. Different domains of health- offering for its storage. Techopedia 2 demarcatdes that
+care and medical care propose in the literature. This unstructured large complex data that is processed by
+reviewpaperdiscussesfivesub-disciplines(i.e.,medical massive parallelism on readily-available hardware be-
+imageprocessingandimaginginformatics,bioinformat- cause relational database engines are unable to process
+ics,clinicalinformatics,publichealthinformatics,med- that data. Literature divulges that big data is larger
+ical signal analytics) that directly or indirectly involve data sets, enormous growth of data, massive data, un-
+inhealthcareandbio-medical[213,211].Beforepresent- structured or complex data [242,77,45,100,80].
+ing the literature review, we present the theoretical in- Basically main characteristics of big data are com-
+formation of big data and data analytics in Section 2. plexityandmassivesize[202,21,22].However,bigdata
+Different architectures of big data analytics deployed is deliberated by three characteristics known as 3Vs
+inthedomainofhealthcareareexplaininginSection3. volume, variety and velocity [273,172,223]. Two addi-
+We also present the advantages of big data to health- tional characteristics are extended to make 5Vs prop-
+care in Section 4 that give the insights how healthcare erties of big data as depicted in Fig. 2. These addi-
+can be improved by big data analytics. Then we move tional characteristics are value and veracity [77,230,
+towards the literature review for which we have pro- 231].Volumeleadstothesizeorquantityofstoredand
+posedareviewmethodologyfortheselectionofarticles generateddata.Whenthevolumeofdataislargeitbe-
+explained in Section 5. Based on the review method- comes big data [169,168]. Variety is the type or nature
+ology, the big data in five sub-disciplines of healthcare ofdatawhengroupedfromseveralsources.Dataisvar-
+(i.e., medical image processing and imaging informat- ied in terms of format like CSV, text or Excel format
+ics, bioinformatics, clinical informatics, public health in which data stored in a database. Likewise various
+informatics, medical signal analytics) comprehensively forms of data also vary such as video, audio, SMS or
+explaininSection6.Wealsosummarizeourmainfind- PDF data [168]. This verity is also one of the decisive
+ings in Section 7. Then, Section 8 presents the notable characteristic of big data. Velocity specifies the speed
+applications of healthcare analytics based on the main of data at which it is generated or processed. Value de-
+findings. Section 9 discusses the challenges and open scribes how much data is beneficial or valuable. The
+researchissues.FinallytheSection10drawsconclusion big data and the value is strongly co-related as stor-
+of this paper. age of raw data is useless and inoperable. Huge data
+is valuable due to the costs and benefits while collect-
+ing and evaluating data [168]. The term veracity is the
+2 Background of Big Data and Data Analytics
+quality of data understand-ability. In other words reli-
+ability, quality and accuracy of big data depend on the
+The concept of big data was introduced in 1990’s by
+veracity property because it prevents dirty data.
+CoxandEllsworth[51],whentheyconsideredvisualiza-
+Data analytics is the amalgamation of two words
+tion as a Big Data problem. The significant academic
+where data refers to raw facts, figures and information
+references of big data in computer science was first dis-
+andanalyticsmeansuseofseveraltoolstoanalyzedata
+coveredbyWeissandIndurkhya[274].In2000,Diebold
+althoughdataissmallorbig.Analyticsisacanopyand
+[67]introducedbigdatainstatistics/econometricswhen
+umbrella term for all data analysis applications [273].
+theyreferredtoexploitedqualityinformation.Thecon-
+The big data analytics is the process of analyzing large
+cept was enriched by Douglas Laney at Gartner in an
+voluminous data using different strategies. As afore-
+unpublished2001research[155].Inshort,thetermBig
+mentionedbigdataisintegratedfrommultiplesources,
+data is attributed to Weiss and Indurkhya, Diebold,
+andLaney.Bigdataisthenamegiventothelargerand
+1 Http://www.zdnet.com/blog/virtualization/what-is-big-
+enormous data-sets that are usually complex so that data/1708
+traditional information processing techniques are not 2 Https://www.techopedia.com/definition/27745/big-data
+4 ArshiaRehmanet al.
+– Exploratory data analysis to examine the data cor-
+pus to summarize their main characteristics.
+– Descriptive modeling to segregating the data into
+clusters based on their properties.
+– Predictivemodelingtoforecastinginformationfrom
+existing data.
+– Discovering pattern to find patterns that occur fre-
+quently.
+– Content retrieval to discover hidden patterns.
+Fig. 2 5V’sCharacteristicsofBig Data
+Several techniques deploy for reduction, optimiza-
+tionorregressionanalysisetc.forbigdata.Onaccount
+of the voluminous amount of big data; its dimensional-
+ity is reduced by linear mapping approaches like Prin-
+thusbigdataanalyticsisusedtoexplorehowtoextract
+cipalComponentAnalysis(PCA)[120],SingularValue
+valuableandhiddenpatternsandconnectionsfromthis
+Decomposition (SVD) [253]. Some non linear mapping
+integrated data. In other words, big data analytics is
+methodsfordimensonalityreductionareKernelPrinci-
+simplyanalysisofdatawiththeintentionofextracting
+palComponentAnalysis(KPCA)[234],Sammonsmap-
+informationandsupportingconclusionmakingfromthe
+ping [228,62],Laplacian eigenmaps [18].
+inclusiveprocedureofscrutinizing,modeling,cleansing,
+Mathematicaloptimizationisanotheranalyticstool
+and transforming of Big data.
+thatinvolvemulti-objectiveandmulti-modaloptimiza-
+Data analytics can be analyzed by three general
+tionapproacheslikeparetooptimization[195,121],evo-
+methods: descriptive, predictive and prescriptive ana-
+lutionaryalgorithms[64,11].Extractingmeaningfulin-
+lytics [86,29]. Descriptive analytics deals with the con-
+formationandclusterdevelopmentandanalysisisachieved
+densation of big data into smaller meaningful informa-
+by various clustering algorithms like Clustering LARge
+tion.Predictiveanalyticsisthedatareductionanalytics
+Applications (CLARA) [142] and Balanced Iterative
+that predicts the future analysis by deploying a diver-
+Reducing using Cluster Hierarchies (BIRCH) [289] etc.
+sity of machine learning, statistical, modeling and data
+mining techniques to study latest recent and historical
+data. Prescriptive analytics is basically the predictive
+analyticsthatisusedtotakeactionandmakethebusi- 3 Architectures For Big Data Analytics
+ness decision.
+Our anticipated general framework of big data analyt-
+Mostextensivelyusedapproachesforpredictiveand
+ics for healthcare is an abstraction of several concep-
+descriptive analytics on big data are based on either
+tual steps that describe the generic functionalities of
+supervised, unsupervised, or hybrid machine learning.
+the domain. The first step in the framework is data
+An exponential time increase in data has made it dif-
+collection, in which health and the clinical data is col-
+ficult to extract valuable information from this data.
+lected from internal or external sources. Verity of data
+Despitethestrongperformanceoftraditionalmethods,
+includes Electronic Healthcare Records (EHRs), clini-
+their predictive power is limited as traditional analysis
+calimagesandhealthmonitoringdeviceslogsetc.After
+only deals with primary analysis whereas data analyt-
+the collection of data, next step is Data processing in
+icsdealswithsecondaryanalysis.Datamininginvolves
+which healthcare data is stored, extract and load in
+the digging or mining of data from many dimensions
+thedatawarehouses,middle-wareorintraditionalfor-
+or perspectives through data analysis tools to find pre-
+mats like CSV, tables etc. Data transformation is the
+viously unknown patterns and associations from data
+next step in which data is transform, aggregate and
+that may be used as valid information [215,186,210,
+loaded in database file systems like Hadoop cloud or
+185]. Moreover, it makes use of this extracted informa-
+in a Hadoop distributed file systems (HDFS). Analyt-
+tion to build predictive models. It has been deployed
+ical phase is used to examine the big data using big
+intensively and extensively by many organizations, es-
+datatoolsandplatformslikeHadoop,Mapreduce,Hive,
+pecially in the healthcare sector.
+Hbase, Jaql, Avro and several others. Finally the out-
+Dataminingisnotamagicalwandbutinfactabig putisgeneratedintheformofreportsandqueriesusing
+powerful tool that does not discover solutions without dataminingandOLAPtools.Theselfexplanatorygen-
+guidance. Data mining is convenient for the succeeding eral and conceptual architecture are depicted in Fig. 3
+purposes: and Fig. 19.
+Leveraging BigDataAnalyticsinHealthcare Enhancement:Trends,ChallengesandOpportunities 5
+in the file system. It stores and maintains the files and
+folders into a file system tree .The Data node is the
+place where the real data is saved and handles.
+3.2 MapReduce
+MapreduceistheanothercornerstoneofApacheHadoop
+thatisdevelopedin2004whenGooglepublishedathe-
+sis [63]. MapReduce is a standard functional program-
+ming model that process and analyze . It breaks task
+into sub-tasks , gathering its outputs and analyze ef-
+ficiently large datasets in parallel mode. Data analysis
+and processing employed two steps namely, Map phase
+and Reduce phase.
+The architecture of MapReduce operation is split
+Fig. 3 Conceptual Journey of Data to Information in Big
+into three main components: Client, Job-Tracker and
+DataAnalyticsEnvironment
+Task-Tracker. Client submit its job to the Job-Tracker
+in the form of JAR file. Job-Tracker maintains all the
+jobs that are executed on the MapReduce thus act as
+Basedonthedomainabstractionandidentification,
+masterservice.Task-Trackerexecutesthejobsthatare
+there are several definitions of big data architectures
+assignedbyJob-Trackerthusactasslaveservice.Fig.8
+proposedanddevelopedbyresearchersforbigdataan-
+demonstrates the generic architecture of MapReduce
+alytics.SometheimportantarchitecturesareHadhoop,
+operation.
+MapReduce [63], Streaming graph [248], Fault tolerant
+graph etc. We present some of the renowned architec-
+tures along with its core component comprehensively
+3.3 Apache Hive
+in detail. One of the major framework on Apache plat-
+formisHadoopdevelopedbyDougCuttingandApache
+ApacheHive[39]isaStructuredQueryLanguage(SQL)
+Lucene. It is a collection of open-source software util-
+based Extract Transform Load (ETL) and dataware
+ities used for distributed computation, processing and
+house on Hadoop plateform. It is a run time Hadoop
+storageofhugedatasetsorbigdata.Twoarchitectures
+provision framework that works on Hive Query Lan-
+or core component of Hadoop are:
+guage (HQL) that converts SQL queries into MapRe-
+– Hadoop Distributed File System (HDFS) duce jobs. The main operations performed by Hive are
+– MapReduce dataencapsulation,analyzing,adhocqueryingandsum-
+Succeeding Fig. 5 and Fig. 6, depicts the core compo- marizing large data-sets. Apache Hive have four major
+nents and basic framework Apache Hadoop. components: Hive Clients, Services, Processing frame-
+work and Distributed Storage. Hive client like Thrift
+Clients,JDBCClients,ODBCClientsetc.canbewrit-
+3.1 Hadoop Distributed File System (HDFS) teninanysupportivelanguagelikeC++,Java,Python
+etc.Services are used to perform queries. Services of
+HDFS [244] is the master-slave architecture intended Hive may include command line interface (CLI), Web
+to run on the commodity hardware. It provide great interface(WI),Hiveserver,driver,meta-storeetc.Queries
+throughputaccesstoapplicationdata.Itallowstheun- are processed, executed and managed using internal
+derlying storage for the Hadoop cluster and enhances HadoopMapReduceframework.Finallythedistributed
+healthcare data analytics system by segregating huge data is deposited in HDFS. The core components are
+expanse of data into smaller one and disseminated it revealed in Fig. 9.
+acrossvariousservers/nodes.ThearchitectureofHDFS
+isdividedintoName-nodeandData-nodewhereName-
+node is master and Data node is slave. Documents are 3.4 Apache HBase
+storedinthedatanodehavingsizeof64Mthatcannot
+bechanged.FollowingFig.7illustratesthearchitecture Apache HBase works on non-SQL and non-relational
+of HDFS. According to Fig. 7, Client is a HDFS user. approach.Itisadatabasemanagementapproachusing
+Name-node is responsible to manage the name space column oriented structure lies on the top of HDFS. It
+6 ArshiaRehmanet al.
+Fig. 4 ArchitectureofBigDataAnalyticsPlatform
+Fig. 5 CoreComponentsofHadoop
+Fig. 7 ArchitectureofHDFS
+Fig. 8 MapReduceArchitecture
+Fig. 6 FrameworkofHadoop
+themaincomponentthatmanagesandmonitorsHBase
+RegionServers,performdatabaseoperationsusingDDL
+used the key/value data that perform read/write oper- to create, update and delete tables. Hbase tables are
+ations on large HDFS database. Apache Hbase is cat- divided into several regions that are manage, handle
+egorized into three main components: HMaster Server, and execute operations through Hbase Region Servers.
+HBaseRegionServer,andZookeeper.HMasterServeris Hbase is a distributed system that is coordinate by
+Leveraging BigDataAnalyticsinHealthcare Enhancement:Trends,ChallengesandOpportunities 7
+Fig. 9 HiveArchitecture
+Fig. 11 PrestoArchitecture
+Zookeeper. The components of Apache HBase are de-
+picted in Fig. 10. onHadoopplatformlikeapplicationsofdistributedand
+accessible machine learning algorithms.
+3.7 Avro
+Avro assists serialization and data encoding that ad-
+vancesstructureofdatabyidentifyingdatatypes,mean-
+ing and scheme. It has the functionalities of serializa-
+tionandversioningcontrolfeatures.Avroconfiguration
+is illustrated from the Fig. 12.
+Fig. 10 HbaseArchitecture
+3.5 Presto
+Presto is a distributed structured query language en-
+gine that is used to analyzed the large amount of data
+ranging from in size from gigabytes to petabytes. The
+architecture of Presto is composed of coordinators and
+workers.UserqueriesaresubmittedtotheCoordinator
+that is accountable for planning, executing, scheduling
+Fig. 12 AvroArchitecture
+and parsing the queries of Workers. The architecture is
+explained from the succeeding Fig. 11.
+3.6 Mahout 4 Advantages of Big Data to Healthcare
+Mahout is an apache scheme, objective is to produce Howbigdataanalyticscanimprovehealthcare?Simple
+unrestrictedapplicationsofdisseminatedandaccessible answer to this question is: Analyzing big data can aid
+machine learning algorithms that supports healthcare healthcare stakeholders to deliver efficient procedures
+data analytics on Hadoop systems. It is designed to and insights into the patients and their health. Numer-
+supportbigdataanalyticsthatprovidefreeapplication ous benefits can be obtained with big data analytics.
+8 ArshiaRehmanet al.
+Main source of healthcare data are: EHR (Electronic and insights by exploring large data-sets. Scientists are
+Health Records), LIMS (Laboratory Information Man- banking on big data to discover the cure for cancer.
+agement system), Pharmacy, MDI (Monitoring and di- Cost: Healthcare cost can be cut down by analyz-
+agnostic instruments), Finance (Insurance claim and ingbiddatai.e.predictiveanalyticscanhelpstodetect
+billing) and hospital resources. With the advancement diseaseatearlystage.Moreover,bigdataalsoreliefsin
+of data acquisition devices and analytics techniques, reducing medication errors by advancing economic and
+data source are getting enriched with newer forms of administrative performance, and reduce re-admissions.
+data i.e. hospitals start to collect Genetic information For example, patient groups effected by a disease and
+in EHR as well. Within this vast variety of patient are treated with different drug regimens can be com-
+data lies the valuable insights for both patient as well pared to determine which treatment plans work best
+as organizations, which, when applied judiciously can for the same of similar disease which result in saving
+bring in wonderful results. Potential benefits includes resources and money.
+advanced patient care: Finding diseases cure: A particular medication
+seems to work for a few people but not for others, and
+Quality of Care: EHR helps in assembling de-
+there are numerous things to be discovered in a sin-
+mographic and medical data such as clinical data, lab
+gle genome. It isn’t feasible to observe all of them in
+test, diagnoses, and medical conditions. By discovering
+element. however big statistics can help in uncovering
+associationsandpatternswithinthisdata,helpshealth-
+unknowncorrelations,hiddenstyles,andinsightsbyus-
+carepractitionerstoprovidequalitycare,savelivesand
+ing analyzing large sets of statistics. through applying
+lower costs.
+machine getting to know, big facts can have a look at
+Disease Prevention: Spending more on health
+human genomes and find the correct remedy or drugs
+doesnotguaranteehealthsystemefficiency.Theinvest-
+to deal with cancer.
+ment in prevention can help to reduce the cost as well
+asimprovehealthqualityandefficiency.Healthsystems
+face considerable challenges in endorsing and protect-
+5 Review Methodology
+ing health at a time when the burden on finances and
+resources is substantial in many countries. The early
+The review methodology is the systematic process of
+detectionandpreventionofdiseaseplaysaveryimpor-
+finding the relevant literature from different sources.
+tantroleinreducingdeathsaswellashealthcarecosts.
+The main objectives of review methodology are:
+Thus, the core question are: How can we diminish the
+level of ill health in the population? And how can we – To deploy the definitions and concepts of Big data
+prevent the disease to occur based on early symptoms in healthcare.
+of patient? – To explore the five sub-disciplines (i.e., medical im-
+age processing and imaging informatics, bioinfor-
+Efficiency: Managinghealthcaredatausingtradi-
+matics, clinical informatics, public health informat-
+tional analytical tools is nearly impossible due to the
+ics, medical signal analytics [208,215]) that directly
+diversity and volume of data. Healthcare stakeholders
+or indirectly involve in healthcare and bio-medical.
+usebigdataasapartoftheirbusinessintelligencestrat-
+– To illustrate the repositories and complex datasets
+egy to examine historical patient admission rates and
+of five sub disciplines.
+to analyze staff efficiency.
+– To determine the big data analytical architectures
+DiseaseCureness:Healthcarepracticeshavelargely
+and techniques in healthcare.
+beenreactivewherethepatienthastowaituntiltheon-
+– Todiscussthepotentialadvantagesandapplications
+setofdiseaseafterwhichtreatmentisprescribedwhich
+of big data in healthcare.
+hopefully leads to a cure.However, no two persons in
+– To present the open challenges and research issues
+the world would have the same in genetic sequence.
+ofbigdatainhealthcareandthestrategiestackling
+Furthermore,environmentalfactorsassociatedwiththe
+the challenges facing in the domain.
+onsetofthediseasearenotknown.,whichisthemotive
+why particular medication seems to work for few peo- he main steps of review methodology are informa-
+plebutnotforothers.Sincetherearemillionsofthings tionsources,selectioncriteria,andsearchandselection
+to be considered in a single genome, it is almost im- procedure. Information Sources: The first step in the
+possible to study them comprehensively. On the other systematic process of research methodology is to col-
+hand, big data in healthcare have been revolutioniz- lecttherelevantarticles.Tosearchtherelevantarticles
+ingtheexpanseofgenomicsmedicine.Bigdataanalyt- we used Google Scholar. We scanned the references to
+ics can extract hidden patterns, unknown correlations, presentathoroughreview.SelectionCriteria:Insecond

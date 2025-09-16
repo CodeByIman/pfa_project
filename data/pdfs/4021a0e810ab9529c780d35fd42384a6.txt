@@ -1,0 +1,313 @@
+Natural Language Processing, Sentiment Analysis and Clinical
+Analytics
+Adil Rajput
+(aiilahi@effatuniversity.edu.sa)
+Assistant Professor, Information System Department, Effat University
+An Nazlah Al Yamaniyyah, Jeddah 22332, Jeddah, Saudi Arabia
+Abstract
+Recent advances in Big Data has prompted health care practitioners to utilize the data available on
+social media to discern sentiment and emotions’ expression. Health Informatics and Clinical Analytics
+depend heavily on information gathered from diverse sources. Traditionally, a healthcare practitioner
+will ask a patient to fill out a questionnaire that will form the basis of diagnosing the medical condition.
+However, medical practitioners have access to many sources of data including the patients’ writings on
+various media. Natural Language Processing (NLP) allows researchers to gather such data and analyze
+it to glean the underlying meaning of such writings. The field of sentiment analysis – applied to many
+other domains – depend heavily on techniques utilized by NLP. This work will look into various
+prevalent theories underlying the NLP field and how they can be leveraged to gather users’ sentiments
+on social media. Such sentiments can be culled over a period of time thus minimizing the errors
+introduced by data input and other stressors. Furthermore, we look at some applications of sentiment
+analysis and application of NLP to mental health. The reader will also learn about the NLTK toolkit
+that implements various NLP theories and how they can make the data scavenging process a lot easier.
+Keywords: Natural Language Processing (NLP), Data scraping, social media analysis, Sentiment
+Analysis, Helathcare analytics, Clinical Analytics, Machine Learning, Corpus
+1. Introduction
+The Big Data revolution has changed the way scientists approach problems in almost every (if
+not all) area of research. The Big Data field culls concepts from various fields of Computer
+Science. These include Natural Language Processing, Information Retrieval, Artificial
+Intelligence, Machine Learning, network analysis and graph theory to name a few. The
+aforementioned fields have been part and parcel of research in Computer Science for many
+decades. However, the advent of Web 2.0 and social media resulted in the three Vs of the big
+data - Variety, Veracity and Volume (Laney et. al., 2001).
+1.1. NLP and Healthcare/Clinical Analytics
+One of the challenges that researchers and practitioners face in both psychology and psychiatry
+is access to data that truly reflects the mental state of the subject/patient. The traditional
+approaches depend on gathering data from the subject and the immediate family/friends and/or
+asking select individuals belonging to a certain group to fill put surveys/questionnaires that
+might provide an insight into mental state of various individuals/groups.
+Sentiment analysis domain – also known as Opinion Mining – allows scientists to sift through
+the text gathered via various sources and glean how the subject at hand feels. The area depends
+heavily on techniques in Natural Language Processing (NLP). The Natural Language
+Processing allows a machine to process a natural human language and translates it to a format
+that the machine understands. NLP dates back to the 1960s but became very popular with the
+advent of the World Wide Web and search engines. The query processing capabilities of search
+engines required to add context to the terms entered by users and in turn present a set of results
+that the user can choose from.
+1.2. Sentiment Analysis
+Utilizing the techniques from NLP, sentiment analysis field looks at users’ expressions and in
+turn associate emotions with what the user has provided. The cultural norms add a different
+twist to this area. For example, the following statement could be interpreted very differently.
+“This new gadget is bad!”
+While the obvious meaning alludes to the user’s dislike of the gadget, user community
+belonging to a certain age group would consider the above statement as a resounding
+endorsement of the gadget at hand. Furthermore, the sentiment analysis looks at the time at
+which the user expressed the sentiment or opinion. The same user can be under certain stressors
+which can cloud their judgment and hence gathering statements on a time continuum can
+provide better assurance of the sentiments expressed.
+The social media platform provides both challenges and opportunities in this area. On a positive
+note, it grants anonymity to the person writing on the web thus allowing him/her to express
+their feelings freely (Rajadesingan et. Al., 2015). Moreover, the data can be gathered for a
+given interval that can prove vital in ensuring consistency. The data gleaned in this manner will
+offer a preponderance of evidence supporting the researcher’s hypothesis and can provide a
+solid foundation for scientific deductions. Gathering data from the web has become the choice
+of many fields such as Marketing etc. Google, YouTube and Amazon are examples of how
+companies can provide customized content to the end-user. Many such fields can depend
+greatly on objective metrics such as number of likes, total number of items sold given an age
+range etc. However, the fields of psychology/psychiatry do not have such luxury as the data is
+in form of text written by users on the various media such as blogs, social media etc. This
+dimension adds more complexity due to a) use of different languages on a certain topic/blog,
+b) use of non-standard words that cannot be found in a dictionary and c) use of emojis and
+symbols. These questions are tackled by experts in the Natural Language Processing (NLP)
+domain along with those working in the sentiment analysis area.
+There is a need of providing social scientists and psychiatrists the requisite vocabulary and the
+basic tools to scavenge data from the web, parse it appropriately and glean the contextual
+information. This work is intended to be a step in this direction. Specifically, the paper provides
+the following:
+1. Provide a basic understanding on various prevalent theories in Natural Language
+Processing (NLP)
+2. Explain the traditional and the statistical approaches to NLP
+3. Look at the work done in the area of sentiment analysis and the challenges faced in the
+light of mental health issues
+4. Present a brief synopsis of various applications in applying NLP concepts to mental
+health issues and sentiment analysis
+The paper will introduce the key concepts and definitions pertaining to each section rather than
+lumping it altogether in a separate section.
+2. Natural Language Processing
+The field of NLP dates back to few decades and has matured quite significantly over the years.
+Initially confined to gathering data from a limited set of digitized documents, the advent of
+World Wide Web saw an explosion in information in many different languages. Significant
+amount of work was done in the information Retrieval (IR) field which is considered an
+application of the Natural Language Processing domain. Before discussing the IR techniques,
+a bit more, let us delve into the theoretical and practical aspects of NLP.
+2.1. Traditional Approach - Key Concepts
+Initially, the NLP approach followed the following discrete steps.
+1. Text Preprocessing/Tokenization
+2. Lexical Analysis
+3. Syntactical Analysis
+4. Semantic Analysis
+2.1.1. Preprocessing/Tokenization
+The first challenge is to segment a given document into words and sentences. The word token
+- initially confined to programming languages theory - is now synonymous with segmenting
+the text into words. Most of the languages use the white space as the delimiter but it can be a
+bit tricky in certain languages. While seeming straightforward, the challenges include
+separating words such as ‘I’m’ into ‘I am’ and deciding whether or not to separate a token such
+as ‘high-impact’ into two words. Complicating the matter further would be the language of the
+document. The unicode standard helps tremendously as each character is assigned a unique
+value and therefore makes it practical to decide upon the underlying language.
+Another concept that NLP experts use quite often is “Regular Expression (RE)”. Also finding
+its root in the computer programming language theory, RE specifies the format of the string
+that needs to be looked at. As an example, a password string (token) that can contain upper
+case letters only will be specified as [A-Z] while a string counting numbers will be specified
+as [0-9]. The importance of RE will become apparent in the next subsection.
+In addition to segmenting the text into token/words, the NLP domain places great emphasis on
+finding the boundary of sentences. While many languages will use punctuation marks to define
+sentence boundaries, other languages such as Chinese, Korean etc. prove to be much more
+difficult in this regards. Complicating the matter further are short forms that use the period
+symbol ‘.’. While used for ending a sentence, a token such as ‘Mr.’ might send the wrong
+signal.
+2.1.2. Lexical Analysis
+After processing the text, the next challenge is to divide the text into lexemes. A lexeme in
+linguistics represents a meaning and is considered the unit of lexicon. A lexeme can have
+different endings - known as inflectional endings. As an example, the term ‘sleep’ is the unit
+that can take various forms such as ‘sleeping’, ‘slept’ or ‘sleeps’. The unit token is also known
+as lemma. A lexeme is composed of morphemes - bound and unbound/free. An unbound
+morpheme are ‘tokens’ that can be independent words such as cat. Bound morphemes are
+affixes and suffixes such as ‘un’, ‘-tion’ etc.
+After preprocessing of text and segmenting it into words, the NLP practitioners would take
+each token and reduce it to its unit lexeme form. Thus, the words ‘depression’ and ‘depressed’
+will both be reduced to one-unit form - ‘depress’. This process is also known as stemming
+where each token is reduced to a root form called stem. This term is more prevalent in
+Computer Science and in certain cases might not be the same as the lemma. The most famous
+algorithm for this technique is the Porter algorithm (Porter et. al., 1980) which was later
+improved to Porter2 or Snowball algorithm. Lancaster Stemmer is also used frequently but is
+considered a bit more aggressive. This will be discussed in more detailed in the practical
+section.
+One of the most important benefit of stemming is to gather a frequency distribution of various
+words in a given text. The frequency distribution helps surmise the topic of the text being
+considered at hand. The famous tf-idf algorithm in Linguistics and Computer Science is widely
+used. The tf measures the frequency of the terms present in the document and infers the
+subject/keywords describing the document. The idf factor focuses on eliminating the
+commonly used words such as prepositions, articles etc. allowing the tf factor to accurately
+represent the subject of the document at hand. While many other techniques have been
+proposed and tested, tf-idf algorithm is usually the starting point when dealing with texts.
+2.1.3. Syntactical Analysis
+Now that we understand how a text can be broken down into sentences and words using the
+concept of tokens, the next challenge is to ensure that the text being processed is following
+rules of grammar and is conveying certain meaning. Syntactical analysis is the process that
+ensures that rules of grammar are being followed. As an example, consider the sentence “Mary
+Joe road deer drive.”. The tokens and the period will indicate a full sentence but does not
+convey any meaning. The grammars are described as sets of rules. The following rules for
+example, describe the rules for representing numbers and the four operators namely addition,
+subtraction, division and multiplication.
+<E> -> Number
+<E> -> (<E>)
+<E> -> <E> + <E>
+<E> -> <E> - <E >
+<E> -> <E> / <E>
+<E> -> <E> * <E>
+The Grammar (referred to as mathematical grammar) is composed of terminal and non-terminal
+symbols. In the above example, Number is a terminal symbol while <E> is a non-terminal
+symbol. If we assume that the Number symbol represents integers, then the following
+expressions when parsed will conform to the above grammar.
+134 + 256, 134, (256)
+However, expressions such as ‘-134’, ‘134’ ’25’ and ‘134 / 12 34’ will not conform to the
+grammar described above. The process of ensuring the tokens follow a particular grammar is
+also referred to parsing by Computer Scientists / Computational Linguists. Both the lexical
+analyzer described in the previous subsection and a parser is needed to process text. While the
+above might seem overwhelming a bit at first, think of it as this: If the text has the following
+two sentences, how can it be decided that the sentences are conforming to English grammar?
+“The dog ran after the ball”
+“The ball dog ran ball the”
+A human looking at the two sentences above will dismiss the second sentence as gibberish right
+away, but it is not so easy for a computer to discern. The question computer scientists and
+computational linguists traditionally faced was whether or not a natural language can be
+represented by a mathematical grammar (also referred to as formal grammar). The grammars
+that have been traditionally the subject of researchers are best described by Chomsky hierarchy
+(Chomsky et. al., 2012). The formal grammars can be divided as follows:
+1. Unrestricted grammars: These are grammars that would have a rule like α -> β where α
+and β can both be terminals, non-terminals or null. Such The unrestricted grammars are
+the most general and include all the remaining grammars. The problem with such
+grammars is that they are too general to describe any programming or natural language.
+2. Context-Sensitive grammars: These grammars are described by rules such as αAβ ->
+αγβ where α, β can be non-terminals, terminals or empty, γ can be can be non-terminals
+or terminals but never empty, and A has to be a non-terminal. In simple terms, the
+context-sensitive grammars refer to the fact that certain words can only be appropriate
+in a certain context - a problem that is intuitive to humans. The issue with such
+grammars are that they are extremely difficult computationally (if decidable at all).
+Note that Context-Sensitive grammars contain the Context-Free grammars and Regular
+grammars but not vice-versa.
+3. Context-Free grammars: These grammars are described by the rules such as A -> γ
+where γ can be can be non-terminals or terminals but never empty, and A has to be a
+non-terminal. These grammars are used to describe the syntax of most programming
+languages such as C etc. The Context-Free grammars contain the regular grammar but
+not vice versa.
+4. Regular grammars: These grammars are described by A -> aB or A -> Ba where a is a
+terminal and both A and B are non-terminals. The regular grammars are used to define
+the search patterns and lexical structure of the programming languages.
+The problem researchers in Computer Science and Computational Linguistics faced for the
+longest time was that while the above was enough to describe the programming languages, it
+was not sufficient for natural languages. This was addressed by Statistical approach as we shall
+see in section 2.2.
+2.1.4. Semantic Analysis
+Finally, we will briefly discuss the semantic analysis before taking a look at the statistical.
+Recall that when we want to process a text, we need to preprocess the text where we break
+down the text into words and sentences. Next, we perform a lexical analysis where we will
+group various words who have the same root token called lemma together. The syntactical
+parsing allows us to ensure that the text is following a grammatical structure and hence can be
+part of a given language. Also recall that most of the languages can be processed by this
+approach while few languages such as Chinese, Thai etc. face difficulty in the process of
+tokenization and lemmatization. Once this is accomplished, we need to ensure whether or not
+the sentence written is conveying a meaning. In addition to the example in Syntactical analysis
+where one sentence was termed as gibberish, consider the following sentences:
+“I am going down”
+“I am feeling down”
+“I am walking down”
+The three sentences can be interpreted differently. Moreover, the first and third sentence could
+mean that the person is going to a floor down or the first sentence could mean the person is
+about to have a flu if the symptoms of flu were discussed prior to this sentence (recall the
+context-sensitive grammar where the text requires history of the text). It can also mean a player
+mentioning that he/she might lose the game. In summary, one can surmise that there are many
+possibilities that any given sentence can convey. Linguistics over the past century has seen
+many theories crop up that have been the basis for the work of Computer
+Scientists/Computational Linguists. While covering all the theories here is beyond the scope
+of this work, we will briefly summarize four such theories here.
+1. Formal Semantics: The key premise in formal semantics is that there is no difference
+between natural and artificial languages. Both can be represented as a set of rules and
+based on such rules we can make deductions. As an example, consider the following
+rules:
+“Every man is mortal”
+“John is a man”
+“John is Mortal”
+This can be represented mathematically as follows:
+Man -> Mortal
+Man(John)
+==> Mortal(John)
+2. Cognitive Semantics: As opposed to the formal semantics, cognitive semanticists
+believe in intuition/psychological aspect of the communication. In other words, they
+argue that each sentence has an intuitive aspect that delivers the message. For example,
+“He is going down” can be interpreted as becoming sick or the physical action of
+heading down. The difference lies in the context/intuition. Furthermore, various
+cultures can add meanings to various sentences
+3. Lexical Semantics: The lexical semantics deal with the meanings of individual lexemes
+and the meanings entailed by them. The lexemes can have suffixes and affixes and they
+can alter the meaning of the individual word. Moreover, the individual lexemes might
+have sensory meaning associated with them. For example, the following sentences are
+correct in terms of grammar but the second one will not be deemed a correct sentence.
+“The cat chased a mouse”
+“The mouse chased a cat”
+4. Compositional Semantics: The compositional semantics do not look at the individual
+meaning of the lexemes but rather look at how a sentence is composed. For example, a
+sentence can be composed of a noun phrase or a verb phrase. So the following two
+sentences will be considered correct:
+“Jack is a boy”
+“J is a B”
+The key premise behind the above is that minus the lexical parts what remains are the
+rules of composition.
+The traditional approach to processing text yields descent results when it comes to
+preprocessing and tokenization phase. However, one can surmise from the examples above that
+the task increases in complexity in the syntactical and semantical analysis phase. This has given
+rise to the statistical approach to NLP which will be discussed later in this paper. However,
+understanding the above concepts are paramount to comprehending and implementing the
+statistical approaches.
+2.2. Statistical Approach - Key Concepts
+As we saw in the previous section, the traditional approach has its share of challenges when
+performing the syntactical and semantical analysis. The statistical approach takes its motivation
+from the machine learning (ML) approach. Simply put the ML approach takes a subset of data
+and studies the underlying structure and behavior of the input and the output. Specifically, the
+process finds the optimal way to convert the given input to the desired output - known as
+‘supervised learning’. The data utilized in the supervised learning is known as the training
+dataset. Once the algorithm is discovered, the algorithm is applied to a new dataset - test dataset
+- to see the effectiveness of the algorithm. This process is termed as ‘unsupervised learning’.
+While many complexities underlie the above process, the following concepts describe the key
+ideas in this approach.
+2.2.1. Corpus and its intricacies
+While many definitions exist for corpus, we chose the following from (Sinclair, 1991):
+“A collection of naturally occurring text, chosen to characterize a state or variety of a
+language”
+For NLP purposes, the text needs to be machine readable, so it can be annotated. The annotation
+process in NLP takes a text and adds special tags known as metadata to various words -
+described in more detail in a later section.
+Researchers over the past decades have provided us with many corpora. These include the
+Brown corpus (Marcus et. al., 1993), British National corpus (Aston et. al., 1998), International
+corpus of English and Google Ngram corpus (Lin et. al., 2012). Such corpora relieve us from
+the legal aspect as pointed out in (Chang et.al., 2016). However, the choice of corpus is
+important given the task at hand and the results can be highly domain specific (Gordon et. al.,
+2009). Intuitively, someone working intending to study British population would naturally look
+at the British National corpus to get better insights. Despite having many copra available to us,
+there is a constant need to build new corpora. For example, (Rajput et. al., 2018) describes the
+need to have a corpus for psychology and psychiatry. This begs the question: What are the key
+characteristics of a corpus? The size, balance and representativeness are three aspects that need
+to be looked at.
+2.2.1.1. Size
+The very first question that needs to be answered is how big a corpus should be in order to
+represent the desired text. Since corpora depend on sampling, the answer to this question will
+help build a corpus that can provide the researchers they are looking for. While intuitively it
+might make sense to keep the corpus as large as possible, having a small corpus fulfills a very
+important purpose - performing annotation and studying grammatical/underlying text structure.
+Thus, someone focused on annotating a given text heavily and/or studying the grammatical
+structure of a particular text would find it very difficult if not impossible to work with a corpus
+that is too big. Loosely speaking a large corpus helps in studying the occurrences of lexemes,
+their frequencies and concordances of various tokens (Berber-Sardinha, T. et. al., 2000). A
+concordance is when certain words occur together in certain text. For example, when Google
+fills certain words such as ‘have’ when someone types ‘I can’ is based on the study of various
+queries and corpora. This will become more evident when we discuss Part-of-Speech tagging.
+2.2.1.2. Balance
+The Balance of a corpus refers to the ability of a corpus to represent the language being studied.
+Even before the era of acronyms of the chat era, one would expect that the text scripts of spoken
+language would be quite different from the written texts. Furthermore, languages having more
+than one spoken dialect will have different text scripts representing different regions. As an
+example, Arabic speaking community in Tunisia will have different choices of word/lexemes
+compared to someone from Egypt. Adding to the complexity is the choice of colloquial words
+specific to that particular community. Furthermore, a particular lexeme can have different
+connotations across different communities. As an example, consider the word ‘unionized’ that
+can be pronounced as “union-ized’ (specific to unions) or ‘un-ionized’ (specific to Chemistry).
+Similarly, the acronym ROE will be read as ‘Return on Equity’ by the finance community

@@ -1,0 +1,44 @@
+{
+  "query": "deep learning medical imaging",
+  "response": {
+    "query_language": "en",
+    "intent": "general",
+    "entities": {
+      "domain": [
+        "medical imaging",
+        "federated medical imaging"
+      ],
+      "methods": [
+        "deep neural networks"
+      ],
+      "datasets": [],
+      "metrics": [],
+      "keywords": []
+    },
+    "expanded_query": "deep federated imaging learning medical networks neural",
+    "api_used": "arxiv",
+    "processing_mode": "abstracts_only",
+    "timestamp": "2025-09-06T19:28:57.072845",
+    "results": [
+      {
+        "paper_id": "http://arxiv.org/abs/2203.12803v2",
+        "title": "A Two-Stage Federated Transfer Learning Framework in Medical Images Classification on Limited Data: A COVID-19 Case Study",
+        "link": "http://arxiv.org/pdf/2203.12803v2",
+        "year": 2022,
+        "authors": [
+          "Alexandros Shikun Zhang",
+          "Naomi Fengqi Li"
+        ],
+        "score": 0.6467494964599609,
+        "summaries": {
+          "tfidf": "As deep learning and convolutional neural network (CNN) has been widely\nutilized and been verified in analyzing medical images, it has become a\npowerful tool for computer-assisted diagnosis. Since transfer learning has been verified in dealing with limited data\nwith good performance, therefore, in this paper, We made a trial to implement\nfederated learning and transfer learning techniques using CNNs to classify\nCOVID-19 using lung CT scans.",
+          "lsa": "Federated\nlearning can ensure the model training is decentralized on different devices\nand no data is shared among them, which guarantees privacy. However, with data\nlocated on different devices, the accessible data of each device could be\nlimited.",
+          "abstractive": "the efficiency of COVID-19 diagnosis has become highly significant. deep learning and convolutional neural network (CNN) is a powerful tool for computer-assisted diagnosis - but there are two most significant challenges in medical image classification with the help of deep-learning and neural networks. the difficulty of acquiring enough samples, which may lead to model overfitting.",
+          "combined": "the efficiency of COVID-19 diagnosis has become highly significant. deep learning and convolutional neural network (CNN) is a powerful tool for computer-assisted diagnosis - but there are two most significant challenges in medical image classification with the help of deep-learning and neural networks. the difficulty of acquiring enough samples, which may lead to model overfitting."
+        },
+        "abstract_summary": "COVID-19 pandemic has spread rapidly and caused a shortage of global medical\nresources. The efficiency of COVID-19 diagnosis has become highly significant.\nAs deep learning and convolutional neural network (CNN) has been widely\nutilized and been verified in analyzing medical images, it has become a\npowerful tool for computer-assisted diagnosis. However, there are two most\nsignificant challenges in medical image classification with the help of deep\nlearning and neural networks, one of them is the difficulty of acquiring enough\nsamples, which may lead to model overfitting. Privacy concerns mainly bring the\nother challenge since medical-related records are often deemed patients'\nprivate information and protected by laws such as GDPR and HIPPA. Federated\nlearning can ensure the model training is decentralized on different devices\nand no data is shared among them, which guarantees privacy. However, with data\nlocated on different devices, the accessible data of each device could be\nlimited. Since transfer learning has been verified in dealing with limited data\nwith good performance, therefore, in this paper, We made a trial to implement\nfederated learning and transfer learning techniques using CNNs to classify\nCOVID-19 using lung CT scans. We also explored the impact of dataset\ndistribution at the client-side in federated learning and the number of\ntraining epochs a model is trained. Finally, we obtained very high performance\nwith federated learning, demonstrating our success in leveraging accuracy and\nprivacy.",
+        "abstractive_summary": "the efficiency of COVID-19 diagnosis has become highly significant. deep learning and convolutional neural network (CNN) is a powerful tool for computer-assisted diagnosis - but there are two most significant challenges in medical image classification with the help of deep-learning and neural networks. the difficulty of acquiring enough samples, which may lead to model overfitting."
+      }
+    ]
+  }
+}

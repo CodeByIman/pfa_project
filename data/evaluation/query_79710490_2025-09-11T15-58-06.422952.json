@@ -1,0 +1,75 @@
+{
+  "query": "transformer neural networks attention mechanisms",
+  "response": {
+    "query_language": "en",
+    "intent": "general",
+    "entities": {
+      "domain": [
+        "axial attention",
+        "class-attention in image transformers"
+      ],
+      "methods": [
+        "attention mechanism",
+        "multi-head attention"
+      ],
+      "datasets": [],
+      "metrics": [],
+      "keywords": []
+    },
+    "expanded_query": "attention axial class-attention image mechanism mechanisms multi-head networks neural transformer transformers",
+    "api_used": "arxiv",
+    "processing_mode": "abstracts_only_auto",
+    "summary_method": "auto",
+    "timestamp": "2025-09-11T15:58:06.422952",
+    "results": [
+      {
+        "paper_id": "http://arxiv.org/abs/2211.13654v2",
+        "title": "Cross Aggregation Transformer for Image Restoration",
+        "link": "http://arxiv.org/pdf/2211.13654v2",
+        "year": 2022,
+        "authors": [
+          "Zheng Chen",
+          "Yulun Zhang",
+          "Jinjin Gu",
+          "Yongbing Zhang",
+          "Linghe Kong",
+          "Xin Yuan"
+        ],
+        "score": 0.47058573365211487,
+        "summaries": {
+          "tfidf": "The core of our CAT is the Rectangle-Window Self-Attention\n(Rwin-SA), which utilizes horizontal and vertical rectangle window attention in\ndifferent heads parallelly to expand the attention area and aggregate the\nfeatures cross different windows. Furthermore, we propose the Locality\nComplementary Module to complement the self-attention mechanism, which\nincorporates the inductive bias of CNN (e.g., translation invariance and\nlocality) into Transformer, enabling global-local coupling.",
+          "lsa": "Furthermore, we propose the Locality\nComplementary Module to complement the self-attention mechanism, which\nincorporates the inductive bias of CNN (e.g., translation invariance and\nlocality) into Transformer, enabling global-local coupling. The code and models are\navailable at https://github.com/zhengchen1999/CAT.",
+          "abstractive": "Abstractive summary not available",
+          "mistral": "a new image restoration model has been introduced to replace convolution neural network (CNN) with surprising results. some methods use the local square window to limit the scope of self-attention, which limits the establishment of long-range dependencies. the core of our CAT is the Rectangle-Window Self-Attention (Rwin-SA), which utilizes horizontal and vertical rectangle window attention in different heads parallelly to expand the attention area.",
+          "combined": "a new image restoration model has been introduced to replace convolution neural network (CNN) with surprising results. some methods use the local square window to limit the scope of self-attention, which limits the establishment of long-range dependencies. the core of our CAT is the Rectangle-Window Self-Attention (Rwin-SA), which utilizes horizontal and vertical rectangle window attention in different heads parallelly to expand the attention area."
+        },
+        "method": "mistral",
+        "abstract_summary": "Recently, Transformer architecture has been introduced into image restoration\nto replace convolution neural network (CNN) with surprising results.\nConsidering the high computational complexity of Transformer with global\nattention, some methods use the local square window to limit the scope of\nself-attention. However, these methods lack direct interaction among different\nwindows, which limits the establishment of long-range dependencies. To address\nthe above issue, we propose a new image restoration model, Cross Aggregation\nTransformer (CAT). The core of our CAT is the Rectangle-Window Self-Attention\n(Rwin-SA), which utilizes horizontal and vertical rectangle window attention in\ndifferent heads parallelly to expand the attention area and aggregate the\nfeatures cross different windows. We also introduce the Axial-Shift operation\nfor different window interactions. Furthermore, we propose the Locality\nComplementary Module to complement the self-attention mechanism, which\nincorporates the inductive bias of CNN (e.g., translation invariance and\nlocality) into Transformer, enabling global-local coupling. Extensive\nexperiments demonstrate that our CAT outperforms recent state-of-the-art\nmethods on several image restoration applications. The code and models are\navailable at https://github.com/zhengchen1999/CAT.",
+        "abstractive_summary": "Abstractive summary not available"
+      },
+      {
+        "paper_id": "http://arxiv.org/abs/2102.10662v2",
+        "title": "Medical Transformer: Gated Axial-Attention for Medical Image Segmentation",
+        "link": "http://arxiv.org/pdf/2102.10662v2",
+        "year": 2021,
+        "authors": [
+          "Jeya Maria Jose Valanarasu",
+          "Poojan Oza",
+          "Ilker Hacihaliloglu",
+          "Vishal M. Patel"
+        ],
+        "score": 0.414997398853302,
+        "summaries": {
+          "tfidf": "Recently proposed Transformer-based architectures that leverage\nself-attention mechanism encode long-range dependencies and learn\nrepresentations that are highly expressive. The proposed Medical Transformer (MedT) is evaluated on three\ndifferent medical image segmentation datasets and it is shown that it achieves\nbetter performance than the convolutional and other related transformer-based\narchitectures.",
+          "lsa": "Recently proposed Transformer-based architectures that leverage\nself-attention mechanism encode long-range dependencies and learn\nrepresentations that are highly expressive. Furthermore, to\ntrain the model effectively on medical images, we propose a Local-Global\ntraining strategy (LoGo) which further improves the performance.",
+          "abstractive": "Abstractive summary not available",
+          "mistral": "many existing Transformer-based network architectures proposed for vision applications require large-scale datasets to train properly. however, for medical imaging the number of data samples is relatively low, making it difficult to efficiently train transformers for medicine applications. this is because of the inherent inductive biases present in the convolutional structures.",
+          "combined": "many existing Transformer-based network architectures proposed for vision applications require large-scale datasets to train properly. however, for medical imaging the number of data samples is relatively low, making it difficult to efficiently train transformers for medicine applications. this is because of the inherent inductive biases present in the convolutional structures."
+        },
+        "method": "mistral",
+        "abstract_summary": "Over the past decade, Deep Convolutional Neural Networks have been widely\nadopted for medical image segmentation and shown to achieve adequate\nperformance. However, due to the inherent inductive biases present in the\nconvolutional architectures, they lack understanding of long-range dependencies\nin the image. Recently proposed Transformer-based architectures that leverage\nself-attention mechanism encode long-range dependencies and learn\nrepresentations that are highly expressive. This motivates us to explore\nTransformer-based solutions and study the feasibility of using\nTransformer-based network architectures for medical image segmentation tasks.\nMajority of existing Transformer-based network architectures proposed for\nvision applications require large-scale datasets to train properly. However,\ncompared to the datasets for vision applications, for medical imaging the\nnumber of data samples is relatively low, making it difficult to efficiently\ntrain transformers for medical applications. To this end, we propose a Gated\nAxial-Attention model which extends the existing architectures by introducing\nan additional control mechanism in the self-attention module. Furthermore, to\ntrain the model effectively on medical images, we propose a Local-Global\ntraining strategy (LoGo) which further improves the performance. Specifically,\nwe operate on the whole image and patches to learn global and local features,\nrespectively. The proposed Medical Transformer (MedT) is evaluated on three\ndifferent medical image segmentation datasets and it is shown that it achieves\nbetter performance than the convolutional and other related transformer-based\narchitectures. Code: https://github.com/jeya-maria-jose/Medical-Transformer",
+        "abstractive_summary": "Abstractive summary not available"
+      }
+    ]
+  }
+}

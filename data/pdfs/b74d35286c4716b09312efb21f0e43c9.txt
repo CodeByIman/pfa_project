@@ -1,0 +1,338 @@
+0202
+rpA
+6
+]VC.sc[
+2v32930.1002:viXra
+Bridging the Gap between AI and Healthcare
+Sides: Towards Developing Clinically Relevant
+AI-Powered Diagnosis Systems
+Changhee
+Han1,2,3[0000−0002−4429−3859],
+Leonardo Rundo4,5[0000−0003−3341−5483], Kohei Murao3,
+Takafumi Nemoto6, and Hideki Nakayama1
+1 Graduate School of Information Science and Technology,
+The University of Tokyo, Tokyo,Japan
+2 LPIXEL Inc., Tokyo, Japan
+han@lpixel.net
+3 Research Centerfor Medical Big Data,
+National Instituteof Informatics, Tokyo, Japan
+4 Department of Radiology, University of Cambridge, Cambridge, UK
+5 Cancer Research UK Cambridge Centre, Universityof Cambridge, Cambridge, UK
+6 Department of Radiology, Keio University School of Medicine, Tokyo, Japan
+Abstract. Despite the success of Convolutional Neural Network-based
+Computer-AidedDiagnosisresearch,itsclinicalapplicationsremainchal-
+lenging. Accordingly, developing medical Artificial Intelligence (AI) fit-
+ting into a clinical environment requires identifying/bridging the gap
+between AI and Healthcare sides. Since the biggest problem in Med-
+ical Imaging lies in data paucity, confirming the clinical relevance for
+diagnosisofresearch-provenimageaugmentationtechniquesisessential.
+Therefore, we hold aclinically valuableAI-envisioningworkshop among
+JapaneseMedicalImagingexperts,physicians,andgeneralistsinHealth-
+care/Informatics. Then, a questionnaire survey for physicians evaluates
+our pathology-aware Generative Adversarial Network (GAN)-based im-
+ageaugmentationprojectsintermsofDataAugmentationandphysician
+training. Theworkshop revealstheintrinsicgap betweenAI/Healthcare
+sidesandsolutionsonWhy (i.e.,clinicalsignificance/interpretation)and
+How (i.e., data acquisition, commercial deployment, and safety/feeling
+safe). This analysis confirms our pathology-aware GANs’ clinical rele-
+vance as a clinical decision support system and non-expert physician
+training tool. Our findings would play a key role in connecting inter-
+disciplinaryresearchandclinicalapplications,notlimitedtotheJapanese
+medical context and pathology-aware GANs.
+Keywords: Translationalresearch·Computer-aideddiagnosis·Gener-
+ative adversarial networks · Data augmentation · Physician training.
+1 Introduction
+ConvolutionalNeuralNetworks(CNNs)haveenabledaccurate/reliableComputer-
+Aided Diagnosis (CAD), occasionally outperforming expert physicians [1,2,3].
+2 C. Han et al.
+However,suchresearchresultscannotbe easilytransferredtoaclinicalenviron-
+ment. Artificial Intelligence (AI) and Healthcare sides have a huge gap around
+technology,funding, and people [4]. In Japan, the biggest challenge lies in med-
+ical data sharing because each hospital has different ethical codes and tends to
+enclosecollecteddatawithoutannotatingthemforAIresearch.Thisdiffersfrom
+the US,where NationalCancerInstitute providesannotatedmedicalimages[5].
+Therefore,a ResearchCenter for Medical Big Data was launched in Novem-
+ber 2017:collaborating with 6 Japanese medical societies and 6 institutes of in-
+formatics, we collected large-scale annotated medical images for CAD research.
+Using over 60 million available images, we achieved prominent research results,
+presented at major Computer Vision [6] and Medical Imaging conferences [7].
+Moreover, we published 6 papers [8,9,10,11,12,13] on Generative Adversarial
+Network (GAN)-based medical image augmentation [14]. Since the GANs can
+generate realistic samples with desired pathological features via many-to-many
+mappings,theycouldmitigatethemedicaldatapaucityvia DataAugmentation
+(DA) and physician training.
+Aiming to further identify/bridge the gap between AI and Healthcare sides
+in Japan towards developing medical AI fitting into a clinical environment in
+five years, we hold a workshop for 7 Japanese people with various AI and/or
+Healthcarebackground.Moreover,toconfirmthe clinicalrelevancefordiagnosis
+of the pathology-awareGAN methods, we conduct a questionnaire survey for 9
+Japanese physicians who interpret Computed Tomography (CT) and Magnetic
+Resonance (MR) images in daily practice. Fig. 1 outlines our investigation.
+Contributions. Our main contributions are as follows:
+– AI and Healthcare Workshop: We firstly hold a clinically valuable AI-
+envisioningworkshopamongMedicalImagingexperts,physicians,andHealth-
+care/Informaticsgeneraliststo bridge the gapbetween AI/Healthcaresides.
+– Questionnaire Survey for Physicians: We firstly present both qualita-
+tive/quantitativequestionnaireevaluationresultsformanyphysiciansabout
+research-provenmedical AI.
+– Information Conversion: Clinical relevance discussions imply that our
+pathology-awareGAN-basedinterpolationandextrapolationcouldovercome
+medical data paucity via DA and physician training.
+2 Pathology-aware GAN-based Image Augmentation
+In terms of interpolation, GAN-based medical image augmentation is reliable
+because acquisition modalites (e.g., X-ray, CT, MR) can display the human
+body’s strong anatomical consistency at fixed position while clearly reflecting
+inter-subject variability [15,16]. This is different from natural images, where
+various objects can appear at any position; accordingly, to tackle large inter-
+subject/pathology/modalityvariability,weproposedtousenoise-to-imageGANs
+(e.g., random noise samples to diverse pathological images) for (i) medical DA
+and (ii) physician training [8]. While the noise-to-image GAN training is much
+more difficult than training image-to-image GANs [17] (e.g., a benign image to
+a malignantone), it can increase image diversity for further performance boost.
+Bridging theGap between AI and Healthcare Sides 3
+General Medical AI
+Pathology-aware GAN-based
+Medical Image Augmentation
+Medical Physician
+DA Training
+Questionnaire Survey to confirm
+above applicationsʼ clinical relevance
+Workshop to find intrinsic gap and its solutions
+between AI researchers and Healthcare workers
+Fig.1: Overview of our discussions towards developing clinically relevant AI-powered
+diagnosissystems:(i)Aworkshopfor7JapanesepeoplewithvariousAIand/orHealth-
+carebackgroundtodevelopmedicalAIfittingintoaclinicalenvironmentinfiveyears;
+(ii) A questionnaire survey for 9 Japanese physicians to confirm our pathology-aware
+GAN-basedrealistic/diverse imageaugmentation’sclinicalrelevance—themedicalDA
+requires high diversity whereas the physician training requires high realism.
+Regarding the DA, the GAN-generated images can improve CAD based on
+supervised learning [18,19,20]. For the physician training, the GANs can dis-
+play novel desired pathological images and help train medical trainees despite
+infrastructural/legal constraints [21]. However, we have to devise effective loss
+functions andtrainingschemesforsuchapplications.Diversitymattersmorefor
+the DA to sufficiently fill the real image distribution, whereas realism matters
+more for the physician training not to confuse the trainees.
+So,howcanweperformGAN-basedDA/physiciantrainingwithonlylimited
+annotated images? Always in collaboration with physicians, for improving 2D
+classification,wecombinedthe noise-to-imageandimage-to-imageGANs [9,10].
+Nevertheless, further DA applications require pathology localization for detec-
+tion and advanced physician training needs the generation of images with ab-
+normalities, respectively. To meet both clinical demands, we proposed 2D/3D
+bounding box-basedGANs conditioned on pathology position/size/appearance.
+Indeed, the bounding box-based detection requires much less physicians’ anno-
+tation effort than segmentation [22].
+Interms ofextrapolation,the pathology-awareGANs arepromisingbecause
+commonand/ordesiredmedicalpriorscanplay akeyroleinthe conditioning—
+theoretically, infinite conditioning instances, external to the training data, ex-
+ist and enforcing such constraints have an extrapolation effect via model re-
+duction [23]. For improving 2D detection, we proposed Conditional Progressive
+Growing of GANs that incorporates rough bounding box conditions incremen-
+tallyintoanoise-to-imageGAN(i.e.,ProgressiveGrowingofGANs[24])toplace
+4 C. Han et al.
+realistic/diversebrainmetastasesatdesiredpositions/sizeson256×256MRim-
+ages[11].Since thehumanbody is3D,forimproving3Ddetection,weproposed
+3D Multi-Conditional GAN that translates noise boxes into realistic/diverse
+32×32×32 lung nodules [25] placed at desired position/size/attenuation on
+CT scans [12]. Interestingly, inputting the noise box with the surrounding tis-
+sues has the effect of combining the noise-to-image and image-to-image GANs.
+We succeeded to (i) generate images even realistic for physicians and (ii)
+improve detection using synthetic training images, respectively; they require
+differentlossfunctionsandtrainingschemes.However,toexploitourpathology-
+awareGANsasa(i) non-expertphysiciantrainingtooland(ii)clinicaldecision
+support system, we need to confirm their clinical relevance for diagnosis—such
+informationconversion[26]techniquestoovercomethedatapaucity,notlimited
+to our pathology-awareGANs, would become a clinical breakthrough.
+3 Methods
+3.1 AI and Healthcare Workshop
+– Subjects: 2 Medical Imaging experts (i.e., a Medical Imaging researcher
+and a medical AI startup entrepreneur), 2 physicians (i.e., a radiologistand
+apsychiatrist),and3Healthcare/Informaticsgeneralists(i.e.,anurseandre-
+searcher in medical information standardization, a general practitioner and
+researcher in medical communication, and a medical technology manufac-
+turer’s owner and researcher in health disparities)
+– Experiments: As its program shows (Table 1), during the workshop, we
+conduct2activities:(Learning)KnowtheoverviewofMedicalImageAnaly-
+sis,including state-of-the-artresearch,well-knownchallenges/solutions,and
+the summary of our pathology-aware GAN projects; (Thinking) Find the
+intrinsic gap and its solutions between AI researchersand Healthcare work-
+ers after sharing their common and different thinking/working styles. This
+workshopwasheldonMarch17th,2019atNakayamaFuture Factory,Open
+Studio, The University of Tokyo, Tokyo, Japan.
+3.2 Questionnaire Survey for Physicians
+– Subjects: 3 physicians (i.e., a radiologist,a psychiatrist,and a physiatrist)
+committed to (at least one of) our pathology-aware GAN projects and 6
+project non-related radiologists without much AI background. This paper’s
+authors are surely not included.
+– Experiments: Physicians are asked to answer the following questionnaire
+within 2 weeks from December 6th, 2019 after reading 10 summary slides
+writteninJapaneseaboutgeneralMedicalImageAnalysisandourpathology-
+aware GAN projects along with example synthesized images. We conduct
+both qualitative (i.e., free comments) and quantitative (i.e., five-point Lik-
+ert scale [27]) evaluation: Likert scale 1 = very negative, 2 = negative, 3 =
+neutral, 4 = positive, 5 = very positive.
+Bridging theGap between AI and Healthcare Sides 5
+Table 1: Workshop program to (i) know the overview of Medical Image Analysis and
+(ii)findtheintrinsicgapanditssolutionsbetweenAIresearchers/Healthcareworkers.
+* indicates activities given bya facilitator (i.e., the first author), such as lectures.
+Time(mins)Activity
+Introduction
+10 1.Explanationoftheworkshop’spurposeandflow*
+10 2.Self-introductionandexplanationofmotivationforparticipation
+5 3.Groupingintotwogroupsbasedonbackground*
+Learning:KnowingMedicalImageAnalysis
+15 1.TEDspeechvideowatching:ArtificialIntelligenceCanChangethefutureofMedicalDiagnosis*
+35 2.Lecture:OverviewofMedicalImageAnalysisincludingstate-of-the-artresearch,well-known
+challenges/solutions,andthesummaryofourpathology-awareGANprojects*
+(itsvideoinJapanese:https://youtu.be/rTQLknPvnqs)
+10 3.Sharingexpectations,wishes,andworriesaboutMedicalImageAnalysis
+(itsvideoinJapanese:https://youtu.be/ILPEGga-hkY)
+10 Intermission
+Thinking:FindingHowtoDevelopRobustMedicalAI
+25 1.IdentifyingtheintrinsicgapbetweenAI/Healthcaresidesaftersharingtheircommonanddifferent
+thinking/workingstyles
+60 2.Findinghowtodevelopgap-bridgingmedicalAIfittingintoaclinicalenvironmentinfiveyears
+10 Intermission
+Summary
+25 1.Presentation
+10 2.Sharingworkshopimpressionsandideastoapplyobtainedknowledge
+(itsvideoinJapanese:https://youtu.be/F31tPR3m8hs)
+5 3.Answeringaquestionnaireaboutsatisfactionandfurthercomments
+5 4.Closingremarks*
+– Question 1:AreyoukeentoexploitmedicalAI ingeneralwhenitachieves
+accurateandreliableperformanceinthenearfuture?(five-pointLikertscale)
+Please tell us your expectations, wishes, and worries (free comments).
+– Question 2: What do you think about using GAN-generated images for
+DA? (five-point Likert scale)
+– Question 3: What do you think about using GAN-generated images for
+physician training? (five-point Likert scale)
+– Question 4: Any comments/suggestionsabout our projects towards devel-
+oping clinically relevant AI-powered systems based on your experience?
+4 Results
+4.1 Workshop Results
+We show the clinically-relevant findings from this Japanese workshop.
+Gap between AI and Healthcare Sides
+Gap 1: AI, including Deep Learning, provides unclear decision criteria, does
+it make physicians reluctant to use it for diagnosis in a clinical environment?
+– Healthcare side: We rather expect applications other than diagnosis. If
+we use AI for diagnosis, instead of replacing physicians, we suppose a reli-
+able second opinion, such as alert to avoid misdiagnosis, based on various
+6 C. Han et al.
+clinical data not limited to images—every single diagnostician is anxious
+about their diagnosis. AI only provides minimum explanation, such as a
+heatmapshowingattention,whichmakespersuadingnotonlythephysicians
+but also patients difficult. Thus, the physicians’ intervention is essential for
+intuitive explanation. Methodological safety and feeling safe are different.
+In this sense, pursuing explainable AI generally decreases AI’s diagnostic
+accuracy [28], so physicians should still serve as mediators by engaging in
+high-level conversation or interaction with patients. Moreover, according to
+the medical law in most countries including Japan, only doctors can make
+the finaldecision.The firstautonomousAI-baseddiagnosiswithoutaphysi-
+cianwasclearedbytheFoodandDrugAdministrationin2018[29],butsuch
+a case is exceptional.
+– AIside:Comparedwithothersystemsorphysicians,DeepLearning’sexpla-
+nationisnotparticularlypoor,sowerequiretooseverestandardsforAI;the
+word AI is excessively promoting anxiety and perfection. If we could thor-
+oughly verify the reliability of its diagnosis against physicians by exploring
+uncertainty measures [30], such intuitive explanation would be optional.
+Gap 2: Are there any benefits to actually introducing medical AI?
+– Healthcare side: After all, even if AI can achieve high accuracy and con-
+venient operation,hospitals would not introduce it without any commercial
+benefits. Moreover, small clinics, where physicians are desperately needed,
+often do not have CT or MR scanners [31].
+– AI side: The commercial deployment of medical AI is strongly tied to di-
+agnostic accuracy;so, if it can achieve significantly outstanding accuracy at
+various tasks in the near future, patients would not visit hospitals/clinics
+withoutAI.Accordingly,introducingmedicalAIwouldbecomeprofitablein
+five years.
+Gap 3: Is medical AI’s diagnostic accuracy reliable?
+– Healthcare side: To evaluate AI’s diagnostic performance, we should con-
+sidermanymetrics,suchassensitivityandspecificity.Moreover,itsgeneral-
+izationabilityformedicaldatahighlyreliesoninter-scanner/inter-individual
+variability[32].Howcanweevaluatewhetheritissuitableasaclinicallyap-
+plicable system?
+– AI side: Generally, alleviating the risk of overlooking the diagnosis is the
+most important, so sensitivity matters more than specificity unless their
+balance is highly disturbed. Recently, such research on medical AI that is
+robust to different datasets is active [33].
+Bridging theGap between AI and Healthcare Sides 7
+How to Develop Medical AI Fitting into a Clinical Environment in
+Five Years
+Why: Clinical significance/interpretation
+– Challenges:WeneedtoclarifywhichclinicalsituationsactuallyrequireAI
+introduction. Moreover, AI’s early diagnosis might not be always beneficial
+for patients.
+– Solutions: Due to nearly endless disease types and frequent misdiagnosis
+coming from physicians’ fatigue, we should use it as alert to avoid misdi-
+agnosis [34] (e.g., reliable second opinion), instead of replacing physicians.
+It should help prevent oversight in diagnostic tests not only with CT and
+MR, but also with blood data, chest X-ray, and mammography before tak-
+ing CT and MR [35]. It could be also applied to segmentation for radiation
+therapy [36], neurosurgerynavigation[37], and pressureulcers’ echo evalua-
+tion.Alongwithimprovingthediagnosis,itwouldalsomakethephysicians’
+workflow easier, such as by denoising [38]. Patients should decide whether
+they accept AI-based diagnosis under informed consent.
+How: Data acquisition
+– Challenges: Ethical screening in Japan is exceptionally strict, so acquir-
+ingandsharinglarge-scalemedicaldata/annotationarechallenging—italso
+applies to Europe due to General Data Protection Regulation [39]. Con-
+sidering the speed of technological advances in AI, adopting it for medical
+devices is difficult in Japan, unlike in medical AI-ready countries, such as
+the US, where the ethical screening is relatively loose in return for the re-
+sponsibility of monitoring system stability. Moreover, whenever diagnostic
+criteria changes, we need further reviews and software modifications. For
+example,theTumor-lymphNode-Metastasis(TNM)classification[40]crite-
+ria changed for oropharyngeal cancer in 2018 and for lung cancer in 2017,
+respectively. Diagnostic equipment/target changes also require large-scale
+data/annotation acquisition again.
+– Solutions:ForJapantokeeppace,theethicalscreeningshouldbeadequate
+totheotherleadingcountries.Currently,overseasresearchandclinicaltrials
+are proceeding much faster, so it seems better to collaborate with overseas
+companiesthantodoitinJapanalone.Moreover,completemedicalcheckup,
+which is extremely costly,is unique in EastAsia, thus Japancould be supe-
+riorin individuals’ multiple medicaldata—Japanis the only country,where
+most workers aged 40 or over are required to have medical checkups once a
+yearregardlessoftheirhealthconditionsbytheIndustrialSafetyandHealth
+Act [41]. To handle changes in diagnostic criteria/equipment and overcome
+dataset/task dependency, it is necessary to establish a common database
+creation workflow [42] by regularly entering electronic medical records into
+the database.For reducing data acquisition/annotationcost,AI techniques,
+suchasGAN-basedDA[12]anddomainadaptation[43],wouldbe effective.
+8 C. Han et al.
+How: Commercial deployment
+– Challenges:Hospitalscurrentlydonothavecommercialbenefitstoactually
+introduce medical AI.
+– Solutions: For example, it would be possible to build AI-powered hospi-
+tals [44] operated with less staff. Medical manufacturers could also stan-
+dardize data format [45], such as for X-ray, and provide some AI services.
+Many IT giants like Google are now working on medical AI to collect mas-
+sive biomedical datasets [46], so they could help rural areas and developing
+countries, where physician shortage is severe [31], at relatively low cost.
+How: Safety and feeling safe
+– Challenges: Considering multiple metrics, such as sensitivity and speci-
+ficity [47], and dataset/task dependency [48], accuracy could be unreliable,
+so ensuring safety is challenging. Moreover, reassuring physicians and pa-
+tients is important to actually use AI in a clinical environment [49].
+– Solutions: We should integrate various clinical data, such as blood test
+biomarkers and multiomics, with images [35]. Moreover, developing bias-
+robusttechnologyis importantsince confounding factorsareinevitable [50].
+Topreventoversight,prioritizingsensitivityoverspecificityisessentialwhile
+maintaining a balance [51]. We should also devise education for medical AI
+users, such as result interpretation, to reassure patients [52].
+4.2 Questionnaire Survey Results
+We show the questions and Japanese physicians’ response summaries. Concern-
+ing the following Questions 1,2,3, Fig. 2 visually summarizes the expectation
+scores on medical AI (i.e., general medical AI, GANs for DA, and GANs for
+physician training) from both 3 project-related physicians and 6 project non-
+related radiologists.
+Question 1: Are you keen to exploit medical AI in general when it achieves
+accurate and reliable performance in the near future?
+– Response summary: As expected, the project-related physicians are AI-
+enthusiasticwhiletheprojectnon-relatedradiologistsarealsogenerallyvery
+positive about the medical AI. Many of them appeal the necessity of AI-
+baseddiagnosisformorereliablediagnosisbecauseofthe lackofphysicians.
+Meanwhile, other physicians worry about its cost and reliability. We may
+be able to persuade them by showing expected profitability (e.g., currently
+CT scanners have an earning rate 16% and CT scans require 2-20 minutes
+for interpretation in Japan). Similarly, we can explain how experts anno-
+tate medical images and AI diagnoses disease based on them (e.g., multiple
+physicians, not a single one, can annotate the images via discussion).

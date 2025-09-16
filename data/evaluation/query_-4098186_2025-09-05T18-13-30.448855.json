@@ -1,0 +1,63 @@
+{
+  "query": "data science in medical field",
+  "response": {
+    "query_language": "en",
+    "intent": "general",
+    "entities": {
+      "domain": [
+        "clinical informatics",
+        "healthcare informatics"
+      ],
+      "methods": [],
+      "datasets": [],
+      "metrics": [],
+      "keywords": []
+    },
+    "expanded_query": "clinical data field healthcare informatics medical science",
+    "api_used": "arxiv",
+    "processing_mode": "abstracts_only",
+    "timestamp": "2025-09-05T18:13:30.448855",
+    "results": [
+      {
+        "paper_id": "http://arxiv.org/abs/1402.1947v1",
+        "title": "Classification Tree Diagrams in Health Informatics Applications",
+        "link": "http://arxiv.org/pdf/1402.1947v1",
+        "year": 2014,
+        "authors": [
+          "Farrukh Arslan"
+        ],
+        "score": 0.5222173929214478,
+        "abstract_summary": "Healthcare analysts are particularly interested in various\ncomputer informatics areas such as; knowledge representation from data, anomaly\ndetection, outbreak detection methods and syndromic surveillance applications. Although various parametric and non-parametric approaches are being proposed to\nclassify information from data, classification tree diagrams provide an\ninteractive visualization to analysts as compared to other methods.\nHealth informatics deal with the methods used to optimize the acquisition,\nstorage and retrieval of medical data, and classify information in healthcare\napplications. In this\nwork we discuss application of classification tree diagrams to classify\ninformation from medical data in healthcare applications.",
+        "abstractive_summary": "healthcare analysts are particularly interested in various computer informatics areas . classification tree diagrams provide an interactive visualization to analysts as compared to other methods ."
+      },
+      {
+        "paper_id": "http://arxiv.org/abs/2004.09010v1",
+        "title": "Leveraging Big Data Analytics in Healthcare Enhancement: Trends, Challenges and Opportunities",
+        "link": "http://arxiv.org/pdf/2004.09010v1",
+        "year": 2020,
+        "authors": [
+          "Arshia Rehman",
+          "Saeeda Naz",
+          "Imran Razzak"
+        ],
+        "score": 0.4914734959602356,
+        "abstract_summary": "We present\nthe emerging landscape of big data and analytical techniques in the five\nsub-disciplines of healthcare i.e.medical image analysis and imaging\ninformatics, bioinformatics, clinical informatics, public health informatics\nand medical signal analytics. We presents different architectures, advantages\nand repositories of each discipline that draws an integrated depiction of how\ndistinct healthcare activities are accomplished in the pipeline to facilitate\nindividual patients from multiple perspectives.\nIt\npromises us the power of early detection, prediction, prevention and helps us\nto improve the quality of life. We presents different architectures, advantages\nand repositories of each discipline that draws an integrated depiction of how\ndistinct healthcare activities are accomplished in the pipeline to facilitate\nindividual patients from multiple perspectives.",
+        "abstractive_summary": "we present the emerging landscape of big data and analytical techniques in the five sub-disciplines of healthcare . we present different architectures, advantages and repositories of each discipline that draws an integrated depiction of how distinct healthcare activities are accomplished . it promises us the power of early detection, prediction, prevention and helps us to improve the quality of life ."
+      },
+      {
+        "paper_id": "http://arxiv.org/abs/2312.04595v1",
+        "title": "Evaluating The Accuracy of Classification Algorithms for Detecting Heart Disease Risk",
+        "link": "http://arxiv.org/pdf/2312.04595v1",
+        "year": 2023,
+        "authors": [
+          "Alhaam Alariyibi",
+          "Mohamed El-Jarai",
+          "Abdelsalam Maatuk"
+        ],
+        "score": 0.46337467432022095,
+        "abstract_summary": "Data\nMining (DM) techniques are mainly used to identify and extract hidden patterns\nand interesting knowledge to diagnose and predict diseases in medical datasets. This work utilizes the classification algorithms with a medical\ndataset of heart disease; namely, J48, Random Forest, and Na\\\"ive Bayes to\ndiscover the accuracy of their performance.\nTherefore, early diagnosis leads to a reduction in deaths. The importance of using classification techniques for heart disease diagnosis\nhas been highlighted.",
+        "abstractive_summary": "data mining techniques are used to identify and extract hidden patterns and interesting knowledge to diagnose and predict diseases in medical datasets . this work utilizes the classification algorithms with a medical dataset of heart disease . early diagnosis leads to a reduction in deaths ."
+      }
+    ]
+  }
+}

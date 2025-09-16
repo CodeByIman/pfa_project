@@ -1,0 +1,915 @@
+ConCare: Personalized Clinical Feature Embedding via Capturing the
+Healthcare Context
+LiantaoMa1,3,ChaoheZhang1,3,YashaWang1,2∗ ,WenjieRuan4,JiangtaoWang4,
+WenTang5,XinyuMa1,3,XinGao1,3,JunyiGao1,2
+1KeyLaboratoryofHighConfidenceSoftwareTechnologies,MinistryofEducation,Beijing,China
+2NationalEngineeringResearchCenterofSoftwareEngineering,PekingUniversity,Beijing,China
+3SchoolofElectronicsEngineeringandComputerScience,PekingUniversity,Beijing,China
+4SchoolofComputingandCommunications,LancasterUniversity,UK
+5DivisionofNephrology,PekingUniversityThirdHospital,Beijing,China
+{malt,wangyasha}@pku.edu.cn,{wenjie.ruan,jiangtao.wang}@lancaster.ac.uk,tanggwen@126.com
+Abstract Blood lab test Physical lab test New-onset complications …
+P
+el
+r
+e
+e
+c
+d
+t
+i
+r
+c
+o
+t
+n
+in
+ic
+g
+m
+th
+e
+e
+di
+p
+c
+a
+a
+t
+l
+ie
+r
+n
+e
+t
+c
+’
+o
+s
+r
+c
+d
+l
+s
+in
+(
+i
+E
+c
+M
+al
+R
+o
+)
+ut
+i
+c
+s
+o
+a
+m
+f
+e
+un
+f
+d
+ro
+a
+m
+me
+t
+n
+h
+t
+e
+al
+h
+r
+i
+e
+st
+s
+o
+e
+r
+a
+i
+r
+c
+c
+a
+h
+l Patient ID Date Albu min
+…
+Weight
+…
+URTI Cancer
+… …
+problem in medical informatics. Most deep learning-based
+98 19/12/2015 35.0 66.3 0 0
+solutionsforEMRanalysisconcentrateonlearningtheclini-
+calvisitembeddingandexploringtherelationsbetweenvis- 98 22/01/2016 38.2 65.2 1 0
+its.Althoughthoseworkshaveshownsuperiorperformances 118 09/07/2015 32.8 49.8 0 1
+inhealthcareprediction,theyfailtoexplorethepersonalchar-
+acteristics during the clinical visits thoroughly. Moreover, Figure1:Dynamicmedicalfeatures.Thephysicianconducts
+existing works usually assume that the more recent record thenecessarylabtestsforthepatientateachvisit.
+weightsmoreintheprediction,butthisassumptionisnotsuit-
+ableforallconditions.Inthispaper,weproposeConCare
+to handle the irregular EMR data and extract feature inter- Demographic Primary disease …
+r O e u la r ti s o o n lu sh ti i o p n to ca p n er e f m or b m ed in th d e iv f i e d a u t a u l r i e ze s d eq h u e e a n lt c h e c s ar s e ep p a r r e a d t i e c l t y io b n y . Patient ID Gender Age Height … C G N Diabetes C HD … …
+modelingthetime-awaredistribution.ConCarefurtherim-
+98 M 53.92 160.54 1 0 0
+provesthemulti-headself-attentionviathecross-headdecor-
+118 F 42.51 171.41 0 1 0
+relation,sothattheinter-dependenciesamongdynamicfea-
+turesandstaticbaselineinformationcanbeeffectivelycap-
+tured to form the personal health context. Experimental re- Figure 2: Static baseline information. Such characteristics
+sults on two real-world EMR datasets demonstrate the ef- areusuallyusedtoevaluatethebasicconditionofthepatient
+fectivenessofConCare.Themedicalfindingsextractedby andtheprognosisintheclinicalpractice.
+ConCarearealsoempiricallyconfirmedbyhumanexperts
+andmedicalliterature.
+the state-of-the-art performance has been demonstrated in
+Introduction these works, the personal characteristics through clinical
+visits have not yet been fully taken into consideration on
+Performing personal health evaluation for each individual
+thehealthcareprediction.Specifically,therearetworesearch
+patientisalwaysthegoalthatphysicianspursue.Electronic
+challenges,i.e.,howtoextractthedifferentmeaningsofthe
+Medical Records (EMR) now provide the possibility to re-
+particularclinicalfeaturesforpatientsindiverseconditions,
+alizethesegoals.EMRisatypeofmultivariatetimeseries
+andhowtoevaluatetheimpactofirregularvisittimeinter-
+datathatrecordspatients’visitsinhospitals(e.g.,diagnoses,
+valsinthehealthcareprediction.
+labtests.AsshowninFigure1)andstaticbaselineinforma-
+tion (e.g., gender, primary disease. As shown in Figure 2).
+• I : Extracting Personal Health Context: A certain
+1
+Recently deep learning-based models have demonstrated
+value of a clinical feature (e.g., blood glucose) may im-
+state-of-the-art performance in mining the massive EMR
+plydifferentmeaningstopatientswithdiversestaticbase-
+data (?; Lee et al. 2017; Gao et al. 2019; Liu et al. 2018;
+lines (e.g., diagnosis of diabetes as a primary disease, as
+Liuetal.2019).Usually,existingworksincorporatemulti-
+shown in Figure 2). In order to evaluate the health sta-
+pledynamicfeatures(e.g.,labtestvalues)tolearnthevisit
+tus of the patient comprehensively, physicians need to
+embedding and the health status through the entire clini-
+takealookatthestaticclinicalbaselineinformation.Be-
+cal visits by sequential models (Ma et al. 2017). Although
+sides, not only the static baseline information, but also
+∗CorrespondingAuthor the dynamic clinical feature sequence (as shown in Fig-
+Copyright(cid:13)c 2020,AssociationfortheAdvancementofArtificial ure 1) can be treated as the health context of the patient.
+Intelligence(www.aaai.org).Allrightsreserved. For example, when plasma concentrations of creatinine
+9102
+voN
+72
+]GL.sc[
+1v61221.1191:viXra
+and urea begin a hyperbolic rise, both of them and the capturingtheinterdependenciesbetweenclinicalfeatures
+GFR (i.e., Glomerular Filtration Rate) value are usually whichareextractedseparately.Tothebestofourknowl-
+associated with systemic manifestations (uremia) for pa- edge, we are the first research to jointly consider static
+tientswithchronickidneydisease(AnnaMalkina2018). baselineinformation,sequentialdynamicfeaturesandthe
+Thus, considering the particular condition of the patient, impact of the time interval as personal health context in
+the way of attending the medical features in the whole theclinicalrepresentationlearning.
+prediction process should be individualized. Some exist-
+• Specifically, 1) We explicitly extract interdependencies
+ing works try to model the relationship between clinical
+betweenclinicalfeaturestolearnthepersonalhealthcon-
+visits(Maetal.2017),dynamicfeatures(Baietal.2018;
+textandregeneratethefeatureembeddingunderthecon-
+Choi et al. 2016) or incorporate the static information
+text, by a multi-head self-attention mechanism (address-
+(Lee et al. 2018). However, none of the existing models
+ingI ).Thecross-headdecorrelationisutilizedtoencour-
+explored the interdependencies among dynamic records 1
+age the diversity among heads. 2) We propose a multi-
+aswellasstaticbaselineinformationviaaglobalview.In
+channel medical feature embedding architecture, which
+practice, it is critical to explore the inherent relationship
+learnstherepresentationofdifferentfeaturesequencesvia
+betweenclinicalfeaturestobuildthepersonalhealthcare
+separateGRUs,andadaptivelycapturestheeffectoftime
+contextandperformthepredictionindividually.
+intervals between records of each feature by time-aware
+• I 2 : Capturing the Impact of Time Interval: The pa- attention(addressingI 2 ).
+tient goes to the hospital only when he feels sick, and
+• We conduct the mortality prediction task on two real-
+thephysicianprescribeslabexaminationswhenitisnec-
+world datasets (i.e., MIMIC-III dataset and end-stage
+essary. Therefore, medical records are produced irregu-
+renal disease dataset) respectively to verify the perfor-
+larly in clinical practice. It is assumed by many existing
+mance.Theresults1showthatConCaresignificantlyand
+works (Pham et al. 2016; Baytas et al. 2017; Ma, Xiao,
+consistentlyoutperformsthebaselineapproachesinboth
+andWang2018;Baietal.2018)thatthemorerecentclin-
+tasks. We also reveal several interesting medical impli-
+icalrecordsweightmorethanpreviousrecordsingeneral
+cations. 1) We provide the overall time-decay ratios for
+on the healthcare prediction. However, under certain cir-
+diverse biomarkers by the learnable parameter in time-
+cumstance,historicalrecordsalsocontainvaluableclini-
+awareattention.2)Weprovidetheadaptivecross-feature
+cal information, which may not be revealed in the latest
+interdependencies,whichfurthersuggestspossiblemedi-
+record(e.g.,thebloodglucoselevelwasextremelyabnor-
+calresearchbetweenspecificfeatures.Theobtainedmed-
+mal). For instance, the upper respiratory tract infection
+ical knowledge has been positively confirmed by human
+(URTI) record a few years ago has almost no influence
+expertsandclinicalliterature.
+onthecurrenthealthcareprediction.However,thehistori-
+caldiagnosisofcerebrovasculardiseaseindicatesthatthe
+patient has been suffering from chronic cerebrovascular RelatedWork
+damage, so it is continuously the risk factor during the
+ExploringRelationshipAmongClinicalRecords
+restofthelife(Somersetal.2008).Thusbuildingamore
+adaptive time-aware mechanism to flexibly learn the im- Mostexistingworksonlyfocusonexploringtherelationship
+pact of the time interval for each clinical feature is ur- betweenclinicalvisits,insimilarwaysasgeneraltimeseries
+gentlyneeded. analysisandnaturallanguageprocessingtasks.Forexample,
+Dipole(Maetal.2017)usesbidirectionalRNNarchitecture
+To jointly tackle the above issues, in this paper, we pro-
+andtheattentionmechanismtocapturetherelationshipsof
+poseamulti-channelhealthcarepredictivemodel,whichcan
+different visits for the prediction. SAnD (Song et al. 2018)
+learn the representation of health status and perform the
+employsself-attentionmechanism,positionalencoding,and
+health prediction by more deeply considering the personal
+denseinterpolationstrategiestoincorporatetemporalorder
+healthcontext.ConCareevaluatesthehealthstatusofpa-
+onclinicalpredictiontasks.
+tientsmainlyfromtheperspectiveofclinicalfeatures,rather
+There are also a few novel research works that try to
+than visits. It embeds the time series of each feature sep-
+modeltherelationshipbetweendynamicfeaturesratherthan
+arately. The time decay effects of different features can be
+just the visits. For example, (Bai et al. 2018) uses the self-
+extracted separately and flexibly via corresponding learn-
+attention mechanism to combine all diagnosis records pro-
+able time-aware parameters. The model explicitly extracts
+ducedinthevisittoformthevisitembedding,butitfailsto
+the interdependencies among time series of dynamic fea-
+extract the relationship in a global sequential view. (Gupta
+turesaswellasstaticbaselineinformation,tolearntheper-
+et al. 2018) embeds the feature sequences by a pre-trained
+sonalhealthcontextofpatientsinaglobalview.ConCare
+TimeNet, which cannot capture the unique characteristics
+re-encodeseachfeaturebylookingatotherfeaturesforclues
+for different features, respectively. RETAIN (Choi et al.
+thatcanhelpleadtoabetterunderstandingforthisfeature,
+2016)employstwoRNNstolearntimeattentionaswellas
+soastodepictthehealthstatusmoreindividually.Ourmain
+feature attention, and then sums up the weighted visit em-
+contributionsaresummarizedasfollows:
+beddingtoperformtheprediction,butitlacksadvancedfea-
+• We propose a novel health status representation frame-
+work called ConCare by fully considering the personal 1WereleaseourcodeandcasestudiesatGitHubhttps://github.
+patient’s health context. The health context is formed by com/Accountable-Machine-Intelligence/ConCare
+ture extraction, and its prediction accuracy is limited (Ma, ^yt
+Xiao,andWang2018;Maetal.2018a).
+s
+Besides the utilization of dynamic sequential data, sev-
+eral novel solutions also try to incorporate the static base- qbase +
+l
+a
+in
+m
+e
+e
+i
+d
+n
+i
+f
+c
+o
+a
+r
+l
+m
+c
+a
+o
+t
+n
+io
+te
+n
+x
+.
+t
+F
+a
+o
+tt
+r
+en
+e
+t
+x
+io
+am
+n-
+p
+b
+l
+a
+e
+s
+,
+e
+(
+d
+L
+R
+ee
+NN
+et
+t
+a
+h
+l
+a
+.
+t
+2
+u
+0
+t
+1
+il
+8
+iz
+)
+e
+p
+s
+r
+t
+o
+h
+p
+e
+o
+d
+se
+e
+s
+-
+f*
+base
+f*
+1
+f*
+N
+rivedindividualinformationfromconditionalvariationalau- Cross-head
+toencoders.However,noneofthemexploretheinterdepen- Multi-head Self-Attention Decorrelation
+dencies between static baseline information and dynamic
+recordsfromaglobalview.Theproposedmodelinthispa- fbase f1 fN
+per, ConCare, can adaptively capture the relationship be- base Time-aware + Time-aware +
+Attention Attention
+tween clinical features and perform individualized predic-
+tionforpatientsindiversehealthcontexts. Demographic h11 h12 … h1T … hN1 hN2 … hNT
+GRU GRU
+HandlingtheTimeIntervalbetweenVisits P di r s im ea a s r e y …
+r11 r12 r1T rN1 rN2 rNT
+Although most of the existing works (Ma et al. 2018b;
+Choietal.2017)simplytreattheclinicalvisitsinequalinter- Figure3:TheFrameworkofConCare.
+vals,severalnovelworks(Phametal.2016;Ma,Xiao,and
+Wang 2018) try to model the importance of clinical visits
+withtimeintervals,byattachingafixedtime-decayratioto is denoted as base. The objective of healthcare predic-
+decaythehiddenmemoryofthepreviousvisit.Thoseworks tion is using EMR data (i.e., record and base) to pre-
+omit the different characteristics between features. For ex- dict whether a patient suffers from the target health risk
+ample,T-LSTM(Baytasetal.2017)handlesirregulartime during the period of the treatment procedure, denoted as
+intervalsofvisitsinlongitudinalpatientrecordsbyenabling y ∈ {0,1}. This problem is posed as a binary classifica-
+time decay to discount the cell memory content in LSTM. tion under a certain time window (e.g., 24 hours), namely,
+In order to capture the characteristics of different disease y =ConCare(record,base).
+(cid:98)
+codes, Timeline (Bai et al. 2018) develops time decay fac-
+torsfordiseasestoformvisitrepresentationandfeedsitinto Solution
+anRNNforprediction.Butitstime-awareeffectisstilldis-
+Figure 3 shows the framework of the proposed ConCare.
+rupted during the historical visit embedding process due to
+Themodeltreatstheclinicalinformationofthepatientfrom
+therapidmemoryforgettingofRNN.AndTimelinecanonly
+theperspectiveoffeaturesratherthanvisits.Weextractthe
+handlethediseasecodesasfeaturesratherthanbiomarkers.
+context vector of each dynamic feature and static baseline
+Therefore, existing works simply assume that recent
+information separately. Such feature embedding vector are
+records play more important roles than previous records.
+thenre-encodedbytakingtheinformationofallfeaturesas
+However,accordingtotheclinicalpractice,somehistorical
+healthcarecontext.Theframeworkcomprisesofthefollow-
+clinical events also strongly indicate the health status un-
+ingsub-modules:
+der certain circumstances while it may not be revealed in
+thelatestrecord.Thetime-awaremechanismshouldtakethe • The multi-channel time series embedding module with
+characteristicsoffeaturesintoconsiderationandmeanwhile, time-aware attention is developed to separately learn the
+flexiblyretainthevitalhistoricalinformation.ConCarecan representationofeachdynamicfeature.
+capture the impact of time interval in diverse feature se- • The feature encoder is adopted to combine all the static
+quencesbyalearnabletime-awareattention. informationanddynamicrecordsbasedonself-attention.
+Theindividualizedpredictionfinallyisobtainedfromall
+ProblemFormulation
+regeneratedfeatureembeddingswithanattentionqueriedby
+We assume that the patient’s dynamic clinical records (as staticbaselineinformation.Wewillpresentthedetailsinthe
+shown in Figure 1) consist of T visits to the hospital. The followingsubsections.
+number of features in each visit record is N. As a result,
+suchaclinicalsequencecanbeformulatedasalongitudinal Multi-ChannelClinicalSequenceEmbedding
+patientmatrixrecordwhereonedimensionrepresentsmed- In ConCare, we aim to capture the interdependencies be-
+icalfeaturesandtheotheronedenotesvisittimestamps(Lee tweenfeaturesbasedonself-attentionmechanism(Vaswani
+etal.2017): et al. 2017). Since the self-attention architecture contains
+norecurrence,inordertoincorporateinformationaboutthe
+ 
+r 11 ··· r 1T order of the sequence, researchers simply utilize the fixed
+record=
+
+. .
+.
+... . .
+.
+
+
+. (1) positionalencodingtoproviderelativepositioninformation
+fortimestamps(Songetal.2018).However,suchpositional
+r ··· r
+N1 NT embeddingcapabilityislimited,especiallyfortheabsolute
+The static baseline data (as shown in Figure 2), includ- position understanding, but the logical order of the clinical
+ing demographic attributes and historical primary diseases, sequenceactuallymattersinthemedicaldomain.ConCare
+thus embeds the time series of each feature separately by LearningtheContextandRe-encodingtheFeature
+multi-channelGRU: We capture the interdependencies among dynamic features
+through visits as well as static baseline information, and
+h n,1 ,...,h n,T =GRU n (r n,1 ,...,r n,T ), (2) furtherre-encodethefeatureembeddingunderthepersonal
+where,thetimeseriesoffeaturenisdenotedasr =(r , contextbasedonself-attention.AstheConCareprocesses
+n,: n,1
+...,r )∈ RT.Then,thehiddenrepresentationsissumma- eachfeature,self-attentionallowsittolookatotherfeatures
+n,T
+rized across the whole time span. To capture the impact of forcluesthatcanhelpleadtoabetterencodingforthisfea-
+timeintervalsineachsequence,weproposeatime-awareat- ture. For example, when the model is processing the fea-
+tentionmechanismhere.Generally,anattentionfunctioncan ture blood glucose, self-attention may allow it to associate
+bedescribedasmappingaqueryandasetofkey-valuepairs it with diagnosis of diabetes in the static baseline informa-
+toanoutput(Vaswanietal.2017).Theoutputiscomputed tion. Besides, the multi-head mechanism enhances the at-
+asaweightedsumofthevalues,wheretheweightassigned tentionlayerwithmultiplerepresentationsubspaces.Math-
+toeachvalueiscomputedbyacompatibilityfunctionofthe ematically, given current feature representations F, the re-
+querywiththecorrespondingkey.First,theQueryvectoris finednewrepresentationsarecalculatedas:
+generated by the hidden representation at the last time step
+u =MultiHeadAttention(F)
+T,andtheKeyvectorsaregeneratedbyeachhiddenrepre- n
+sentation: =[head (f )⊕head (f )⊕...⊕head (f )]WO,
+1 n 2 n m n
+q n em ,T b =W n q·h n,T , (3) (8)
+k n em ,t b =W n k·h n,t , (4) wherehead m ism-thattentionhead,⊕istheconcatenation
+where qemb and kemb are the Query vector and the Key operationandWOisalinearprojectionmatrix.Considering
+n,T n,t
+vectorrespectively.Wq andWk arethecorrespondingpro- both efficiency and effectiveness, the scaled dot product is
+n n usedastheattentionfunction(Vaswanietal.2017).Thisfol-
+jection matrices to obtain the query and key vectors. Then
+lowing softmax score determines how much each feature
+wedesignthetime-awareattentionweightsasfollow:
+willbeexpressedatthiscertainfeature.Specifically,head
+m
+α n,1 ,α n,2 ,...,α n,T =Softmax(ζ n,1 ,ζ n,2 ,...,ζ n,T ), (5) istheweightedsumofallvaluevectorsandtheweightsare
+where calculated by applying attention function to all the query,
+qemb·kemb keypairs:
+ζ =tanh( n,T n,t ).
+n,t β ·log(e+(1−σ(qemb·kemb))·∆t)
+n n,T n,t q·k q·k q·k
+(6) α ,α ,...,α =Softmax(√ 1, √ 2,..., √N+1),
+1 2 N+1
+Thisisanalignmentmodelthatcanquantifyhowmucheach d k d k d k
+hiddenrepresentationcontributestothedenselysummarized (9)
+representation for each feature. ∆t is the time interval to
+N+1
+thelatestrecord.σisthesigmoidfunction.β isafeature- (cid:88)
+n head (g )= α ·v , (10)
+specificlearnableparametertrainedtocontroltheinfluence m n i i
+i=1
+ofthetimeintervalonthecorrespondingfeature.Theatten-
+whereq,k andv arethequery,key,andvaluevectorsand
+tionweightα willbesignificantlydecayed,if: i i
+n,t
+d is the dimension of k . Moreover, q, k and v are ob-
+k i i i
+• thetimeinterval∆tislong,whichmeansthatsuchvalue
+tained by projecting the input vectors into query, key and
+isrecordedalongtimeago.Itisobviouslythat,themost
+valuespaces,respectively(Wangetal.2019).Theyarefor-
+recent (i.e., ∆t = 0) value of any feature will only be
+mallydefinedas:
+decayedslightly(i.e.,log(e)=1).
+• thetime-decayratioβ n ishighwhichmeansthatforpar- q,k i ,v i =Wq·f,Wk·f i ,Wv·f i , (11)
+ticularclinicalfeatureonlyrecentrecordedvaluematters.
+whereWq,WkandWvaretheprojectionmatricesandeach
+The clinical feature whose influence persists (i.e., β is
+n head has its own projection matrices. As shown in Eq.9
+low)willbedecayedjustslightly. m
+andEq.10eachhead isobtainedbylettingf attendingto
+m
+• thehistoricalrecorddoesnotactivelyrespondtothecur- all the fearure positions, thus any feature interdependen-
+renthealthcondition(i.e.,q n em ,T b·k n em ,t bissmall). ciesbetweenf andf i canbecaptured.
+Finally,basedonthelearnedweights,wecanderivetime-
+awarecontextualfeaturerepresentationasf =
+(cid:80)T
+α ·
+Cross-HeadDecorrelation
+n i=1 n,t
+h .Furthermore,thedemographicbaselinedataisembed- Heads for self-attention are expected to capture dependen-
+n,t
+dedintothesamehiddenspaceoff ciesfromdifferentaspects.However,inpractice,headsmay
+n
+tendtolearnsimilardependenciesaccordingto(Vaswaniet
+f =Wemb·base, (7)
+base base al.2017).Toovercomethischallenge,weencouragediverse
+where Wemb is an embedding matrix. Thus, all the data of or non-redundant representations (Cogswell et al. 2015;
+base
+thepatientcanberepresentedbyamatrixF (i.e.,asequence Chuetal.2019)byminimizingthecross-covarianceofhid-
+of vectors, where each vector represents one feature of the denactivationsacrossdifferentheads.Weutilizethecross-
+patientovertime):F =(f ,··· ,f ,f )(cid:62). head decorrelation module to expand the models ability to
+1 N base
+focusondifferentfeatures,basedon(Cogswelletal.2015) Experiment
+whichreducestheredundancyofthenormalneuralnetwork We conduct the mortality prediction experiments on
+layer. According to Eq.8, we get u t as the multi-head at- MIMIC-III dataset 2 and end-stage renal disease (ESRD)
+tention for f t , which is the concatenation of the heads. For dataset.ThesourcecodeofConCare,statisticsofdatasets
+simplicity,hereweuseutodenoteu t asageneralcase.The andcasestudiesareavailableattheGitHubrepository3.
+covariancesbetweenallpairsofactivationsiandjofuform
+amatrixC: DatasetsandPredictionTasks
+1 (cid:88) B • MIMIC-IIIDataset.WeuseICUdatafromthepublicly
+C i,j = B (ub i −µ i )(ub j −µ j ), (12) available Medical Information Mart for Intensive Care
+b=1 (MIMIC-III)database(Johnsonetal.2016).Weperform
+whereBisthebatchsizeandubisthei−thactivationofuat the in-hospital mortality prediction for patients based on
+i
+b−thcaseinthebatch.µ = 1 (cid:80)B ubisthesamplemean patients’ demographic data and events produced during
+i B b=1 i ICUstays(Harutyunyanetal.2017).Wefixatestsetof
+of activation i over the batch. Covariance between diverse
+15% of patients and divide the rest of the dataset into
+heads is expected to be minimized. The diagonal of C is
+the training set and validation set with a proportion of
+then subtract from the matrix norm to build the cross-head
+0.85:0.15.
+decorrelationlossterm:
+1 • Real-World ESRD Dataset. We perform the mortal-
+L decorrelation = 2 ((cid:107)C(cid:107)2 F −(cid:107)diag(C)(cid:107)2 2 ), (13) ity prediction on an end-stage renal disease dataset. The
+cleaned dataset consists of 656 patients with static base-
+where (cid:107)·(cid:107) is the frobenius norm,and the diag() operator
+F line information and 13,091 dynamic records. There are
+extracts the main diagonal of a matrix into a vector. Af-
+1196 records with positive labels (i.e., died within 12
+ter obtaining the refined representation of each position by
+months) and 10,804 records with negative labels. The
+themulti-headattentionmechanism,weaddaposition-wise
+training set is further split into 10 folds to perform the
+fullyconnectedfeed-forwardnetworksub-layer.Thisfeed-
+10-foldcross-validation.
+forwardnetworktransformsthefeaturesnon-linearlyandis
+defined as FeedForward(r ) = max(0,u ·W +b )· Weassessperformanceusingtheareaunderthereceiver
+n n 1 1
+W +b . We also employ a residual connection (He et al. operating characteristic curve (AUROC), area under the
+2 2
+2016)aroundeachofthetwosub-layers,followedbylayer precision-recallcurve(AUPRC),andtheminimumofpreci-
+normalization (Ba, Kiros, and Hinton 2016). As shown in sion and sensitivity Min(Se,P+). AUPRC is the most infor-
+Fig.3,theoutputsofthissubsectionfromF aredenotedas mativeandtheprimaryevaluationmetricwhendealingwith
+F∗ =(f∗,f∗,...,f∗,f∗ )(cid:62). a highly imbalanced and skewed dataset (Davis and Goad-
+1 2 N base
+rich2006;Choietal.2018)likethereal-worldEMRdata.
+HealthcarePrediction
+ImplementationDetailsandBaselineApproaches
+Adensehealthstatusrepresentationisexpectedtoperform
+the final prediction. Here, we introduce an individualized The training was done in a machine equipped with CPU:
+characterizationattentionsummarization.TheQueryisob- IntelXeonE5-2630,256GBRAM,andGPU:NvidiaTitan
+tainedbyf∗ andKeysareformedbyF∗as: V by using Pytorch 1.1.0. For training the model, we used
+base
+Adam(KingmaandBa2014)withthemini-batchof256pa-
+qfin =Wfin ·f∗ , (14)
+base base base tientsandthelearningrateissetto1e−3.Tofairlycompare
+kfin =Wfin·f∗, (15) different approaches, the hyper-parameters of the baseline
+n n n
+modelsarefine-tunedbygrid-searchingstrategy.Weinclude
+where Wfin and Wfin are the projection matrix respec-
+base n severalstate-of-the-artmodelsasourbaselineapproaches.
+tively. Similar to the first subsection, the attention weights
+• GRU isthebasicGRUwithanaddition-basedattention
+arecalculatedas: α
+mechanism.
+αfin ,αfin,...,αfin =Softmax(ζfin,ζfin,...,ζfin),
+base 1 N base 1 N • RETAIN(NeurIPS2016)(Choietal.2016)utilizesatwo-
+(16)
+ζfin =tanh(qfin ·kfin). (17) levelneuralattentionmechanismtodetectinfluentialvis-
+n base n itsandsignificantvariables.
+Thehealthstatusrepresentationsandthepredictionresulty
+(cid:98)
+• T-LSTM(SIGKDD2017)(Baytasetal.2017)handlesir-
+canbeobtainedby:
+regulartimeintervalsbyenablingtimedecay.Wemodify
+(cid:88) N itintoasupervisedlearningmodel.
+s= αfin·f∗+αfin ·f∗ , (18)
+i i base base • MCA-RNN (ICDM 2018) (Lee et al. 2018) utilizes the
+i=1
+derived individual patient information from conditional
+y (cid:98) =σ(Wfin·s+bfin), (19) variational auto-encoders to construct a medical context
+where Wfin and bfin are the weight matrix and bias term, attention-basedRNN.
+respectively.Andthefinallosscanbedenotedasthecombi-
+2https://mimic.physionet.org
+nationofcross-entropylossanddecorrelationloss
+3https://github.com/Accountable-Machine-Intelligence/
+L=L cross−entropy +L decorrelation . (20) ConCare
+• Transformer (NeurIPS2017)(Vaswanietal.2017)isthe
+e
+encoder of the Transformer, in the final step, we use to
+flattenandFFNstomaketheprediction. Scr K WBC Ca CO2CP Cl Hb Urea Feat P ure h s s-CRPGlucose DBP Appetite SBP Albumin Na Weight
+• SAnD (AAAI 2018) (Song et al. 2018) models clinical
+∗
+time-series data solely based on masked self-attention.
+When performing prediction at every time step, we use
+causal padding (Van Den Oord et al. 2016) for the con-
+volutional layer to prevent using future information. We
+re-implementSAnDbyusingr tobuildinputem-
+t−k+1:t
+beddingatthemeasurementpositiont,insteadoftheone
+proposedintheoriginalpaperr ,toavoidthevio-
+t:t+k−1
+lationofcausality.
+For a fair comparison, although most of the comparative
+approachesdidnottakethestaticbaselineinformationinto
+consideration which is greatly beneficial for improving the
+performanceofhealthcareprediction,wefeedsuchcharac-
+teristics as additional input (i.e., concatenate with the raw
+input)forthemateachvisit.
+ResultsofRiskPrediction
+Table 1 shows the performance of all approaches on two
+datasets. The number in () denotes the standard deviation
+of bootstrapping for 100 times on the MIMIC-III dataset
+andthestandarddeviationof10-foldcross-validationonthe
+ESRD dataset. The results indicate that ConCare signifi-
+cantlyandconsistentlyoutperformotherbaselinemethods.
+We find that ConCare outperforms the approaches that
+onlyutilizetheembeddingofthehealthstatusinvisits(i.e.,
+ConCare andallcomparativeapproaches).ConCare
+MC−
+alsooutperformstheapproacheswhichincorporatethestatic
+information. It indicates that capturing the interdependen-
+ciesamongclinicalfeatures(includingstaticbaselineinfor-
+mation and dynamic features) and regenerating the feature
+embedding under the personal health context is critical for
+evaluatingthehealthstatus.
+Moreover, ConCare outperforms the positional
+encoding-based approaches (i.e., ConCare ,
+PE
+Transformer-Encoder, SAnD). It demonstrates the su-
+periorofmulti-channelGRUencoderthantheconventional
+positional encoding which is difficult to precisely embed
+the positional information. ConCare also outperforms the
+time-awareapproaches(i.e.,T-LSTM),whichdemonstrates
+that capturing the time-decay impact of each feature sepa-
+rately in a global view is superior to directly decaying the
+hidden memory of entire visits. The superior performance
+of ConCare than the ConCare (i.e., without the
+DE−
+decorrelation loss) verifies the efficacy of the decorrelation
+loss which can encourage the diversity among heads and
+improvetheperformance.
+FindingsandImplications
+This section will discuss the findings and implications of
+ConCareintheexperiments.
+DecayRatesForDifferentFeatures Figure4showsthe
+decayrates(i.e.theβ inEqn.6)learnedadaptivelyfordif-
+ferentfeatures,whichdepictshowtheimportanceofprevi-
+ousvaluesoffeaturesfadesthroughtime.Thedarkerboxes
+setaR
+yaceD 0
+0.40 0.48 0.56 0.64 0.72
+Figure4:DecayRatesForDifferentFeatures
+mean the importance of previous values of features fades
+quickly(i.e.,theshort-termpatternsofthefeaturesmatter),
+and vice versa. The figure indicates that ConCare attends
+moreontheshort-termofserumcreatinine(Scr),K,White
+Blood Cell Count (WBC), Ca, Carbon-dioxide Combining
+Power (CO2CP), Cl, hemoglobin (Hb). According to the
+medicalcommonsense,theabovefeaturesarerelativelyfast-
+changing indicators, reflecting the patient’s infection status
+or dialysis adequacy, etc. Conversely, the weight, albumin,
+Na and systemic blood pressure (SBP) need to be attended
+inthelong-termaspect.Accordingtomedicalresearch(?),
+thesefeaturesareusuallyrelatedtonutritionintakeandre-
+flectthepatient’sconditionoveraperiodoftime.
+Cl
+CO2CP
+WBC
+Hb
+Urea
+Ca
+K
+Na
+Scr
+P
+Albumin
+hs-CRP
+Glucose
+Appetite
+Weight
+SBP
+DBP
+Base
+C C l O2CP WBCHb UreaCaKNaScr Al P bum h in s-CR G P luco A s p e petit W e eightSBPDBP Base
+Key Features
+serutaeF
+yreuQ
+0.05525 0.05550 0.05575 0.05600 0.05625 0.05650 0.05550 0.05575 0.05600 0.05625 0.05650
+Cl
+CO2CP
+WBC
+Hb
+Urea
+Ca
+K
+Na
+Scr
+P
+Albumin
+hs-CRP
+Glucose
+Appetite
+Weight
+SBP
+DBP
+Base
+C C l O2CP WBCHb UreaCaKNaScr Al P bum h in s-CR G P luco A s p e petit W e eightSBPDBP Base
+Key Features
+Figure 5: Cross-Feature Interdependencies: Patients Died
+with(Left)/without(Right)Diabetes
+Cross-Feature Interdependencies Figure 5 shows
+cross-feature interdependencies of all patients who died
+with/without diabetes respectively. The average attention
+weightsofoneheadcalculatedbytheself-attentionmodule
+are shown. The ordinates of the two figures are the Query
+features and the abscissas are the Key features. The
+boxes in the figures show when a Query feature makes a
+query, how much each Key feature respond to the Query.
+Most of the clinical features are more likely to respond to
+themselves,whichdenotedbythediagonaloftwomatrices.
+It is common medical knowledge that the glucose of a
+patient is strongly related to diabetes. By comparing the
+two figures, in the box of Glucose-Glucose position, the
+model pays much more attention to the glucose in patients
+who died with diabetes. Besides, ConCare figures out
+that there are relatively high interdependencies between
+albumin, hyper-sensitive C-reactive protein (hs-CRP),
+glucoseandthestaticinformation(includingage,diagnosis
+of diabetes) for patients suffering from diabetes. This is
+highlyconsistentwiththemedicalresearch(?)andmedical
+Table1:ResultsoftheHealthcarePredictionTasks
+MIMIC-IIIDataset(Bootstrapping) ESRDDataset(10-FoldCrossValidation)
+Methods AUROC AUPRC min(Se,P+) AUROC AUPRC min(Se,P+)
+GRU .8628(.011) .4989(.022) .5026(.028) .8066(.004) .3502(.009) .3770(.006)
+α
+RETAIN .8313(.014) .4790(.020) .4721(.022) .7986(.005) .3386(.009) .3699(.011)
+MCA-RNN .8587(.013) .5003(.028) .4932(.024) .8021(.015) .3451(.041) .3731(.025)
+T-LSTM .8617(.014) .4964(.022) .4977(.029) .8101(.015) .3508(.052) .3721(.045)
+Transformer .8535(.014) .4917(.022) .5000(.019) .8082(.027) .3502(.062) .3719(.037)
+e
+SAnD .8382(.007) .4545(.018) .4885(.017) .8002(.026) .3371(.036) .3591(.053)
+∗
+ConCare .8566(.008) .4811(.024) .5012(.020) .8124(.025) .3561(.047) .3761(.037)
+PE
+ConCare .8594(.008) .4902(.024) .4947(.025) .8101(.023) .3498(.066) .3766(.064)
+MC−
+ConCare .8671(.009) .5231(.028) .5080(.023) .8162(.033) .3525(.063) .3864(.034)
+DE−
+ConCare .8702(.008) .5317(.027) .5082(.021) .8209(.036) .3606(.084) .3853(.071)
+experience. [Baytasetal.2017] Baytas, I. M.; Xiao, C.; Zhang, X.;
+Wang, F.; Jain, A. K.; and Zhou, J. 2017. Patient subtyp-
+Conclusion ing via time-aware lstm networks. In Proceedings of the
+23rd ACM SIGKDD International Conference on Knowl-
+In this work, we proposed a novel medical representation edgeDiscoveryandDataMining,65–74. ACM.
+learningframework,ConCare,whichcanexplicitlyextract
+[Choietal.2016] Choi, E.; Bahadori, M. T.; Sun, J.; Kulas,
+the personal healthcare context and perform health predic-
+J.; Schuetz, A.; and Stewart, W. 2016. Retain: An inter-
+tionindividually.Specifically,itextractstheclinicalfeatures
+pretable predictive model for healthcare using reverse time
+by multi-channel GRU with a time-aware attention mecha-
+attention mechanism. In Advances in Neural Information
+nism.Theinterdependenciesamongstaticbaselineinforma-
+ProcessingSystems,3504–3512.
+tion and dynamic features are captured to build the health
+[Choietal.2017] Choi,E.;Bahadori,M.T.;Song,L.;Stew-
+context and re-encode the clinical information. We con-
+art, W. F.; and Sun, J. 2017. Gram: graph-based attention
+ducted experiments on two real-world datasets. ConCare
+model for healthcare representation learning. In Proceed-
+demonstrated significant prediction performance improve-
+ingsofthe23rdACMSIGKDDInternationalConferenceon
+mentacrossbothtasks.Itprovidesthetime-decayratiosfor
+KnowledgeDiscoveryandDataMining,787–795. ACM.
+differentfeaturesrespectivelyandindicatestheinterdepen-
+dencies between features as interpretability. All extracted [Choietal.2018] Choi, E.; Xiao, C.; Stewart, W.; and Sun,
+medicalfindingshavebeenpositivelyconfirmedbyexperts J. 2018. Mime:Multilevelmedicalembeddingofelectronic
+andmedicalliterature.Theresultsalsoremindsomepossi- healthrecordsforpredictivehealthcare.InAdvancesinNeu-
+blemedicalresearchopportunitiesfordeeplyanalyzingthe ralInformationProcessingSystems,4547–4557.
+relationshipbetweensomeclinicalfeatures. [Chuetal.2019] Chu, X.; Lin, Y.; Wang, Y.; Wang, L.;
+Wang, J.; and Gao, J. 2019. Mlrda: A multi-task semi-
+Acknowledgments supervised learning framework for drug-drug interaction
+prediction. In The 28th International Joint Conference on
+This work is supported by the National Science and ArtificialIntelligence,45184524. MorganKaufmann.
+Technology Major Project (No. 2018ZX10201002), and
+[Cogswelletal.2015] Cogswell, M.; Ahmed, F.; Girshick,
+the fund of the Peking University Health Science Center
+R.; Zitnick, L.; and Batra, D. 2015. Reducing overfitting
+(BMU20160584). WR is supported by ORCA PRF Project
+in deep networks by decorrelating representations. arXiv
+(EP/R026173/1).
+preprintarXiv:1511.06068.
+[DavisandGoadrich2006] Davis, J., and Goadrich, M.
+References
+2006. The relationship between precision-recall and roc
+[AnnaMalkina2018] AnnaMalkina. 2018. Chronickidney curves. InProceedingsofthe23rdinternationalconference
+disease. [Online;October2018]. onMachinelearning,233–240. ACM.
+[Ba,Kiros,andHinton2016] Ba,J.L.;Kiros,J.R.;andHin- [Gaoetal.2019] Gao, J.; Wang, X.; Wang, Y.; Yang, Z.;
+ton, G. E. 2016. Layer normalization. arXiv preprint Gao, J.; Wang, J.; Tang, W.; and Xie, X. 2019. Camp:
+arXiv:1607.06450. Co-attention memory networks for diagnosis prediction in
+healthcare. InICDM,10361041. IEEE.
+[Baietal.2018] Bai, T.; Zhang, S.; Egleston, B. L.; and
+Vucetic, S. 2018. Interpretable representation learning for [Guptaetal.2018] Gupta, P.; Malhotra, P.; Vig, L.; and
+healthcare via capturing disease progression through time. Shroff, G. 2018. Using features from pre-trained timenet
+In Proceedings of the 24th ACM SIGKDD International forclinicalpredictions. InThe3rdInternationalWorkshop
+Conference on Knowledge Discovery & Data Mining, 43– onKnowledgeDiscoveryinHealthcareDataatIJCAI.
+51. ACM. [Harutyunyanetal.2017] Harutyunyan, H.; Khachatrian,
+H.; Kale, D. C.; and Galstyan, A. 2017. Multitask learn- model for predictive medicine. In Pacific-Asia Conference
+ingandbenchmarkingwithclinicaltimeseriesdata. arXiv onKnowledgeDiscoveryandDataMining,30–41.Springer.
+preprintarXiv:1703.07771.
+[Somersetal.2008] Somers, V. K.; White, D. P.; Amin, R.;
+[Heetal.2016] He,K.;Zhang,X.;Ren,S.;andSun,J.2016. Abraham, W. T.; Costa, F.; Culebras, A.; Daniels, S.; Flo-
+Deep residual learning for image recognition. In Proceed- ras, J. S.; Hunt, C. E.; Olson, L. J.; et al. 2008. Sleep
+ingsoftheIEEEconferenceoncomputervisionandpattern apnea and cardiovascular disease: An american heart asso-
+recognition,770–778. ciation/americancollegeofcardiologyfoundationscientific
+statement from the american heart association council for
+[Johnsonetal.2016] Johnson, A. E.; Pollard, T. J.; Shen,
+high blood pressure research professional education com-
+L.; Li-wei, H. L.; Feng, M.; Ghassemi, M.; Moody, B.;
+mittee, council on clinical cardiology, stroke council, and
+Szolovits, P.; Celi, L. A.; and Mark, R. G. 2016. Mimic-
+iii,afreelyaccessiblecriticalcaredatabase. Scientificdata council on cardiovascular nursing in collaboration with the
+national heart, lung, and blood institute national center on
+3:160035.
+sleepdisordersresearch(nationalinstitutesofhealth). Jour-
+[KingmaandBa2014] Kingma, D. P., and Ba, J. 2014.
+naloftheAmericanCollegeofCardiology52(8):686–717.
+Adam:Amethodforstochasticoptimization.arXivpreprint
+[Songetal.2018] Song,H.;Rajan,D.;Thiagarajan,J.J.;and
+arXiv:1412.6980.
+Spanias, A. 2018. Attend and diagnose: Clinical time se-
+[Leeetal.2017] Lee,C.;Luo,Z.;Ngiam,K.Y.;Zhang,M.;
+riesanalysisusingattentionmodels. InThirty-SecondAAAI
+Zheng,K.;Chen,G.;Ooi,B.C.;andYip,W.L.J.2017.Big
+ConferenceonArtificialIntelligence.
+healthcare data analytics: Challenges and applications. In
+[VanDenOordetal.2016] VanDenOord,A.;Dieleman,S.;
+Handbook of Large-Scale Distributed Computing in Smart
+Zen,H.;Simonyan,K.;Vinyals,O.;Graves,A.;Kalchbren-
+Healthcare.Springer. 11–41.
+ner,N.;Senior,A.;andKavukcuoglu,K. 2016. Wavenet:A
+[Leeetal.2018] Lee, W.; Park, S.; Joo, W.; and Moon, I.-
+generativemodelforrawaudio. CoRRabs/1609.03499.
+C. 2018. Diagnosispredictionviamedicalcontextattention
+[Vaswanietal.2017] Vaswani, A.; Shazeer, N.; Parmar, N.;
+networks using deep generative modeling. In 2018 IEEE
+Uszkoreit,J.;Jones,L.;Gomez,A.N.;Kaiser,Ł.;andPolo-
+International Conference on Data Mining (ICDM), 1104–
+sukhin,I. 2017. Attentionisallyouneed. InAdvancesin
+1109. IEEE.
+neuralinformationprocessingsystems,5998–6008.
+[Liuetal.2018] Liu,L.;Shen,J.;Zhang,M.;Wang,Z.;and
+[Wangetal.2019] Wang, Z.; Ma, Y.; Liu, Z.; and Tang, J.
+Tang,J. 2018. Learningthejointrepresentationofhetero-
+2019. R-transformer: Recurrent neural network enhanced
+geneoustemporaleventsforclinicalendpointprediction. In
+transformer. arXivpreprintarXiv:1907.05572.
+Thirty-SecondAAAIConferenceonArtificialIntelligence.
+[Liuetal.2019] Liu, L.; Li, H.; Hu, Z.; Shi, H.; Wang, Z.;
+Tang,J.;andZhang,M. 2019. Learninghierarchicalrepre-
+sentations of electronic health records for clinical outcome
+prediction. InAMIAAnnualSymposium.
+[Maetal.2017] Ma,F.;Chitta,R.;Zhou,J.;You,Q.;Sun,T.;
+and Gao, J. 2017. Dipole: Diagnosis prediction in health-
+care via attention-based bidirectional recurrent neural net-
+works. InProceedingsofthe23rdACMSIGKDDInterna-
+tionalConferenceonKnowledgeDiscoveryandDataMin-
+ing,1903–1911. ACM.
+[Maetal.2018a] Ma,F.;Gao,J.;Suo,Q.;You,Q.;Zhou,J.;
+andZhang,A. 2018a. Riskpredictiononelectronichealth
+records with prior medical knowledge. In Proceedings of
+the24thACMSIGKDDInternationalConferenceonKnowl-
+edgeDiscovery&DataMining,1910–1919. ACM.
+[Maetal.2018b] Ma,F.;You,Q.;Xiao,H.;Chitta,R.;Zhou,
+J.; and Gao, J. 2018b. Kame: Knowledge-based attention
+modelfordiagnosispredictioninhealthcare.InProceedings
+of the 27th ACM International Conference on Information
+andKnowledgeManagement,743–752. ACM.
+[Ma,Xiao,andWang2018] Ma, T.; Xiao, C.; and Wang, F.
+2018. Health-atm:Adeeparchitectureformultifacetedpa-
+tient health record representation and risk prediction. In
+Proceedingsofthe2018SIAMInternationalConferenceon
+DataMining,261–269. SIAM.
+[Phametal.2016] Pham, T.; Tran, T.; Phung, D.; and
+Venkatesh, S. 2016. Deepcare: A deep dynamic memory

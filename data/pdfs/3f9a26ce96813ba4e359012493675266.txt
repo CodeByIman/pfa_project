@@ -1,0 +1,694 @@
+1
+MeDaS: An open-source platform as service to help break the
+walls between medicine and informatics
+Liang Zhang1, Member, IEEE, Johann Li1, Ping Li2, Xiaoyuan Lu2, Peiyi Shen1, Guangming Zhu1, Syed Afaq Shah3,
+Mohammed Bennarmoun4, Kun Qian5, Member, IEEE, and Bjo¨rn W. Schuller6,7, Fellow, IEEE
+1 Embedded Technology & Vision Processing Research Center, School of Computer and Technology, Xidian University,
+Xian, China
+2 Shanghai BNC, Shanghai, China
+3 College of Science, Health, Enginering and Education, Murdoch University, Australia
+4 School of Computer Science and Software Engineering, The University of Western Australia, Australia
+5 Educational Physiology Laboratory, The University of Tokyo, Japan
+6 GLAM - Group on Language, Audio & Music, Imperial College London, UK
+7 Chair of Embedded Intelligence for Health Care and Wellbeing, University of Augsburg, German
+Abstract—Inthepastdecade,deeplearning(DL)hasachievedunprece- Therefore, one important concept in computer-related areas is “code
+dented success in numerous fields including computer vision, natural reuse”. The experts in one area create frameworks, libraries, for
+language processing, and healthcare. In particular, DL is experienc-
+others to implement their programs easily. TensorFlow ([7]), ITK
+ing an increasing development in applications for advanced medical
+([8]),andOpenCV([9])aretypicalexamplesfromthetargetdomain image analysis in terms of analysis, segmentation, classification, and
+furthermore. On the one hand, tremendous needs that leverage the ofdeeplearningandimageanalysistohelpresearcherssimplifytheir
+power of DL for medical image analysis are arising from the research programs.
+communityofamedical,clinical,andinformaticsbackgroundtojointly In medical areas, ITK ([8]), ANTs ([10]), FSL ([11]), Deep
+share their expertise, knowledge, skills, and experience. On the other
+Neuro([12]),andNiftyNet([13])aretheprevalenttoolkits,libraries,
+hand, barriers between disciplines are on the road for them often
+hampering a full and efficient collaboration. To this end, we propose and frameworks to help medical researchers build programs to
+our novel open-source platform, i.e., MEDAS–the MeDical open-source analyze medical images and data. These tools, libraries, and frame-
+platform as Service. To the best of our knowledge, MeDaS is the first works can help them to register different images, process, visualize,
+open-source platform proving a collaborative and interactive service
+and analyze them. However, it still requires a significant level of
+for researchers from a medical background easily using DL related
+programmingskillsfrominterestedmedicalresearcherswhowantto
+toolkits,andatthesametimeforscientistsorengineersfrominformation
+sciences to understand the medical knowledge side. Based on a series apply such toolkits, libraries, and frameworks.
+of toolkits and utilities from the idea of RINV (Rapid Implementation While using computers to solve a problem, the approaches can
+aNd Verification), our proposed MEDAS platform can implement pre- be divided into three levels. The first level is to execute the task
+processing,post-processing,augmentation,visualization,andotherphases
+by all yourself; the second level is to combine other libraries via
+needed in medical image analysis. Five tasks including the subjects of
+lung, liver, brain, chest, and pathology, are validated and demonstrated programming; the third level is to use out-of-the-box software and
+tobeefficientlyrealisablebyusing MEDAS. interact via a user interface. Meanwhile, the most toolkits, libraries,
+Index Terms—Deep Learning, Medical Imaging, Platform, Digital andframeworksinthetargetdomainofinteresthereprovideonlythe
+Health,Medicine first and the second levels, which still require programming skills.
+The first level and second level require expert programming skills
+I. INTRODUCTION and limit the access of those who have not majored in computer
+science. For example, the popular deep learning frameworks only
+Deep learning is the present cutting-edge technique in computer
+provideclearinterfacesofthesecondlevel,andusersarerequiredto
+vision, medical image analysis, and several other areas. Thanks to
+codewhenattemptingtousedeeplearningformedicaldataanalysis.
+its power, researchers can use a regular pipeline to process and
+This creates a challenging situation for these researchers.
+analyze images and obtain excellent results with the aid of deep
+As most deep learning frameworks, such as TensorFlow and
+learning. For instance, there are a lot of recent studies that apply
+PyTorch, only provide APIs (programming), the application of deep
+deep learning [1], [2], [3], [4], [5], [6]. However, most researchers,
+learningbecomesachallengingproblemformedicalresearchers,who
+who use deep learning in their research on medical image-related
+arenotfamiliarwithprogramming.However,whenwetakeacloser
+tasks, are professionals in computer science, and not medicine. Due
+look at the most use-cases of deep learning-based medical image
+totheoftenpresentlackofcomputerrelatedknowledge,itishardfor
+analysis, one easily sees that pre-processing, augmentation, neural
+medical researchers to understand and apply deep learning in their
+networks, post-processing, visualization, augmentation, and debug-
+researchindividuallyfortaskssuchastumorsegmentationandnuclei
+ging is the commonly used pipeline. Therefore, users with a purely
+classification. As to computer science researchers, they cannot fully
+or mostly medical background would not need to implement these
+analyze their results without the help of medical researchers. This
+algorithms, but rather reuse them. Furthermore, those researchers
+present gap between computer science and the medical field creates
+couldsimplycombinethesetoolsandmakeuptheirmodelswithout
+a bottleneck for the use of deep learning in medical image analysis.
+programmingwhenapplyingdeeplearningintheirstudieswithvisual
+Programming is a skill. Programmers design programs with a
+programming.
+series of instructions to operate hardware. However, directly oper-
+Nevertheless, all these frameworks and toolkits are not integrated
+ating hardware with instructions is very difficult for most people.
+as a system. Researchers need to assemble their program from here
+Correspondingauthor:LiangZhang(Email:liangzhang@xidian.edu.cn and there one by one with their programming skills, unlike out-of-
+0202
+luJ
+41
+]VC.sc[
+2v31060.7002:viXra
+2
+the-boxtools,suchasMicrosoftExcelandIBM’sSPSS.Inorderto
+Conv.Block
+help medical researchers build their deep learning models easily, a
+MEDicalopen-sourceplatformAsService(MeDaS)isproposedin
+the oncoming.
+The main idea of MeDaS is to provide a scalable platform as a
+serviceandintegratingasetoftools tocovertheimplementationof
+deeplearningmodelsformedicalimageanalysis.Moreover,MeDaS
+not only provides commonly used tools, functions, and modules
+used in deep learning, but can also help researchers to manage their
+computing resources and refine their models.
+The remainder of this article is organized as follows. Section
+II introduces the related work on software, medical, Docker, and
+other technologies. Section III expounds our main idea of rapidly
+implementation and verification, i.e., RINV. Section IV discusses
+the basic components that MeDaS provides to users to design and
+implement their algorithms and models. Section V introduces the
+utilitiesthatMeDaSprovidestosimplifyprogramming,management,
+and refining. Section VI introduces several case studies of MeDaS,
+including lung property classification, liver contour segmentation,
+multi-organ segmentation, Alzheimer’s Disease classification, pul-
+monary nodule detection, and nuclei segmentation. Finally, Section
+VII provides a discussion of open questions, and Section VIII
+concludes the paper.
+II. RELATEDWORK
+Inthissection,wewilldiscusstherelatedtoolkitsandsoftwarefor
+medical image analysis, the deep learning frameworks used in most
+relevantworks, andothertechnologiesused inorrelated toMeDaS.
+A. Medical Toolkits
+a) ANTs: Advanced Neuroimaging Tools[10] is a toolkit for
+brain images, and provides functions to visualize, process, and
+analyze the multi-modal image, and others.
+b) FreeSurfer: FreeSurfer[14]isanopen-sourcetoolkitforpro-
+cessing and analyzing MRI images, which includes functions about
+skull stripping, image registration, subcortical segmentation, cortical
+surface reconstruction, cortical segmentation, cortical thickness es-
+timation, longitudinal processing, fMRI Analysis, tractography, and
+GUI-based visualization.
+c) ITK: Insight Segmentation and Registration Toolkit [15] is
+the most popular toolkit widely used in medical image analysis.
+The functions provided by ITK include basic operations of medical
+images, visualization, preprocessing, registration, and segmentation.
+It is implemented with C++, and offers template and bindings for
+Python, Java, and other languages.
+B. Deep Learning-based Medical Toolkits
+a) DeepNeuro: DeepNeuro [12] is an open-source toolkit with
+deep learning pipelines and applications, which provides open-box-
+feepipelinesandapplications.Itaimsatmedicalimageanalysiswith
+deep learning.
+b) MIScnn: Medical Image Segmentation with Convolutional
+Neural Networks [16], which was released recently, targets medical
+image segmentation based on Convolutional Neural Networks and
+Deep Learning, and provides pipelines and programming-based user
+interface to help users to create their dedicated models.
+c) NiftyNet: NiftyNet[13],isanotheropen-sourcetoolkit,sim-
+ilar to DeepNeuro, which provides a series of components such as
+dataset splitting, data augmentation, data pre- and post-processing,
+a pre-designed network, and evaluation metrics. NiftyNet aims at
+medical image analysis with deep learning.
+.tpo.vnoC
+ULeR
+.tpo.vnoC
+ULeR
+.mroNhctaB
+Fig.1:The“convolution”blockiscombinedwithconvolutionlayers,
+ReLU active functions, and batch normalization. A deep learning
+model is also combined with other modules. These form pipelines.
+C. Deep Learning Frameworks
+Many researchers use deep learning methods to analyze medical
+images, and they rely on frameworks to ease their research. The
+framework requires the users to implement algorithms and run them
+onaGPUbythemselves;thus,theresearchersareforcedtospenda
+lot of time on testing and implementation.
+a) Caffe: Caffe [17] created the Caffe framework, which is an
+abbreviationforConvolutionalArchitectureforFastFeatureEmbed-
+ding.Itprovidesausefulopen-sourcedeeplearningframework.Caffe
+filled the gap between different devices and platforms.
+b) PyTorch: Facebook released Torch – a scientific computing
+framework. It widely supports machine learning algorithms on the
+GPU. A few years later, Facebook released another deep learning
+framework, named PyTorch, [18], [9], which puts Python first, and
+isoneofthemostpopulardeeplearningframeworksforresearchers.
+c) TensorFlow: Google released a deep learning framework
+namedTensorFlow[7],aimedattensor-baseddeeplearning.Tensor-
+Flow is based on dataflow graphs and can run on different devices,
+including CPU, GPU, and Google’s TPU. The platforms can vary
+from personal computing to server clusters. TensorFlow is widely
+used for research and in industry. Google has also open-sourced a
+number of tools for TensorFlow, such as TensorBoard.
+D. Docker and Visual Programming
+Docker [19] is a kind of container platform, and also is an
+industrial level resource management solution. Docker takes on the
+management task of computing resources, which frees its users to
+focusontheirresearch.Itallowscontainerslaunchedinashorttime,
+andalsoallowsthemassofapplicationstorunonthehostandkeep
+the host and containers “clean”.
+NVIDIA released nvidia-docker[20] in 2015, which makes it
+possible to use a CUDA-enabled GPU in Docker containers. In this
+way, one can use the GPU to accelerate one’s algorithms in Docker.
+Kubernetes[21]isoneofthemostfamousDockerclustermanage-
+ment software pieces, which can save one from managing a lot of
+workstationsorservers.Userscansimplyuploadtheirtasks,runthe
+tasks on a machine, and supervise their tasks on a web-based user
+interface.
+Visual programming allows users to create programs by manipu-
+latingprogrampipelinesgraphicallyordraganddropelements,such
+asUnrealEngine’sBlueprintsVisualScripting[22]andScratch[23].
+This allows naive programmers or the researchers not familiar with
+programmingtobuildmachinelearningmodelsquicklybydragging
+and dropping pipelines. With visual programming, researchers can
+monitor their algorithms or the mathematical models.
+III. RAPIDIMPLEMENTATIONANDVERIFICATION
+The naive motivation behind MeDaS is to make the application
+of deep learning easier for medical researchers in their research.
+However, fact is that deep learning requires programming skills,
+which can – as laid out – be challenging for medical researchers
+3
+(1)
+tierfour FormularF() = Program
+Implement Verify · ⇒
+(2)
+tier
+Fig. 2: The workflow is a circle of implementation and verification.
+three
+⟳Resourcesauto-management
+Forexample,inthedevelopmentofthealgorithm,theverificationis
+followedbyimplementationtoassurethealgorithmworksasplanned.
+Theimplementationisalsofollowedbyverification,tofixerrorsand tiertwo Buildingwithblocks
+improve the performance. After several iterations, the development
+is finished.
+tierone C/C++Implementation
+without according background knowledge. That makes using frame-
+workssuchasTensorFlowandPyTorchdifficulty,butthereisanother Fig.3:Therearefourtiersofdeeplearningmodeldevelopment.Tier
+way to help create models and algorithms with deep learning. For one is the implementation with C/C++ and assembly, such as for
+medical researchers, deep learning is mainly a tool. Hence, ideally, cuDNN([24]). The next tier is the combination of the basic blocks.
+it is a good idea that they are provided simply with high-level user- Tier three includes the management of resources to help users focus
+friendlysoftwaretoimplementandverifytheirmodelsandalgorithms onthemodelitself.Tierfouraimsatconvertingthemodeltoprogram
+rapidly. directly,meaningtheimplementationandverificationisautomatically
+completed by the software.
+Theideatoimplementandverifyamodeliscalled“RapidImple-
+mentation aNd Verification”(RINV). RINV aims at the workflow
+from the formula or algorithm from draft stage to the final program
+and outputting results.
+andresults.Basedonthisidea,MeDaSprovidestoolsandutilities
+Tier four is a moonshot, but still a utopian design. However,
+to help focus on one’s model, and simplify the implementation
+researchers mostly prefer tier four, which outputs the result with
+andverification.ThetoolsandutilitieswillbeintroducedinSection
+a given model and without any coding. Our aim for MeDaS is to
+IV and Section V.
+realizefunctionsoftierthree,whichcanprovideefficientalgorithms
+The medical image analysis is a significant computer vision task,
+for users to implement their models and algorithms, and help them
+butdeeplearning,whichiscommonlyusedincomputervision,isnot
+manage their resources efficiently.
+favoredbymostmedicalresearchersanddoctors,becausetheyknow
+too little about deep learning, especially programming. Just like a
+medical researcher should not have to build a CT scanner before he
+IV. CORE:TOOLSOFDEEPLEARNING
+orshewantstoscan,theyshouldnotberequiredtospendunnecessary Similar to NiftyNet and MIScnn – and as laid out – MeDaS
+time on the implementation of deep learning before using it, either. provides a series of tools to allow users to combine them to create
+Thoughthereisnoneedtoimplementdeeplearningalgorithmsfrom algorithms and models. With the idea of “Rapid Implement and
+cover to cover, programming is still a difficult thing. Verification”, MeDaS also employs visualization for a programming
+Mostofthealgorithmsandmathematicalmodelsarethecombina- interface. The tools are discussed in this section, and the whole
+tionofsub-algorithms,sub-pipelines,orsubroutines,asFig.1shows. architecture of MeDaS is given in Fig. 5 and Section V.
+Notonlyinmedicalareas,butalsoincomputerscience,physics,and Thetools,providedbyMeDaS,canhelpresearchersenhancetheir
+other disciplines, the computer programs are created by combining algorithms and models, and a neural network is provided as a tool.
+subroutines. Meanwhile, each component comes with a workload Therefore,theassemblyoftoolsisamostsimplewaytoimplement
+shared between implementation and verification as can be seen in complex algorithms.
+Fig. 2 (path (1) and (2)). For medical imaging-related fields, the workflow of processing of
+medicalimagesisrelativelyfixed.Forboth,traditionalmethods,such
+When implementing an algorithm or model for diagnosis, recog-
+as PCA and graph cut, and recent ones, for example, deep learning-
+nition, or segmentation, it can be a waste of time to focus on the
+based methods, the workflow usually includes:
+implementation and verification of the algorithms. Instead, medical
+researchers should spend time on designing the model itself. Fo- • Dataset management
+cusing on implementing and verifying a diagnosis, recognition, and • Pre-processing
+segmentation system is just the half opposite of what researchers • Kernel algorithm
+mightdesiretofocusupon.Theyshouldbegiventheopportunityto • Post-processing
+focus on designing models and algorithms. • Visualization and evaluation.
+Therearealotofstepsinvolvedinconvertingthemodeltoprogram Afteranalyzingthepipelineofdeeplearningfromourandothers’
+even a basic system. The process of transforming from a model or research,[25],[26],[27],[28],[29],[30],[31],[32],wefoundthatthe
+formula to the program can be split into four tiers, as shown in Fig. pipeline in these contributions share a similar view. Pre-processing
+3.Attierone,researchersneedtodoeverythingbythemselves.They ([33],[34],[35],[36],[2]),augmentation([2],[37],[38],[39]),post-
+needtoimplementandverifythelow-levelalgorithmswithC++and processing([2]),visualization([40]),debugging,andotherpipelines
+assembly, convert mathematical formula to a program, make sure are mostly used. The importance of these pipelines is obvious. Fig.
+the program runs on the right device, manage computing resources, 4showstheworkflowofthetypicaldeeplearningformedicalimage
+visualize results, and so on. At tier two, researchers can use naive processing pipelines.
+algorithm toolkits to implement the complex program, but they still Each step/pipeline has its purpose of processing. Therefore,
+needtomanagethedeviceresourcesbythemselves.Attierthree,the MeDaS implements a series of tools to meet these requirements, in-
+managementofcomputingresourceswillbescheduledautomatically cludingimagepreprocessing,post-processing,augmentation,artificial
+ornon-manually.The tier four is inputting mathematical formula neural network, visualization, and other steps.
+4
+DICOMImage Annotation There usually exists a strong data bias in medical images. For
+radiography, such as CT and PET, the images are noisy due to
+Loading Convert the different pieces of equipment, [41], [42], different operators,
+and even different settings. Therefore, MeDaS implements the basic
+Pre-processing GroundTruth registration tool and N4 bias field correction tool, [43], to help
+one process one’s data.
+Registration
+For pathology , the difference of stain concentration produces
+different results for the algorithms, [44], [45], [46]. Thus, stain
+N4BiasFieldCorrection
+normalization tool, [47], and stain deconvolution [46] are applied
+asthespaceofstainisnotlinearandgeneralnormalizationtooldoes
+Augment
+not work.
+Meanwhile,forgeneralpurposes,thenormalization tool,resam-
+Mirroring
+ple tool, rescale tool, mask generating tool, resize tool, and other
+Rotation tools are implemented to process data. Furthermore, MeDaS imple-
+ments serial tools, including format conversion tools, annotation
+Crop conversion tools, and further more.
+Training B. Augmentation
+The scale of datasets in the concerned medical areas is usually
+Network
+considerablysmallerthanthaninothers,[48],[49],[50].Thepublic
+Layer1 medical image datasets generally have 100 to 1000 cases, while
+other datasets – for example, for 3D object detection [51] – usually
+Layer2 featurethousandsandevenmillionsofdata.Therefore,augmentation
+isnecessarytoenlargethesizeofthedataset.Medicalimagedatasets
+Loss
+‘always’lackdata,comparedtootherareas,becausedataacquisition
+Optimization& and annotation takes a lot of time, cost, and manpower.
+BackPropagation
+Augmentation is an efficient method to make models more ro-
+bust, not only in medical image analysis, but also in other areas.
+Post-processing
+Augmenting with mirroring, rotating, cropping, format transforming
+Graphcut and other methods such as by Generative Adversarial Networks
+are frequently used. Augmentation diversifies the data making it
+Evaluation “different” – which can improve the model performance, [52], [53].
+The key to augmentation is that the distribution of data is expanded
+F1score Dicescore such that it leads to increased robustness of the model.
+MeDaS provides general transformation tools Gaussian random
+Visualization
+noise, rescaling tools and other tools. The former uses noise to
+enhancetherobustnessofthemodel,whiletheothertwodesensitize
+2D 3D
+the noise of the scale and the bias by re-sampling and transforming
+Fig. 4: The general flow of an application of deep learning for MRI the distribution of the data.
+image analysis. The flow shows pipelines and components of pre-
+processing, post-processing, augmentation, evaluation, visualization, C. Artificial Neural Network
+andaneuralnetwork.Thepre-processingincludesregistrationandN4 The neural network is the most important part in deep learning,
+bias field correction. The augmentation contains mirroring, rotating, simply, as deep learning is essentially based on a deep neural
+andcropping.Atthesametime,annotationsareprocessedfortraining network. MeDaS provides several tools to integrate different types
+tobeusedasthegroundtruth.Thenetworkiscomposedofaseries ofneuralnetworks.Thesetoolscanbeusedfortrainingorinferring.
+of layers, such as convolution, ReLU function, and further more. Meanwhile, MeDaS plans to integrate a neural architecture search,
+Ineachiteration,thelossiscalculatedandusedfortheoptimization which aims at automatically designing neural networks for specific
+algorithm,which‘searches’forthebestparametersofthemodel.The tasks.
+post-processingusesgraph-cuttingandhandlesthedatapredictedby Network (model) training is a fixed workflow which includes
+the neural network and renders the result optimised. The evaluation forward propagation, loss calculation, and backward propagation
+layersexploitthegroundtruthandthepredictionresulttoevaluatethe [54]. The neural network is modularized. The network is built
+performanceofthemodel,whilethevisualizationlayersaredesigned by connecting “blocks” such as “max-pooling layer”, ”convolution
+for debugging and visualization. layer”, “fully connected layer”, “ResBlock”, “Dense Block”, and so
+on [55], [56], [57], [58], [59], [60], [61]. Loss function influences
+the search in the parametric space, the different loss functions meet
+A. Pre-processing
+the different tasks. As the neural network is intended to be applied
+As the name implies, pre-processing is the step before training of merelyasatoolbymedicalresearchers,theyareconsideredasusers
+the neural networks. It includes feature processing, such as feature and not developers. Therefore, the tools with pre-designed networks
+extraction, noise reduction, data normalization, modalities’ registra- can be the best choice and can meet needs of researchers that want
+tion, and data processing, such as format conversion, annotation to focus on the application side of matters.
+transformationandfurthermore.Weimplementthenecessarytoolsto Sinceonlyafewneuralnetworkshaveachievedsignificantsuccess
+helpresearchersprocessthedatabeforethetrainingoftheirmodels. for many medical image analysis tasks, MeDaS implements those
+5
+networkastoolsforsegmentation,classification,andothertasks.For
+Users
+instance, the 3D Mask RCNN ([62]) and 3D Dual-Path Net ([63])
+areintegratedforthedetectionandclassificationtasksonradiography
+PythonAPI VisualizationProgramming
+images. The U-Net ([61]) and V-Net ([64]) are integrated for the
+segmentationtask,besidestheU-Netalsobeingavailabletobeused
+Tools
+in classification tasks. The other similar neural networks are also
+integrated for segmentation and classification tasks.
+D. Post-processing
+Post-processing is a strategy that can improve the result. For
+segmentation tasks, post-processing can make predictions more
+“smooth”. For example, [65] employed an FCN-based neural net-
+work, which is simpler to UNet and VNet, but achieves better
+performancecomparedtothecasestudy5,whichappliesUNet-based
+networks. The key to its success is the post-processing step. [65]
+use“horizontalandverticalgradientmaps”,“energylandscape”,and
+otherfeaturesasthepost-processing,e.g.,thewatershedalgorithm.
+MeDaS integrates many post-processing tools. A Conditional
+Random Field ([66]), Graph Cut ([67]), and other traditional
+algorithms can be used as post-processing to optimize the results
+of a neural network.
+Inafewcases,theoutputoftheneuralnetworkisaprobabilityor
+aprobabilitymap.The tools, suchasbinary normalization,canbe
+used for the classification and segmentation tasks, which will reach
+better results compared to a simple threshold.
+E. Visualization
+Generallyspeaking,thevisualizationcanbecategorizedintoresult
+visualization, metric visualization, and analysis visualization.
+The result and analysis visualization show the result of the final
+inference,whichkeepsimportantlinksbetweenthemodelandclinic
+side [68], [69], [70], [40], [71]. The results of algorithms, such as
+segmentation and classification, are data-based – this is hard to be
+shown directly, as it is not a color-based image. A well-designed
+tool of visualization can help users present and analyze their work
+corresponding with the clinical aspects.
+Formetricvisualization,MeDaSimplementstoolstovisualizethe
+metricasanimage,forexample,alossvisualizationtool.Forresult
+and analysis visualization, MeDaS implements a series of tools for
+many kinds of tasks. The segmentation visualization, organ visu-
+alization,point cloud-based pulmonary nodule visualization,and
+other visualization tools are implemented for visualization. MeDaS
+also implements analysis visualization tools, such as sensitivity
+analysis tools to help researchers to analyze their results.
+F. Others
+MeDaS also includes other kinds of tools, such as for dataset
+managementandanalysistools.Theformercontrolsthedatasetused
+in neural network training, while the latter analyzes the results.
+The dataset management tool aims at the management of the
+dataset. For example, if one wants to split one’s data into a training
+set and a testing set, one can use the dataset split tool to carry this
+step out.
+The result analysis and metric tools can help analyze results of
+the analysis tools.
+V. ARCHITECTUREOFMEDAS
+MeDaS not only includes the core - tools, as shown in Fig. 5,
+but also other parts.Different from traditional toolkit, MeDaS is a
+kindofsystem,andnotacollectionoftools.Thetraditionaltoolkits
+andframeworkscanonlybeappliedviaprogramming,whileMeDaS
+gnissecorp-erP noitatnemguA krowteNlarueN gnissecorp-tsoP noitazilausiV tnemeganaMataD
+sisylanA
+······
+Auto-ML
+Hyper-parameter Optimization
+Neural
+Architecture
+Search
+Computing
+BaseClass DataAccess
+Backend ···
+ResourcesManagement
+TaskManagement DeviceManagement
+CUDA Docker Database Storage ......
+Machine
+Fig. 5: The general architecture of MeDaS: From the bottom
+(machine) to the top (user). The user can operate MeDaS via a
+Python API (SectionV-C) or a visualization programming interface
+(SectionV-A) to operate tools (SectionIV), auto-machine learning
+(SectionV-B), resources management (SectionV-D), and other com-
+ponents.
+provides a visualization programming approach to help researchers
+intuitively and easily use our MeDaS. In the following, we will
+discussthevisualization-basedprogramming,auto-machinelearning,
+Python APIs, and resources management features of MeDaS.
+Fig. 5 shows the architecture of MeDaS. From the bottom to
+top, the figure depicts each component of MeDaS, including the
+named features: Visualization programming, auto-machine learning,
+python API, and resource management. The users can interact with
+MeDaSviaPythonAPIorvisualizationprogramming.Theoperation
+with tools is directly concerned with the Python API, while the
+visualization provides more functions integrated in MeDaS, such
+as auto-machine learning. The resources management is a part of
+MeDaS, but MeDaS does not provide any programming APIs for it.
+The resources management controls the tasks scheduling and device
+allocation, which directly interact with the machine.
+A. Visualization Programming
+Theoriginalinterfaceofacomputeristeletypewriter-based.Later,
+scientistsinventedaterminalbasedonCRT.Untiltheinventionofthe
+Graphical User Interface (GUI), there wasno wayto graphicallyin-
+teractwithsoftwarefornon-professionals.Thecomputerhasitsown
+rules. Software developmenter convert instructions from the “human
+rules”to“computerrules”,andthatiscalled“implementation”.GUI-
+basedsotfwarecanefficientlyhelpnon-professionalstotranslatetheir
+ideas from “human rules” to “computer rules” and to execute them.
+A GUI is usually considerably more intuitive than a Command
+Line Interface (CLI) or any text-based interface – especially for the
+ones not or less familiar with computers. If well designed, it can
+render the operation of tools and visualizing results more accessible
+and efficient for its users.
+6
+1) NeuralArchitectureSearch: Theruletodesigntheneuralnet-
+observation(x) workcannotbeexpressedwithaformulaoranyothermathematical
+objectivef() approach. Thus, algorithms to search for the best architecture of a
+·
+neural network were suggested [72], [73]. The skillful design of a
+acquisitionmax neural network can be time consuming and difficult and requires
+acquisitionfunctionu() expertise. However, an automated neural architecture search can
+· helpdesignnetworksthatperformwell.Together,neuralarchitecture
+search and hyper-parameter optimization can help to overcome the
+difficulty of manual neural network design and refinement. MeDaS
+employsittohelpresearchers,anditprovidesasystembasedonthe
+uncertainty newobservation(x) idea published in [72] to help its users build the neural network for
+posteriormean their specific tasks.
+C. Python API
+Fig. 6: Principle of the provided Bayesian-based hyper-parameter
+Formostresearcherswithoutadvancedprogrammingbackground,
+auto-search. The above figure shows the ‘prediction’ of t = t1 . visualization programming is the best interface and approach to
+The blue points show the observation x; the black line presents the
+implementtheiralgorithms.However,forthosewhoareskilledpro-
+posterior mean of the prediction; the dashed line is the objective
+grammers, the Python API might be better suited than visualization
+functionf();thegreenarearepresentsthepossiblefunctions,while
+programming. Therefore, MeDaS also supports access via a Python
+·
+the blue area is the acquisition function u(). The maximum point
+API.
+·
+ofu()isthenextpointofthehyper-parametertobeoptimized.We
+Attheprogramminglevel,MeDaSdesignsandimplementsa“base
+·
+use a set of the sine function to explain how Bayesian optimization
+class” as the basic class of the tools and to support visualization
+searchesthehyper-parameter.ThekeyideaofBayesianoptimization
+programming. The base class handles the tasks of input and output,
+is the iterative repetition of fitting and search. The methods, such as
+provides the functions of continuous programming, the computing
+aGaussianprocessandaregressionrandomforest,areemployedfor
+back-end, unified-data processing, and other utilities. The detail
+fitting the data (x,y), where x denotes the hyper-parameter, and y
+descriptions are presented in the following sub-sections.
+denotestheperformanceofthemodel.Theacquisitionfunction,such
+1) Data, Format, Input and Output: Each type of medical image
+asExpectedImprovementandUpperConfidenceBound,isemployed
+canhavemorethanoneformat.Therefore,the“baseclass”employs
+for searching the next best x of the model.
+SimpleITK and OpenSlide [74] to handle the different formats of
+medical images. Furthermore, MeDaS supports loading and saving
+png-type images (both, a single image, and a series of images) and
+As shown in Fig. 5, visualization programming is used to interact
+Numpy objects.
+withusersdirectly.TheyusesuchaninterfacetooperatetheMeDaS
+a) Plug and Slot: The inputs to a tool might be all kinds of
+via dragging, dropping, and connecting. Moreover, visualization
+files, numbers, or just a numpy array. Therefore, MeDaS employs
+programming is accessible directly online via a web site, and users
+“plug” and “slot” to process these inputs with differentiation and to
+do not need to install any client, but a web browser suffices.
+send them to the kernel function with assimilation. The plug takes
+charge of the input processing, while the slot handles the input and
+B. Auto-Machine Learning pass it to the kernel. The plug will also automatically convert the
+Designing and optimization of the deep neural network are the format of the input. For example, when the input is a string, but the
+keys to success in the current state-of-the-art medical imaging ap- parameter should be a float number, the plug will try to parse the
+proach. However, the design and refinement of the model are not string.
+trivial. Therefore, MeDaS integrates auto-machine learning utilities, b) Constructor: Similartoinput,theoutputcanalsohavemany
+as shown in Fig. 5. formats. Therefore, MeDaS employs “constructor” to process the
+Generally, the parameter θ of a deep learning model f(x;θ) can result of the kernel function. The constructor converts the results
+be optimized by gradient descent, while the hyper-parameter needs to different kinds of formats, including DICOM, NIfTI, and numpy
+to be optimized manually, and the model needs to be designed by array. The variable simply passes through the variable constructor,
+hand as well. Furthermore, researchers need to design their own whiletheimageconstructorsavesthetensortoanimagefileorpasses
+networksorchoosefromalargenumberofout-of-the-boxnetworks. it on to the following modules.
+This adds to the extra workload of users. With that on mind, 2) Computing Backend: MeDaS employs Numpy, OpenCV, and
+MeDaSemploysautomatedhyper-parameteroptimizationandneural otherlibrariestoimplementalgorithms,butnotC/C++.Thelow-level
+architecture search. algorithm’s implementation is not a high priority, due to the lack of
+Whenweoptimizethehyper-parameterΘofthemodelf(x;θ),we timeandmanpower.However,thereisareserved“ComputingBack-
+actually need to optimize another model F(Θ;f), which represents end”. It is inspired by TensorFlow’s design. The implementation of
+thebestvalueofthefunctionf withthehyper-parameterΘ,toobtain fasterCPUversionsorotherdeviceversions,suchasGPUandFPGA,
+the optimal hyper-parameters. For optimization argmaxF(Θ;f), it can be added to the system via the “Computing Back-end”, and can
+is hard to deduce the analytical formula of F(); hence, we use a be selected when executing the instance initialization.
+·
+set of functions to estimate the distribution of F() as Fig. 3) Continuous programming: Inspired by Either Monad in
+{F} ·
+6 shows. After training the original model and getting the hyper- Haskell, [75], [76], MeDaS implements an abstract class named
+parameterresultofF(),wecanremovethefunctionswhichdonot “Either”, which aims at the processing results and errors. “Either”
+·
+fit the result. Then, we get a subset . After several iterations, of MeDaS has two states: success and failure, just like the one in
+i
+{F}
+the distribution of approximates the final one. Ultimately, we Haskell. The actions of operating a tool are executed one by one.
+{F}
+can obtain an approximation of the optimal hyper-parameters. The previous execution should be succeed before the current one
+7
+hasbeenexecuted.Forexample,settingupparametersmustbedone These case studies are executed with MeDaS via the premium
+successfully before calculating. container.1
+4) Others:
+a) Logging: MeDaS employs a flexible logging system, which CaseStudy1:PulmonaryNoduleDetection&AttributeClassification
+accepts outputting to a terminal or another system. Such a logging The detection and attribute classification of the pulmonary nodule
+system supports users to monitor, diagnose, and debug models is a common medical image analysis task and is important for lung
+flexibly. cancerdiagnosisandclinicaltreatment.Inthiscasestudy,weemploy
+b) Testing suit: MeDaS provides a small kit for testing, by the“deeplung”-basedneuralnetwork,proposedin[77],todetectand
+which modules included in MeDaS or by third-parties can be well classify the pulmonary nodule.
+tested. At the same time, we employ tools to test MeDaS automati- TheLUNA16dataset,whichisbasedontheLIDC-IDRIdataset,
+cally which is known as continuous integration. [78], is used to train the model. The details of this case study are
+provided in the following subsections.
+1) Workflow: ThebasicworkflowisshowninFig.7.Theworkflow
+D. Resource Management
+is split into five parts, including “input”, “pre-processing”, “dataset
+Resource management is important in deep learning, medical management”, “neural network”, and “visualization”. The “input” is
+image analysis, and several other tasks. Let us discuss a situation: the source of data.
+WhenaresearcherusesonecomputerwithoneGPU,themanage- “Pre-processing” tools convert the formats of the image, annotate
+ment means execution and termination by the researcher. When two it,andprocessthedata.The“lungmask”toolcangeneratethemask
+researchersshareonecomputerwithaGPU,communicationbetween ofthelung,andhelpthedeeplearningmodeltofocusonitandreduce
+the two researchers is needed for the scheduling of individual tasks. thenoise.The“rescale”toolcantransformthevaluesofinputs.The
+WhenseveralusersshareGPUclusters,thesituationeasilybecomes valueoftheimagewillbelimitedwiththewindowwidthandwindow
+complicated.Onemayeasilyimagineatypcialscenariowhereevery level of the lung, and rescaled to 0 to 1, which is a common range
+userwantstousemoreresourcesandcompletetheirtasksasquickly used in deep learning.
+as possible. “Dataset management” is used to split the dataset into a training
+ThecomputingresourcesnotonlyincludeGPUs,butalsostorage, set and a testing set. Note that some deep learning tasks might split
+memory, bandwidth, software, and even energy. Cloud computing, thedatasetintoatrainingset,avalidationset,andatestingset.The
+grid computing, IaaS, PaaS, and CaaS are the concepts which are training set will be used to train the model, while the testing set
+usually presented to solve this problem. Task-based scheduling can or validation set can be used to evaluate the model when or after
+meet the demand for resources management of deep learning when training.
+the GPU, CPU, memory, and disk are considered as the main “NeuralNetwork”employs3DMaskRCNNforpulmonarynodule
+resources. detection, while the 3D Dual-Path Net is used for attribute classifi-
+The management of resources usually includes task management cation.
+and device management, as shown in Fig. 5. The task management “Visualization”employspointcloud-basednodulevisualizationto
+takes charge of the scheduling of tasks, while the device manager is display the pulmonary nodule detected by the 3D mask RCNN, and
+in charge of the controlling and organizing of the hardware. the loss visualization can visualize the training loss of the model.
+a) Taskmanagement: MeDaSemploysDockerandKubernetes 2) Implementation: Simple steps by dragging and dropping with
+to manage containers. Docker containers use the “control group” to MeDaScanimplementtheworkflowmentionedintheprevious.Then
+establishasandboxwithlimiteddevicesallocated.Eachtaskhasall we can launch the Docker container and load data from a database
+the resources to itself in a container. The tasks are scheduled with to execute the task.
+containers. 3) ResultandVisualization: Wetrainthe3DmaskRCNNmodel
+b) Devicemanagement: ThenumberofGPUsiscontrolledwith andthe3Ddual-pathnetwiththetrainingsetandtestthemwiththe
+a different set of the plan according to the calculation scale. The testing set. Fig. 8, which is rendered via the 3D point cloud, shows
+device management is controlled by using Docker and Kubernetes. the result of the 3D mask RCNN. Fig. 9 presents the training loss
+ofthe3Ddual-pathnet.Theleftplotshowsthetotalloss,whilethe
+right plot presents the loss for every classifier.
+VI. APPLICATIONCASESTUDIES
+In this section, we present different case studies performed using Case Study 2: Liver Contour Segmentation
+MeDaS, and selected varying themes of tasks. We thereby focus on Deep learning-based methods are also a hot research direction in
+the different parts of MeDaS in these case studies. Deep learning- the liver-related radio-graphic analysis. The first step is usually to
+based methods are employed throughout in these case studies. The segment the contour of the liver. In this case study, we employ
+case studies include: a VNet-based neural network, proposed in [64], to segment liver
+Pulmonary Nodule Detection & Attribute Classification contours.
+Liver Contour Segmentation ThepublicdatasetLiTS[48]isusedtotrainthemodel.Thisdataset
+Multi-Organ Segmentation is aimed at the detection and segmentation of the liver and tumors.
+Alzheimer’s Disease Classification 1) Workflow: AsshowninFig.10,theworkflowofthiscasestudy
+Nuclei Segmentation includessixparts.The“input”partisthesourceofdata,andweuse
+“pre-processing” to convert formats of images. Next, the dataset is
+On purpose to foster comparability and reproducibility, we chose
+split into a training set and a testing set.
+publicdatasetsofmedicalimageanalysistasksinthesecasestudies.
+The VNet is employed to segment the liver contours from the
+Each case study will introduce the workflow of the model, and the
+images and trained with the training set. Then, we use the trained
+workflowisimplementedwithvisualizationprogrammingviasimple
+drag and drop. The results of the model will be shown in each case 1Thecontainerincludes6coresofIntel(cid:13)R Xeon(cid:13)R Gold5120,anNVIDIA
+study. TeslaV100(32GPCIEversion),and48Gigabytesofmemory.
+8
+Input Pre-processing Dataset NeuralNetwork Visualization
+path Annotation label Managament trainset 3DMask data Nodule
+Annotation
+Convert testset RCNN Visualization
+Image path Format image Lung data Rescale packed Dataset trainset 3DDual log Loss
+Convert Mask data Split testset PathNet Visualization
+Fig.7:Workflowanddataflowofthepulmonarynoduledetectionandtheattributeclassification(casestudy1).Theworkflowincludesfive
+parts: “input”, “pre-processing”, “dataset management”, “neural network”, and “visualization”. A 3D mask RCNN is employed to detect,
+while a 3D dual-path net is employed for attribute classification.
+tool = TrainVNet()
+tool .set params(new ct dir = new ct dir , new seg dir = new seg dir , save module path = save module path , save loss path = save loss path)
+tool .run()
+tool .with succ(handler)
+With “continuous programming”, the codes above is equal to the
+below one:
+tool = TrainVNet()
+.set params(new ct dir = new ct dir , new seg dir = new seg dir , save module path = save module path , save loss path = save loss path)
+.run()
+.with succ(handler)
+3) Result and Visualization: The network for liver contour seg-
+mentationistrainedontheLiTSdataset,andthemodelobtains0.96
+Fig. 8: The pulmonary nodules detected in two subjects. The red as “dice score”. The dice on the LiTS dataset (testing set) reaches
+marksarethedetectedpulmonarynodules,whilethebluepointsare 0.92 as the best performance.
+the edges of the lung. Fig.12presentstheresultofthesegmentationtask,whileFig.13a
+visualizes the training loss as the debugging information.
+Case Study 3: Multi-Organ Segmentation
+The cognition of artificial intelligence is important for computer-
+aided diagnostic. Multi-organ segmentation can help the machine
+understandthestructureofthehumanbody,whichisveryimportant
+for all the relevant tasks. Therefore, some research has focused on
+single- or multi-organ segmentation tasks, such as the liver([79],
+[80]) and the pancreas([81], [82]). In this case study, we use a
+VNet-based neural network to solve the multi-organ segmentation
+challenge, SegTHOR, [83]. The SegTHOR challenge includes about
+(a)totalloss (b)classificationloss 40CTimagesofthechest,andaimsatthesegmentationtasksofthe
+heart, aorta, trachea, esophagus, and further more.
+Fig. 9: The total loss and separate classification loss. The left plot
+showsthetrainingloss(blueline)andtestingloss(orangeline).The 1) WorkflowandImplementation: AsFig.11shows,Theworkflow
+right plot shows the loss of different classifiers. of this case study includes six parts: “input”, “pre-processing”,
+“datasetmanagement”,“neuralnetwork”,“visualization”,and“anal-
+ysis”. The “input” includes images of the chest and annotations.
+modeltoinitializethepredictiontoolofthemodeltotestthetesting “Pre-processing” rescales the range of the image values with a
+set.Thetraininglossisvisualizedwiththe“lossvisualization”tool, window width and a window level. Then, the input images are re-
+while the segmentation results are presented with the “segmentation sampled with the “resample” tool to change their size. The “dataset
+visualization” tool. The prediction and ground truth are analyzed by management”functionsubsequentlysplitsthedatasetintoatraining
+computing the “dice score”. and a testing set randomly, yet reproducibly.
+“Neural network” employs VNet to train and validate the model,
+2) Implementation: The algorithm can be developed by using
+which can be used to segment organs from the chest. Then, the
+MeDaS’s visualization programming. However, in this case study,
+segmented images can be visualized via the “organ visualization”
+we will show the alternative option available to users to program in
+option, and the results can be analyzed with the “result analysis”
+MeDaS.Thesetup,execution,andresultscheckingwiththetraining
+tool to generate an MS-Excel based report.
+tool will be shown as an example.
+2) Task Management: When users set up and submit their tasks,
+To use the tool, there are four steps to follow:
+MeDaSgeneratescodesandfilesforeachtask,andlaunchesaDocker
+1) initializing instances
+container.Whenataskrequiresspecificresources,suchastheGPU,
+2) setting up the tool
+the scheduler will allocate or link the resources to the container.
+3) executing the tool
+When the limit of one account or the total of resources is reached,
+4) checking the results
+thetaskwillbefailingorqueuedinlineandwaitforanotherchance
+shown as the following codes: to re-launch, when all the resources are ready.
