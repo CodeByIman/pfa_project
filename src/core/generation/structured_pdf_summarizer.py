@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import urlparse
 
-from ..pdf_processing.extract_pdf import extract_text_from_pdf
+from ..pdf_processing.extractor import extract_text_from_pdf
 from ..pdf_processing.preprocess import clean_scientific_text
 from .tfidf_summarizer import summarize_tfidf
 from .lsa_summarizer import summarize_lsa
@@ -1265,7 +1265,8 @@ def download_and_process_pdf(pdf_url: str, title: str, authors: List[str],
             logger.info(f"Using cached PDF: {pdf_path}")
         
         # Process the PDF
-        return process_pdf_structured_summary(pdf_path, title, authors, year)
+        structured_summary, validation_results = process_pdf_structured_summary(pdf_path, title, authors, year)
+        return structured_summary
         
     except Exception as e:
         logger.error(f"PDF download/processing failed: {e}")
