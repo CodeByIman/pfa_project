@@ -1,0 +1,74 @@
+Title: Moving Object Proposals with Deep Learned Optical Flow for Video Object Segmentation
+Authors: Ge Shi, Zhili Yang
+Year: 2024
+Paper ID: http://arxiv.org/abs/2402.08882v1
+Link: http://arxiv.org/pdf/2402.08882v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+In this work, we propose a state of art architecture of neural networks to accurately and efficiently get Figure 1. We first train an to segment images.
+unsupervised convolutional neural network (Un Flow [11]) to generate optical flow estimation. Then we render the output of optical flow net to a fully convolutional Seg Net video, but the variational information with respect to time model. The main contribution of our work is (1) Fine-tuning base also facilitates better understanding of object indepenthe pretrained optical flow model on the brand new DAVIS dence.
+
+The traditional methods solving this problem [22, 3] Dataset [14]; (2) Leveragingfully convolutional neural net- relies on hand-crafted features without leveraging CNN to works with Encoder-Decoder architecture to segment ob- learn video representation. We developed the codes with Tensor Flow, and exe- thatlikelycontainsindependentobjectsandusing CNN curcuted the training and evaluation processes on an AWS EC 2 rently dominate object detection in static images. MOP [12] is a motion based proposal The Convolutional Neural Networks (CNN [13]) has method to generate a set of region proposals in each frame achieved great success in learning image features. To get impressive Encoder-Decoder model, the convolutional neural networks results in objects segmentation in video, many advanced can preserve spatial information when extracting general works [4, 10, 16, 11] unites optical flow boundaries comfeature maps.
+
+This model greatly promoted the perfor- ing from motion information and static boundaries coming mance of convolution neural networks when handling pixel- from static object proposals.
+wise segmentation [1] and object detection [15] tasks. Second, they trained Flow Net C with In this work, we decided to develop a neural networks to their comprehensive unsupervised loss to estimate bidirecsegment objects in video leveraging unsupervised learning tional flow. Optionally, they can optical flow estimation to into a Seg Net model. also use a supervised loss for fine-tuning their networks on We choose DAVIS 2017 [14] as the dataset for training sparse ground truth data after unsupervised training.
+and evaluation, which contains 50 high quality video se 2.2. Methods for Object Segmentation quences and so as the corresponding ground truth for evaluation.
+
+Despite its decent performance, it is lim Flow Net [4]: End-to-end supervised learning of convolu- ited by its frame-based nature and also overlooks appeartional networks for optical flow was first introduced with ance features of objects. The network takes two consecutive input images Conv GRU-Net [21]: Conv GRU-Net is a novel approach 2 methods (Figure 3), (cid:90) min { (|∇u(x,y)|2 + |∇v(x,y)|2)dΩ+ u(x),v(x) Ω (cid:90) λ (I + I u(x,y) + I v(x,y))dΩ} t x y Ω where Ω is the image domain. Moving Object Proposals Our method to segment moving objects can be separated as two steps: (1) training an unsupervised neural net- We propose a temporal stable moving object detector usworkstolearnopticalflow; (2)feedinga Seg Netmodelwith ing Seg Net architecture. Expected results and Evaluation test.
+
+We decide to evaluate our results by applying the intersection over union overlap (Io U) between the final results 4.1.3 Successful Approach and the ground truth. We can compute Io U according to the Instead of training everything from scratch, we finally deformula below, cided to move to a pretrained model that has been finetuned. After modifying the codes of evaluation, we success Io U = A ∩ B/A ∪ B fully adapted our DAVIS 2017 into the pretrained model.
+where A denotes the area covered on the expected outputs and B denotes the area annotated on ground truth. Accord 4.1.4 Results Evaluation ing to the formula, Io U simply means the proportion of the overlap area within the union area of the model’s output and Although, the pretrained model could provide us with relthe corresponding ground truth. atively better outputs than our original model, the outputs Baselines: For the evaluation, we decide to compare our still consist a lot of glitches that might affect the final remethod with an advanced methods PCM [2]. sults of the whole model.
+
+Experiment Obstacles: As we can see from the example Dog agility in Figure 7, the unflow outputs includes the pillars as moving Our model consists of two parts: (1) Unflow net (Unobjects, which might make sense because while the dog is supervised Learning of Optical Flow); (2) Seg Net: A crossing those pillars, it might also cause the pillars keep Deep Convolutional Encoder-Decoder Architecture for Imvibrating in different frames. In our implementation, we combined the pillars are also detected.
+two models, and modified the source codes for training the Reflections: Reflections are another common features in dataset DAVIS 2017 [14]. Unflow Experiment an object, but detecting edge’s information always be a big In our implementation, we modified the input and train- problem for the model. Seg Net Experiment 4.1.1 Pre-processing 4.2.1 Training Details First, we divide the images in each class into a pair of lists, We trained the Seg Net with Adam Optimizer for 10000 iteach pair of images are consecutive frames, therefore, they erations. β1 = 0.9, β2 = 0.999, the start learning rate is could be stacked and fed as inputs into the model.
+
+4.1.2 Early attempts and failures 4.2.2 Qualitative Analysis At the beginning, we decided to train our modified model from scratch. The learning rate was 0.25 e−5, and the save We evaluate our results on the evaluation dataset of DAVIS interval = 250, so that a checkpoint would be generated in for the lack of test data. Our method compared to other state-of-the-art methods on DAVIS.
+erties of Unflow networks. We compared out ap This paper introduces a novel approach for video movproach with Table 1 compares our approach to the state-ofing object segmentation.
+
+In general, we tried to combine the-art methods on DAVIS. In this work, we leveraged the test data, we assume it would be worse to some extent.
+the state-of-the-art unsupervised optical flow estimation approach and fine-tuned it on the novel DAVIS 2017 dataset 4.2.3 Quantitative Analysis in which we learned the constrained optical flow formula Based on the results of our experiment, we found our net- with smoothness penalty. To solve this problem, Conv LSTM is developed with the motivation to unify CNN and LSTM in one model. Than take both tensors into The analysis of results inspires us to make improvement the Decoder architecture.
+
+Key sentences:
+- In this work, we propose a state of art architecture of neural networks to accurately and efficiently get Figure 1.
+- We first train an to segment images.
+unsupervised convolutional neural network (Un Flow [11]) to generate optical flow estimation.
+- Then we render the output of optical flow net to a fully convolutional Seg Net video, but the variational information with respect to time model.
+- The main contribution of our work is (1) Fine-tuning base also facilitates better understanding of object indepenthe pretrained optical flow model on the brand new DAVIS dence.
+- The traditional methods solving this problem [22, 3] Dataset [14]; (2) Leveragingfully convolutional neural net- relies on hand-crafted features without leveraging CNN to works with Encoder-Decoder architecture to segment ob- learn video representation.
+- We developed the codes with Tensor Flow, and exe- thatlikelycontainsindependentobjectsandusing CNN curcuted the training and evaluation processes on an AWS EC 2 rently dominate object detection in static images.
+- MOP [12] is a motion based proposal The Convolutional Neural Networks (CNN [13]) has method to generate a set of region proposals in each frame achieved great success in learning image features.
+- To get impressive Encoder-Decoder model, the convolutional neural networks results in objects segmentation in video, many advanced can preserve spatial information when extracting general works [4, 10, 16, 11] unites optical flow boundaries comfeature maps.
+- This model greatly promoted the perfor- ing from motion information and static boundaries coming mance of convolution neural networks when handling pixel- from static object proposals.
+wise segmentation [1] and object detection [15] tasks.
+- Second, they trained Flow Net C with In this work, we decided to develop a neural networks to their comprehensive unsupervised loss to estimate bidirecsegment objects in video leveraging unsupervised learning tional flow.
+- Optionally, they can optical flow estimation to into a Seg Net model. also use a supervised loss for fine-tuning their networks on We choose DAVIS 2017 [14] as the dataset for training sparse ground truth data after unsupervised training.
+and evaluation, which contains 50 high quality video se 2.2.
+- Methods for Object Segmentation quences and so as the corresponding ground truth for evaluation.
+- Despite its decent performance, it is lim Flow Net [4]: End-to-end supervised learning of convolu- ited by its frame-based nature and also overlooks appeartional networks for optical flow was first introduced with ance features of objects.
+- The network takes two consecutive input images Conv GRU-Net [21]: Conv GRU-Net is a novel approach 2 methods (Figure 3), (cid:90) min { (|∇u(x,y)|2 + |∇v(x,y)|2)dΩ+ u(x),v(x) Ω (cid:90) λ (I + I u(x,y) + I v(x,y))dΩ} t x y Ω where Ω is the image domain.
+- Moving Object Proposals Our method to segment moving objects can be separated as two steps: (1) training an unsupervised neural net- We propose a temporal stable moving object detector usworkstolearnopticalflow; (2)feedinga Seg Netmodelwith ing Seg Net architecture.
+- Expected results and Evaluation test.
+- We decide to evaluate our results by applying the intersection over union overlap (Io U) between the final results 4.1.3 Successful Approach and the ground truth.
+- We can compute Io U according to the Instead of training everything from scratch, we finally deformula below, cided to move to a pretrained model that has been finetuned.
+- After modifying the codes of evaluation, we success Io U = A ∩ B/A ∪ B fully adapted our DAVIS 2017 into the pretrained model.
+where A denotes the area covered on the expected outputs and B denotes the area annotated on ground truth.
+- Accord 4.1.4 Results Evaluation ing to the formula, Io U simply means the proportion of the overlap area within the union area of the model’s output and Although, the pretrained model could provide us with relthe corresponding ground truth. atively better outputs than our original model, the outputs Baselines: For the evaluation, we decide to compare our still consist a lot of glitches that might affect the final remethod with an advanced methods PCM [2]. sults of the whole model.
+- Experiment Obstacles: As we can see from the example Dog agility in Figure 7, the unflow outputs includes the pillars as moving Our model consists of two parts: (1) Unflow net (Unobjects, which might make sense because while the dog is supervised Learning of Optical Flow); (2) Seg Net: A crossing those pillars, it might also cause the pillars keep Deep Convolutional Encoder-Decoder Architecture for Imvibrating in different frames.
+- In our implementation, we combined the pillars are also detected.
+two models, and modified the source codes for training the Reflections: Reflections are another common features in dataset DAVIS 2017 [14].
+- Unflow Experiment an object, but detecting edge’s information always be a big In our implementation, we modified the input and train- problem for the model.
+- Seg Net Experiment 4.1.1 Pre-processing 4.2.1 Training Details First, we divide the images in each class into a pair of lists, We trained the Seg Net with Adam Optimizer for 10000 iteach pair of images are consecutive frames, therefore, they erations. β1 = 0.9, β2 = 0.999, the start learning rate is could be stacked and fed as inputs into the model.
+- 4.1.2 Early attempts and failures 4.2.2 Qualitative Analysis At the beginning, we decided to train our modified model from scratch.
+- The learning rate was 0.25 e−5, and the save We evaluate our results on the evaluation dataset of DAVIS interval = 250, so that a checkpoint would be generated in for the lack of test data.
+- Our method compared to other state-of-the-art methods on DAVIS.
+erties of Unflow networks.
+- We compared out ap This paper introduces a novel approach for video movproach with Table 1 compares our approach to the state-ofing object segmentation.
+- In general, we tried to combine the-art methods on DAVIS.
+- In this work, we leveraged the test data, we assume it would be worse to some extent.
+the state-of-the-art unsupervised optical flow estimation approach and fine-tuned it on the novel DAVIS 2017 dataset 4.2.3 Quantitative Analysis in which we learned the constrained optical flow formula Based on the results of our experiment, we found our net- with smoothness penalty.
+- To solve this problem, Conv LSTM is developed with the motivation to unify CNN and LSTM in one model.
+- Than take both tensors into The analysis of results inspires us to make improvement the Decoder architecture.
+
+Important terms: method, approach, algorithm, model, analysis, evaluation, experiment, results, propose, present, introduce, develop, design, implement, deep learning, neural network, classification, prediction, performance
+Focus: Data analysis approach
+Contribution: Improves existing methods

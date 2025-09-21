@@ -55,10 +55,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   const getSummaryIcon = (type: string) => {
     switch (type) {
       case 'ollama': return '🦙'
-      case 'abstractive': return '🤖'
+      case 'abstractive': return '🔗'
       case 'tfidf': return '📊'
       case 'lsa': return '🔍'
-      case 'extractive': return '🧩'
+      case 'extractive': return '📝'
       case 'combined': return '🔗'
       default: return '📝'
     }
@@ -93,7 +93,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   const getSummaryLabel = (type: string) => {
     switch (type) {
       case 'ollama': return 'Résumé Ollama (IA Avancée)'
-      case 'abstractive': return 'Résumé Abstractif (IA)'
+      case 'abstractive': return 'Overview'
       case 'tfidf': return 'Résumé TF-IDF'
       case 'lsa': return 'Résumé LSA'
       case 'extractive': return 'Résumé Extractif (utilisé par Ollama)'
@@ -338,7 +338,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                             onClick={() => setShowFinal(prev => ({ ...prev, [result.paper_id]: !prev[result.paper_id] }))}
                             className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm"
                           >
-                            {showFinal[result.paper_id] ? 'Masquer le Résumé' : 'Obtenir le Résumé'}
+                            {showFinal[result.paper_id] ? 'Hide overview' : 'See overview'}
                           </button>
                           {loadingPdf[result.paper_id] && (
                             <span className="text-xs text-gray-500">(Analyse PDF en cours...)</span>
@@ -348,7 +348,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                             disabled={newOllamaLoading[result.paper_id]}
                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
                           >
-                            {newOllamaLoading[result.paper_id] ? '🦙 Génération...' : '🦙 New Ollama Result'}
+                            {newOllamaLoading[result.paper_id] ? '✅ Génération...' : '✅ Résumé de la feuille de recherche'}
                           </button>
                         </div>
 
@@ -363,7 +363,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                             <p className={`text-sm text-gray-700 p-3 rounded-lg border-l-4 bg-green-50 border-green-400`}>
                               {result.final_response && result.final_response.trim() !== 'Final response not available'
                                 ? result.final_response
-                                : (result.ollama_summary || result.abstractive_summary || 'Résumé indisponible')}
+                                : ( result.abstractive_summary || 'Résumé indisponible')}
                             </p>
                           </div>
                         )}
@@ -372,7 +372,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                         {result.summaries && Object.keys(result.summaries).length > 0 && (
                           <div className="border-t pt-3">
                             <h6 className="font-medium text-gray-800 mb-3 flex items-center">
-                              📋 Tous les résumés disponibles
+                              plus d'options
                             </h6>
                             
                             {Object.entries(result.summaries)
@@ -421,7 +421,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                           </div>
                         )}
 
-                        {/* Full PDF Summary Button */}
+                        {/* Full PDF Summary Button
                         <div className="border-t pt-3 mt-4">
                           <button
                             onClick={() => handlePdfSummary(result)}
@@ -441,7 +441,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                               </>
                             )}
                           </button>
-                        </div>
+                        </div> */}
 
                         {/* PDF Summary Results */}
                         {pdfSummaries[result.paper_id] && (
@@ -463,11 +463,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                           </div>
                         )}
 
-                        {/* New Ollama Result from extractive summary */}
+                        {/* Résumé de la feuille de recherche from extractive summary */}
                         {newOllamaResults[result.paper_id] && (
                           <div className="mt-4 border-t pt-4">
                             <h6 className="font-semibold text-gray-800 mb-3 flex items-center">
-                              <span className="mr-2">🦙</span> New Ollama Result
+                              <span className="mr-2">✅</span> Résumé de la feuille de recherche
                             </h6>
                             <div className={`p-4 rounded-lg border-l-4 ${newOllamaResults[result.paper_id].status === 'error' ? 'bg-red-50 border-red-500' : 'bg-green-50 border-green-500'}`}>
                               <p className={`text-sm ${newOllamaResults[result.paper_id].status === 'error' ? 'text-red-800' : 'text-green-800'} whitespace-pre-wrap`}>

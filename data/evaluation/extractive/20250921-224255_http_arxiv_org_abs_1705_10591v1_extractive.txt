@@ -1,0 +1,116 @@
+Title: Optimizing Memory Efficiency for Convolution Kernels on Kepler GPUs
+Authors: Xiaoming Chen, Jianxu Chen, Danny Z. Chen, Xiaobo Sharon Hu
+Year: 2017
+Paper ID: http://arxiv.org/abs/1705.10591v1
+Link: http://arxiv.org/pdf/1705.10591v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+Recent successes of convolutional ers is always a computation bottleneck in both the training neural networks in various deep learning applications put and inference phases of CNN s.
+even higher demand on fast convolution. The high com With the rapid development of many-core parallel proputation throughput and memory bandwidth of graphics cessors, new methods have been developed by leveraging processing units (GPU s) make GPU s a natural choice for high computation throughput and memory bandwidth of accelerating convolution operations. This paper introduces four categories: (1) general matrix multiplication (GEMM) a general model to address the mismatch between the membased convolution [7,8], (2) direct convolution [9–11], (3) fast ory bank width of GPU s and computation data width of Fourier transform (FFT) based convolution [12–14], and (4) threads. Based on this model, we develop two convolution the Winograd algorithm [15,16].
+kernels, one for the general case and the other for a special Convolution can be easily converted into a multiplicacase with one input channel. By carefully optimizing memtion of two matrices by unrolling all the involved convoluory access patterns and computation patterns, we design tion operations [7].
+
+This is the default method in Caffe [18], a popular perimental data based on implementations on Kepler GPU s deep learning framework. Although good performance can show that our kernels achieve 5.16× and 35.5% average perbe attained, it requires a huge amount of additional memformance improvement over the latest cu DNN library, for ory. A direct method was proposed in [9], but the re- •Computing methodologies → Massively parallel alported performance is not good enough when there are more gorithms; than 100 channels. In [10], optimization techniques were Keywords discussed for direct convolution on GPU s, but the proposed Convolution; graphics processing unit; memory bandwidth method was not compared with any public library. INTRODUCTION but there is no detailed document to describe its methodology or performance.
+
+Recently, transform of the filters, the batch size should be big enough.
+convolutional neural networks (CNN s) [3] have become a Recent studies have shown that the Winograd algorithm can powerful deep learning model which has been widely adopted significantly reduce the arithmetic complexity for the 3×3 filter [15,16], at the cost of increased memory usage and Permission to make digital or hard copies of all or part of this work for personal or filter size dependent specialized processing.
+classroomuseisgrantedwithoutfeeprovidedthatcopiesarenotmadeordistributed for profit or commercial advantage and that copies bear this notice and the full cita- Although FFT-based methods and the Winograd algotion on the first page. Specifically, we 200 introduce a general model to address the mismatch between 0 2 K 3 K 4 K 5 K 6 K 7 K 8 K the shared memory bank width of GPU s and computation data width of threads. Based on this model, by carefully optimizing the memory access patterns and computation patterns, we design a communication-optimized kernel for the special case and a communication-reduced kernel for the general case. Experimental data based on implementations on Kepler GPU s show that our convolution kernels achieve 5.16× and 35.5% average performance improvement compared with the latest cu DNN library, for the special case and the general case, respectively.
+
+PROBLEM FORMULATION In this section, we present the problem formulation, which illustrates the main challenges and the general model that we propose to overcome such challenges. To demonstrate the importance of this problem, we compare the performance of the single-precision GEMM on a Kepler K 40 m GPU, as shown in Fig. 2. A simple analysis shows that an input pixel can be used up to K×K×F times, where K is the filter size and F is the number of filters. Another challenge arises from the SM bank width model presented in the previous subsection.
+
+3.2 Optimizing Memory Accesses We now discuss how we schedule memory accesses in coordination with the thread layout design in Section 3.1. CD SMB tion, the SM provides inter-thread data sharing; in the vertical direction, intra-thread data sharing is achieved through Taking all these requirements into consideration, the goal the private registers of the threads.
+of this paper is to develop general solutions for convolution A simple analysis shows that each pixel in a block is read on GPU s, such that (i) the memory communication is refrom the GM only once, which is, of course, the theoretduced as much as possible, (ii) the basic constraints of the ical lower bound. When considering the SM bank width model presented This section presents our convolution kernel for the spein Section 2.1, the above thread layout and memory access cial case, in which the input has only one channel (C = 1 schedule are suitable only when n = 1, i.e., W = W .
+in Fig. 3 a). We first show how we design the thread layout and in Fig. 1 b, we propose to have each thread read, write, and then discuss how we achieve optimal memory accesses.
+compute n pixels together (using built-in data types such as 3.1 Thread Layout float 2 or float 4).
+
+With this approach, each maximize both coarse-grained and fine-grained parallelism.
+n thread needs a few more registers (O(K×(n−1))) to store Fig. 3 b depicts the general concept for our parallelization K×(K+n−1) pixels that are used by the convolutions for n methodology, in which each thread keeps K×K pixels of the contiguous output pixels. Fig. 5 b shows our modified coninput image used by a convolution operation in the register.
+volution method specifically for the Kepler architecture. 3.3 Implementation In other words, once a thread moves to the right to compute the next convolution, it loses some pixels needed by the con- Algorithm 1 outlines the flow of our special case convoluvolution below. 1 Load rows 0 to K−1 (the first K rows) of the block into the SM; 2 __syncthreads(); 3 Each thread loads (K−1)×(K+n−1) pixels from the SM into register; 4 for k=K−1; k<H+K−1;++k do 5 Prefetch row k+1 of the block into register; 6 Each thread loads the latest row from the SM into register; 7 for f=0; f<F;++f do 8 Each thread computes n convolutions for filter f and writes the results back to the GM; 9 __syncthreads(); 10 Store the prefetched row into the SM; 11 __syncthreads(); The above algorithm is quite memory efficient.
+
+Our experimental results in Section 5 support our analysis here. CONVOLUTION FOR GENERAL CASE This section presents our convolution kernel for the general case, where the input has multiple channels (see Fig. 3 a). Note that the method for the special case cannot be applied here for the following reasons. Hence, the computation of one convolution must be divided into multiple steps, and the intermediate results should be accumulated in the registers.
+
+Our basic idea for the general case is inspired by the blocked GEMM method for GPU s [19], but we optimize memory communication by maximally sharing data. We use a 2 D TB layout which is similar to that adopted by the blocked GEMM method [19]. Each thread keeps F ×W pixels in the Y T T W T register to store the intermediate convolution results for the ... Shared memory Register 1 st round 2 nd round Figure 6: Our convolution method for the general case (n=2 in this illustration).
+
+4.2 Optimizing Memory Accesses Fig. 6 depicts our convolution method for the general case at the TB level. So we only keep a row of W +K−1 T input pixels in each thread’s register, and the convolution results are accumulated iteratively. When reading filter values from the SM, we use the same thread layout as that used in the blocked GEMM method [19]. The only issue of this approach is at the writing back Algorithm 2: Convolution for the general case on GPU s.
+
+Writing the results back to the GM is not coalesced, as contiguous threads in the X dimension compute different output feature maps. 4.3 Implementation Algorithm 2 outlines our general case convolution method at the TB level. The algorithm starts by clearing the results (line 3) and loading the first C channels of image blocks SH and filters into the SM (lines 4 and 5). After that, a loop iteratively accumulates the results for all the channels (lines 7–19).
+
+We also use a prefetching method to overlap GM accesses and computation (lines 8, 9, 17 and 18). After the intermediate results of all the channels are accumulated, the final results are written back to the GM (line 20). Compared with direct GEMM-based convolution methods, our method reduces GM communication by approximately 1 , since one image row is used by the convolution of K K rows. EXPERIMENTAL RESULTS We have implemented our proposed methods and conducted experiments on a Kepler K 40 m GPU with peak performance of 4290 giga floating-point operations per second (GF lop/s) for single-precision.
+
+5.1 Results of Special Case Through design space exploration, we determined that the best block size for the special case convolution kernel is W =256 and H =8. The performance comparison between our kernel and cu DNN for different convolution parameters (image size N, filter size K, and number of filters F) is shown in Fig. 7. For the 1×1 filter, actually there is no data sharing; however, our kernel still obtains an average 6.16× performance gain, due to the well-designed communicationoptimal kernel. For the 3×3 and 5×5 filters, our kernel obtains 6.43× and 2.90× average performance gains over cu DNN, respectively.
+
+The average performance gain of the three filters we have tested is 5.16×. 5.2 Results of General Case Table 1: Best configurations of our general case convolution kernel for different filter sizes for Kepler K 40 m. As a result, our proposed model and method will benefit applications using these data types. High Figure 8: Performance of the general case convolution for Performance Convolutional Neural Networks for Document Processing.
+
+In this paper, we introduced a general model to address [15] Andrew Lavin and Scott Gray. Fast Algorithms for Convoluthe mismatch between the SM bank width and computation tional Neural Networks. Based on this model, we designed Yoo. An nels on the Kepler architecture, our proposed ideas can be Improved MAGMA Gemm For Fermi Graphics Processing Units.
+
+Key sentences:
+- Recent successes of convolutional ers is always a computation bottleneck in both the training neural networks in various deep learning applications put and inference phases of CNN s.
+even higher demand on fast convolution.
+- The high com With the rapid development of many-core parallel proputation throughput and memory bandwidth of graphics cessors, new methods have been developed by leveraging processing units (GPU s) make GPU s a natural choice for high computation throughput and memory bandwidth of accelerating convolution operations.
+- This paper introduces four categories: (1) general matrix multiplication (GEMM) a general model to address the mismatch between the membased convolution [7,8], (2) direct convolution [9–11], (3) fast ory bank width of GPU s and computation data width of Fourier transform (FFT) based convolution [12–14], and (4) threads.
+- Based on this model, we develop two convolution the Winograd algorithm [15,16].
+kernels, one for the general case and the other for a special Convolution can be easily converted into a multiplicacase with one input channel.
+- By carefully optimizing memtion of two matrices by unrolling all the involved convoluory access patterns and computation patterns, we design tion operations [7].
+- This is the default method in Caffe [18], a popular perimental data based on implementations on Kepler GPU s deep learning framework.
+- Although good performance can show that our kernels achieve 5.16× and 35.5% average perbe attained, it requires a huge amount of additional memformance improvement over the latest cu DNN library, for ory.
+- A direct method was proposed in [9], but the re- •Computing methodologies → Massively parallel alported performance is not good enough when there are more gorithms; than 100 channels.
+- In [10], optimization techniques were Keywords discussed for direct convolution on GPU s, but the proposed Convolution; graphics processing unit; memory bandwidth method was not compared with any public library.
+- INTRODUCTION but there is no detailed document to describe its methodology or performance.
+- Recently, transform of the filters, the batch size should be big enough.
+convolutional neural networks (CNN s) [3] have become a Recent studies have shown that the Winograd algorithm can powerful deep learning model which has been widely adopted significantly reduce the arithmetic complexity for the 3×3 filter [15,16], at the cost of increased memory usage and Permission to make digital or hard copies of all or part of this work for personal or filter size dependent specialized processing.
+classroomuseisgrantedwithoutfeeprovidedthatcopiesarenotmadeordistributed for profit or commercial advantage and that copies bear this notice and the full cita- Although FFT-based methods and the Winograd algotion on the first page.
+- Specifically, we 200 introduce a general model to address the mismatch between 0 2 K 3 K 4 K 5 K 6 K 7 K 8 K the shared memory bank width of GPU s and computation data width of threads.
+- Based on this model, by carefully optimizing the memory access patterns and computation patterns, we design a communication-optimized kernel for the special case and a communication-reduced kernel for the general case.
+- Experimental data based on implementations on Kepler GPU s show that our convolution kernels achieve 5.16× and 35.5% average performance improvement compared with the latest cu DNN library, for the special case and the general case, respectively.
+- PROBLEM FORMULATION In this section, we present the problem formulation, which illustrates the main challenges and the general model that we propose to overcome such challenges.
+- To demonstrate the importance of this problem, we compare the performance of the single-precision GEMM on a Kepler K 40 m GPU, as shown in Fig. 2.
+- A simple analysis shows that an input pixel can be used up to K×K×F times, where K is the filter size and F is the number of filters.
+- Another challenge arises from the SM bank width model presented in the previous subsection.
+- 3.2 Optimizing Memory Accesses We now discuss how we schedule memory accesses in coordination with the thread layout design in Section 3.1.
+- CD SMB tion, the SM provides inter-thread data sharing; in the vertical direction, intra-thread data sharing is achieved through Taking all these requirements into consideration, the goal the private registers of the threads.
+of this paper is to develop general solutions for convolution A simple analysis shows that each pixel in a block is read on GPU s, such that (i) the memory communication is refrom the GM only once, which is, of course, the theoretduced as much as possible, (ii) the basic constraints of the ical lower bound.
+- When considering the SM bank width model presented This section presents our convolution kernel for the spein Section 2.1, the above thread layout and memory access cial case, in which the input has only one channel (C = 1 schedule are suitable only when n = 1, i.e., W = W .
+in Fig. 3 a).
+- We first show how we design the thread layout and in Fig. 1 b, we propose to have each thread read, write, and then discuss how we achieve optimal memory accesses.
+compute n pixels together (using built-in data types such as 3.1 Thread Layout float 2 or float 4).
+- With this approach, each maximize both coarse-grained and fine-grained parallelism.
+n thread needs a few more registers (O(K×(n−1))) to store Fig. 3 b depicts the general concept for our parallelization K×(K+n−1) pixels that are used by the convolutions for n methodology, in which each thread keeps K×K pixels of the contiguous output pixels.
+- Fig. 5 b shows our modified coninput image used by a convolution operation in the register.
+volution method specifically for the Kepler architecture.
+- 3.3 Implementation In other words, once a thread moves to the right to compute the next convolution, it loses some pixels needed by the con- Algorithm 1 outlines the flow of our special case convoluvolution below.
+- 1 Load rows 0 to K−1 (the first K rows) of the block into the SM; 2 __syncthreads(); 3 Each thread loads (K−1)×(K+n−1) pixels from the SM into register; 4 for k=K−1; k<H+K−1;++k do 5 Prefetch row k+1 of the block into register; 6 Each thread loads the latest row from the SM into register; 7 for f=0; f<F;++f do 8 Each thread computes n convolutions for filter f and writes the results back to the GM; 9 __syncthreads(); 10 Store the prefetched row into the SM; 11 __syncthreads(); The above algorithm is quite memory efficient.
+- Our experimental results in Section 5 support our analysis here.
+- CONVOLUTION FOR GENERAL CASE This section presents our convolution kernel for the general case, where the input has multiple channels (see Fig. 3 a).
+- Note that the method for the special case cannot be applied here for the following reasons.
+- Hence, the computation of one convolution must be divided into multiple steps, and the intermediate results should be accumulated in the registers.
+- Our basic idea for the general case is inspired by the blocked GEMM method for GPU s [19], but we optimize memory communication by maximally sharing data.
+- We use a 2 D TB layout which is similar to that adopted by the blocked GEMM method [19].
+- Each thread keeps F ×W pixels in the Y T T W T register to store the intermediate convolution results for the ...
+- Shared memory Register 1 st round 2 nd round Figure 6: Our convolution method for the general case (n=2 in this illustration).
+- 4.2 Optimizing Memory Accesses Fig. 6 depicts our convolution method for the general case at the TB level.
+- So we only keep a row of W +K−1 T input pixels in each thread’s register, and the convolution results are accumulated iteratively.
+- When reading filter values from the SM, we use the same thread layout as that used in the blocked GEMM method [19].
+- The only issue of this approach is at the writing back Algorithm 2: Convolution for the general case on GPU s.
+- Writing the results back to the GM is not coalesced, as contiguous threads in the X dimension compute different output feature maps.
+- 4.3 Implementation Algorithm 2 outlines our general case convolution method at the TB level.
+- The algorithm starts by clearing the results (line 3) and loading the first C channels of image blocks SH and filters into the SM (lines 4 and 5).
+- After that, a loop iteratively accumulates the results for all the channels (lines 7–19).
+- We also use a prefetching method to overlap GM accesses and computation (lines 8, 9, 17 and 18).
+- After the intermediate results of all the channels are accumulated, the final results are written back to the GM (line 20).
+- Compared with direct GEMM-based convolution methods, our method reduces GM communication by approximately 1 , since one image row is used by the convolution of K K rows.
+- EXPERIMENTAL RESULTS We have implemented our proposed methods and conducted experiments on a Kepler K 40 m GPU with peak performance of 4290 giga floating-point operations per second (GF lop/s) for single-precision.
+- 5.1 Results of Special Case Through design space exploration, we determined that the best block size for the special case convolution kernel is W =256 and H =8.
+- The performance comparison between our kernel and cu DNN for different convolution parameters (image size N, filter size K, and number of filters F) is shown in Fig. 7.
+- For the 1×1 filter, actually there is no data sharing; however, our kernel still obtains an average 6.16× performance gain, due to the well-designed communicationoptimal kernel.
+- For the 3×3 and 5×5 filters, our kernel obtains 6.43× and 2.90× average performance gains over cu DNN, respectively.
+- The average performance gain of the three filters we have tested is 5.16×.
+- 5.2 Results of General Case Table 1: Best configurations of our general case convolution kernel for different filter sizes for Kepler K 40 m.
+- As a result, our proposed model and method will benefit applications using these data types.
+- High Figure 8: Performance of the general case convolution for Performance Convolutional Neural Networks for Document Processing.
+- In this paper, we introduced a general model to address [15] Andrew Lavin and Scott Gray.
+- Fast Algorithms for Convoluthe mismatch between the SM bank width and computation tional Neural Networks.
+- Based on this model, we designed Yoo.
+- An nels on the Kepler architecture, our proposed ideas can be Improved MAGMA Gemm For Fermi Graphics Processing Units.
+
+Important terms: method, approach, algorithm, technique, framework, model, analysis, evaluation, experiment, results, propose, present, introduce, develop, design, implement, deep learning, neural network, classification, optimization, performance
+Focus: Methodological approach
+Contribution: Introduces novel approach

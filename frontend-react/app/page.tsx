@@ -124,8 +124,16 @@ export default function Home() {
   }
 
   const exampleQueries = [
-    "État de l'art en apprentissage profond pour le diagnostic médical",
-    "Recent advances in natural language processing with transformers",
+    "Advances in reinforcement learning for autonomous systems",
+
+"Federated learning approaches for privacy-preserving healthcare",
+
+"Explainable artificial intelligence (XAI) in medical decision support",
+
+
+"Transformers in computer vision: challenges and opportunities",
+
+"Ethical implications of AI in healthcare and diagnosis",
     "Machine learning applications in healthcare 2023",
     "Deep learning for computer vision: latest developments",
   ]
