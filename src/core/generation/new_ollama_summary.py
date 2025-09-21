@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 def _check_ollama() -> bool:
     try:
-        response = requests.get('http://localhost:11434/api/tags', timeout=3)
+        response = requests.get('http://127.0.0.1:11434/api/tags', timeout=3)
         return response.status_code == 200
     except Exception:
         return False
@@ -47,6 +47,9 @@ def summarize_with_new_prompt(
         return "Ollama is not available on localhost:11434"
 
     cleaned = _light_clean(text)
+    # Cap input to avoid slow first runs; keep enough context
+    if len(cleaned) > 6000:
+        cleaned = cleaned[:6000]
 
     authors_str = ", ".join((authors or [])[:3]) + ("..." if authors and len(authors) > 3 else "")
     title = title or "Untitled"
@@ -81,8 +84,23 @@ CONTENT TO SUMMARIZE (between <<< and >>>):
         pass
 
     try:
+        # Warmup: tiny generate to ensure model is loaded
+        try:
+            requests.post(
+                'http://127.0.0.1:11434/api/generate',
+                json={
+                    'model': model,
+                    'prompt': 'Hello',
+                    'stream': False,
+                    'options': { 'num_predict': 5, 'num_ctx': 2048, 'temperature': 0.2 }
+                },
+                timeout=15
+            )
+        except Exception:
+            pass
+
         response = requests.post(
-            'http://localhost:11434/api/generate',
+            'http://127.0.0.1:11434/api/generate',
             json={
                 'model': model,
                 'prompt': prompt,
@@ -96,7 +114,7 @@ CONTENT TO SUMMARIZE (between <<< and >>>):
                     'presence_penalty': 0.1
                 }
             },
-            timeout=45
+            timeout=300
         )
         if response.status_code == 200:
             result = response.json().get('response', '').strip()
@@ -106,6 +124,34 @@ CONTENT TO SUMMARIZE (between <<< and >>>):
         else:
             return f"Ollama HTTP error: {response.status_code}"
     except requests.exceptions.Timeout:
+        # Retry once with lighter settings and shorter text
+        try:
+            prompt_short = prompt
+            short_clean = cleaned[:2000]
+            prompt_short = prompt.replace(cleaned, short_clean)
+            response = requests.post(
+                'http://127.0.0.1:11434/api/generate',
+                json={
+                    'model': model,
+                    'prompt': prompt_short,
+                    'stream': False,
+                    'options': {
+                        'temperature': 0.2,
+                        'top_p': 0.9,
+                        'num_predict': 400,
+                        'num_ctx': 4096,
+                        'repeat_penalty': 1.05,
+                        'presence_penalty': 0.1
+                    }
+                },
+                timeout=180
+            )
+            if response.status_code == 200:
+                result = response.json().get('response', '').strip()
+                result = re.sub(r'^.*?(This paper)', r'\1', result, flags=re.DOTALL) or result
+                return result
+        except Exception:
+            pass
         return "Ollama request timed out"
     except Exception as e:
         logger.exception("New Ollama summary error")

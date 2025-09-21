@@ -1,0 +1,47 @@
+Title: Decentralized Healthcare Systems with Federated Learning and Blockchain
+Authors: Abdulrezzak Zekiye, Öznur Özkasap
+Year: 2023
+Paper ID: http://arxiv.org/abs/2306.17188v1
+Link: http://arxiv.org/pdf/2306.17188v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+Artificial intelligence (AI) and deep learning techniques have gained significant attraction in recent years, owing to their remarkable capability of achieving high performance across a broad range of applications. However, a crucial challenge in training such models is the acquisition of vast amounts of data, which is often limited in fields like healthcare. The aggregated data collected from multiple sources in the healthcare domain is sufficient for training advanced deep learning models. To address this challenge, researchers have proposed the integration of blockchain and federated learning to develop a system that facilitates the secure sharing of medical records.
+
+For instance, researchers in [1] trained a machine learning model with only 303 records. To tackle these challenges, the combination of Federated Learning (FL) and Blockchain (BC) technology has been proposed to enable data sharing while preserving privacy. By means of federated learning, entities train a global machine learning model and then share the parameters of the model instead of raw data. To our knowledge, there is no review of the usage of both techniques in 3202 nu J 42 ]CD.sc[ 1 v 88171.6032:vi Xra  ̈  ̈ 2 Abdulrezzak Zekiye and Oznur Ozkasap an integrated manner in the field of medical systems.
+
+In the rest of this extended abstract, we present some of the latest research that used both federated learning and blockchain in the medical field with a graphical representation of blockchain and federated learning-enabled systems. 2 State-of-the-art: Blockchain and Federated Learning Empowered Healthcare Solutions This section presents an overview of the representative recent studies that employed blockchain and federated learning in the healthcare domain. The type of used blockchain, the type of aggregation performed in federated learning, the proposed solution and the application types are summarized in Table 1. A graphical representation of the integration of blockchain and federated learning in healthcare systems is presented in Figure 1.
+
+The federated learning component trains local models on local data, either through on-site processing or by sending the data to nodes with sufficient computational power. The second step is having each participant training the machine learning model using their own private data along with the shared dataset in the first step. The aggregation of local models has been done by centralized nodes using Secure Multiparty Computation (SMPC) technique. The work presented in [10] includes an approach to construct large medical datasets from diverse data sources.
+
+The decentralized nature of blockchain and the ability of federated learning to train models locally while sharing only model parameters make this approach well-suited for healthcare. Remarkable results have been achieved by combining federated learning and blockchain techniques to classify data located at different nodes. In another study, [9] trained a deep learning model on the Breast Cancer Wisconsin dataset by distributing it over several nodes, achieving an f 1-score of approximately 99%. Finally, researchers in [11] compared their platform with a centralized approach and demonstrated that training a model on small datasets dispersed through different nodes can achieve results that are similar to those of a centralized solution with a large dataset.
+
+Ozkasap (2022), ”A Hybrid Edge-assisted Machine Learning Approach for Detecting Heart Disease,” ICC - IEEE International Conference on Communications, Seoul, Korea, Republic of, 2022, pp. Federated optimization: Distributed machine learning for on-device intelligence. Secure and provenance enhanced internet of health things framework: A blockchain managed federated learning approach.
+
+Key sentences:
+- Artificial intelligence (AI) and deep learning techniques have gained significant attraction in recent years, owing to their remarkable capability of achieving high performance across a broad range of applications.
+- However, a crucial challenge in training such models is the acquisition of vast amounts of data, which is often limited in fields like healthcare.
+- The aggregated data collected from multiple sources in the healthcare domain is sufficient for training advanced deep learning models.
+- To address this challenge, researchers have proposed the integration of blockchain and federated learning to develop a system that facilitates the secure sharing of medical records.
+- For instance, researchers in [1] trained a machine learning model with only 303 records.
+- To tackle these challenges, the combination of Federated Learning (FL) and Blockchain (BC) technology has been proposed to enable data sharing while preserving privacy.
+- By means of federated learning, entities train a global machine learning model and then share the parameters of the model instead of raw data.
+- To our knowledge, there is no review of the usage of both techniques in 3202 nu J 42 ]CD.sc[ 1 v 88171.6032:vi Xra  ̈  ̈ 2 Abdulrezzak Zekiye and Oznur Ozkasap an integrated manner in the field of medical systems.
+- In the rest of this extended abstract, we present some of the latest research that used both federated learning and blockchain in the medical field with a graphical representation of blockchain and federated learning-enabled systems.
+- 2 State-of-the-art: Blockchain and Federated Learning Empowered Healthcare Solutions This section presents an overview of the representative recent studies that employed blockchain and federated learning in the healthcare domain.
+- The type of used blockchain, the type of aggregation performed in federated learning, the proposed solution and the application types are summarized in Table 1.
+- A graphical representation of the integration of blockchain and federated learning in healthcare systems is presented in Figure 1.
+- The federated learning component trains local models on local data, either through on-site processing or by sending the data to nodes with sufficient computational power.
+- The second step is having each participant training the machine learning model using their own private data along with the shared dataset in the first step.
+- The aggregation of local models has been done by centralized nodes using Secure Multiparty Computation (SMPC) technique.
+- The work presented in [10] includes an approach to construct large medical datasets from diverse data sources.
+- The decentralized nature of blockchain and the ability of federated learning to train models locally while sharing only model parameters make this approach well-suited for healthcare.
+- Remarkable results have been achieved by combining federated learning and blockchain techniques to classify data located at different nodes.
+- In another study, [9] trained a deep learning model on the Breast Cancer Wisconsin dataset by distributing it over several nodes, achieving an f 1-score of approximately 99%.
+- Finally, researchers in [11] compared their platform with a centralized approach and demonstrated that training a model on small datasets dispersed through different nodes can achieve results that are similar to those of a centralized solution with a large dataset.
+- Ozkasap (2022), ”A Hybrid Edge-assisted Machine Learning Approach for Detecting Heart Disease,” ICC - IEEE International Conference on Communications, Seoul, Korea, Republic of, 2022, pp.
+- Federated optimization: Distributed machine learning for on-device intelligence.
+- Secure and provenance enhanced internet of health things framework: A blockchain managed federated learning approach.
+
+Important terms: approach, technique, framework, model, study, results, propose, present, develop, implement, machine learning, deep learning, optimization, performance, accuracy
+Focus: Methodological approach
+Contribution: Provides comparative analysis

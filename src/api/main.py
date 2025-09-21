@@ -180,6 +180,10 @@ def new_ollama_summary(req: NewOllamaSummaryRequest) -> NewOllamaSummaryResponse
             year=req.year,
             model=req.model or 'mistral'
         )
+        # Mark errors explicitly so the frontend shows an error banner
+        lower = (result or '').lower()
+        if ('timed out' in lower) or lower.startswith('error:') or lower.startswith('ollama http error'):
+            return NewOllamaSummaryResponse(summary=result, status='error')
         return NewOllamaSummaryResponse(summary=result, status='success')
     except HTTPException:
         raise

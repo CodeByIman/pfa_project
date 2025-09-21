@@ -4,7 +4,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { User, Bot, ExternalLink, Calendar, Users, Star, ChevronDown, ChevronRight, Zap, Brain, Target, Tag, FileText, Download } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
-import { apiClient, PDFSummaryRequest, PDFSummaryResponse } from '../lib/api'
+import { apiClient, PDFSummaryRequest, PDFSummaryResponse, NewOllamaSummaryRequest, NewOllamaSummaryResponse } from '../lib/api'
 
 interface ChatMessageProps {
   message: string
@@ -24,6 +24,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   const [pdfSummaries, setPdfSummaries] = React.useState<{[key: string]: PDFSummaryResponse}>({})
   const [loadingPdf, setLoadingPdf] = React.useState<{[key: string]: boolean}>({})
   const [showFinal, setShowFinal] = React.useState<{[key: string]: boolean}>({})
+  const [newOllamaLoading, setNewOllamaLoading] = React.useState<{[key: string]: boolean}>({})
+  const [newOllamaResults, setNewOllamaResults] = React.useState<{[key: string]: NewOllamaSummaryResponse}>({})
 
   // Disable auto-fetch of PDF summaries to avoid long processing; summaries will be fetched on-demand via button
   // React.useEffect(() => {}, [searchResults])
@@ -59,6 +61,32 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
       case 'extractive': return '🧩'
       case 'combined': return '🔗'
       default: return '📝'
+    }
+  }
+
+  // New: Call backend to summarize the extractive text with the fixed prompt
+  const handleNewOllamaSummary = async (result: any) => {
+    const paperId = result.paper_id
+    setNewOllamaLoading(prev => ({ ...prev, [paperId]: true }))
+    try {
+      const text = result.extractive_summary || result.source_text || result.original_abstract || ''
+      if (!text || text.trim().length < 30) {
+        setNewOllamaResults(prev => ({ ...prev, [paperId]: { summary: 'Aucun texte extractif disponible pour ce papier.', status: 'error' } }))
+        return
+      }
+      const req: NewOllamaSummaryRequest = {
+        text,
+        title: result.title,
+        authors: result.authors,
+        year: (result.year && String(result.year)) || undefined,
+        model: 'mistral'
+      }
+      const resp = await apiClient.newOllamaSummary(req)
+      setNewOllamaResults(prev => ({ ...prev, [paperId]: resp }))
+    } catch (e) {
+      setNewOllamaResults(prev => ({ ...prev, [paperId]: { summary: 'Erreur lors de la génération du nouveau résumé Ollama.', status: 'error' } }))
+    } finally {
+      setNewOllamaLoading(prev => ({ ...prev, [paperId]: false }))
     }
   }
 
@@ -315,6 +343,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                           {loadingPdf[result.paper_id] && (
                             <span className="text-xs text-gray-500">(Analyse PDF en cours...)</span>
                           )}
+                          <button
+                            onClick={() => handleNewOllamaSummary(result)}
+                            disabled={newOllamaLoading[result.paper_id]}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
+                          >
+                            {newOllamaLoading[result.paper_id] ? '🦙 Génération...' : '🦙 New Ollama Result'}
+                          </button>
                         </div>
 
                         {showFinal[result.paper_id] && (
@@ -416,10 +451,28 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                               Analyse Complète du PDF
                             </h6>
 
-                            {/* Only show the long Ollama-generated summary */}
+                            {/* Only show the long Ollama-generated summary or error */}
                             <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
                               <div className="font-semibold text-green-900 mb-2">🦙 Résumé du PDF (Ollama)</div>
-                              <p className="text-sm text-green-800 whitespace-pre-wrap">{pdfSummaries[result.paper_id].abstractive_summary}</p>
+                              <p className="text-sm text-green-800 whitespace-pre-wrap">
+                                {pdfSummaries[result.paper_id].status === 'error'
+                                  ? 'Erreur lors de la génération du résumé Ollama pour le PDF.'
+                                  : (pdfSummaries[result.paper_id].abstractive_summary || 'Résumé Ollama indisponible')}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* New Ollama Result from extractive summary */}
+                        {newOllamaResults[result.paper_id] && (
+                          <div className="mt-4 border-t pt-4">
+                            <h6 className="font-semibold text-gray-800 mb-3 flex items-center">
+                              <span className="mr-2">🦙</span> New Ollama Result
+                            </h6>
+                            <div className={`p-4 rounded-lg border-l-4 ${newOllamaResults[result.paper_id].status === 'error' ? 'bg-red-50 border-red-500' : 'bg-green-50 border-green-500'}`}>
+                              <p className={`text-sm ${newOllamaResults[result.paper_id].status === 'error' ? 'text-red-800' : 'text-green-800'} whitespace-pre-wrap`}>
+                                {newOllamaResults[result.paper_id].summary}
+                              </p>
                             </div>
                           </div>
                         )}

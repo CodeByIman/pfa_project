@@ -1508,6 +1508,21 @@ Requirements:
 """
 
     try:
+        # Warmup tiny generate to ensure model is loaded
+        try:
+            requests.post(
+                'http://localhost:11434/api/generate',
+                json={
+                    'model': 'mistral',
+                    'prompt': 'Hello',
+                    'stream': False,
+                    'options': { 'num_predict': 5, 'num_ctx': 2048, 'temperature': 0.2 }
+                },
+                timeout=15
+            )
+        except Exception:
+            pass
+
         response = requests.post(
             'http://localhost:11434/api/generate',
             json={
@@ -1515,15 +1530,15 @@ Requirements:
                 'prompt': prompt,
                 'stream': False,
                 'options': {
-                    'temperature': 0.3,
+                    'temperature': 0.2,
                     'top_p': 0.9,
-                    'num_predict': 12000,
+                    'num_predict': 1500,
                     'num_ctx': 8192,
-                    'repeat_penalty': 1.1,
+                    'repeat_penalty': 1.05,
                     'presence_penalty': 0.1
                 }
             },
-            timeout=30
+            timeout=180
         )
         
         if response.status_code == 200:
