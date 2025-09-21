@@ -1,0 +1,38 @@
+Title: Evolution of transfer learning in natural language processing
+Authors: Aditya Malte, Pratik Ratadiya
+Year: 2019
+Paper ID: http://arxiv.org/abs/1910.07370v1
+Link: http://arxiv.org/pdf/1910.07370v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Research study
+CONTRIBUTION: Improves existing methods
+KEY SENTENCES COUNT: 3
+TERMS: method, algorithm, model, study, present, machine learning, deep learning, neural network, classification, performance
+
+BODY:
+Eventually, with the advent of advanced recurrent neural network architectures such as the LSTM, we were able to achieve state-of-the-art performance in several natural language
+
+processing tasks such as text classification and machine translation. Several advanced architectures such as the Transformer and its variants have allowed practitioners to leverage knowledge gained
+
+from unrelated task to drastically fasten convergence and provide better performance on the target task. This survey represents an effort at providing a succinct yet
+
+complete understanding of the recent advances in natural language processing using deep learning in with a special focus on detailing transfer learning and its potential advantages.
+
+Key sentences:
+- Eventually, with the advent of advanced recurrent neural network architectures
+such as the LSTM, we were able to achieve state-of-the-art performance in
+several natural language processing tasks such as text classification and
+machine translation.
+- Several advanced architectures such as the
+Transformer and its variants have allowed practitioners to leverage knowledge
+gained from unrelated task to drastically fasten convergence and provide better
+performance on the target task.
+- This survey represents an effort at providing a
+succinct yet complete understanding of the recent advances in natural language
+processing using deep learning in with a special focus on detailing transfer
+learning and its potential advantages.
+
+Important terms: method, algorithm, model, study, present, machine learning, deep learning, neural network, classification, performance
+Focus: Research study
+Contribution: Improves existing methods

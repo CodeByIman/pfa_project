@@ -1,0 +1,47 @@
+Title: Personalized Heart Disease Detection via ECG Digital Twin Generation
+Authors: Yaojun Hu, Jintai Chen, Lianting Hu, Dantong Li, Jiahuan Yan
+Year: 2024
+Paper ID: http://arxiv.org/abs/2404.11171v2
+Link: http://arxiv.org/pdf/2404.11171v2
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Data analysis approach
+CONTRIBUTION: Improves existing methods
+KEY SENTENCES COUNT: 5
+TERMS: method, approach, model, experiment, propose, present, develop
+
+BODY:
+Most traditional electrocardiogram (ECG) based automated diagnosis methods are trained at population level, neglecting the customization of personalized ECGs to enhance
+
+individual healthcare management. In this paper, we present an innovative prospective learning approach for personalized heart disease detection, which generates digital
+
+twins of healthy individuals' anomalous ECGs and enhances the model sensitivity to the personalized symptoms. In our approach, a vector quantized
+
+feature separator is proposed to locate and isolate the disease symptom and normal segments in ECG signals with ECG report guidance.
+
+Experiments demonstrate that our approach not only excels in
+generating high-fidelity ECG signals but also improves personalized heart
+disease detection. Moreover, our approach ensures robust privacy protection,
+safeguarding patient data in model development.
+
+Key sentences:
+- Most
+traditional electrocardiogram (ECG) based automated diagnosis methods are
+trained at population level, neglecting the customization of personalized ECGs
+to enhance individual healthcare management.
+- In this paper, we present an innovative prospective learning
+approach for personalized heart disease detection, which generates digital
+twins of healthy individuals' anomalous ECGs and enhances the model sensitivity
+to the personalized symptoms.
+- In our approach, a vector quantized feature
+separator is proposed to locate and isolate the disease symptom and normal
+segments in ECG signals with ECG report guidance.
+- Experiments demonstrate that our approach not only excels in
+generating high-fidelity ECG signals but also improves personalized heart
+disease detection.
+- Moreover, our approach ensures robust privacy protection,
+safeguarding patient data in model development.
+
+Important terms: method, approach, model, experiment, propose, present, develop
+Focus: Data analysis approach
+Contribution: Improves existing methods

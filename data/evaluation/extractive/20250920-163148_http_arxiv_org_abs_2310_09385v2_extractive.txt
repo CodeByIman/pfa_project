@@ -1,0 +1,109 @@
+Title: PIM-GPT: A Hybrid Process-in-Memory Accelerator for Autoregressive Transformers
+Authors: Yuting Wu, Ziyu Wang, Wei D. Lu
+Year: 2023
+Paper ID: http://arxiv.org/abs/2310.09385v2
+Link: http://arxiv.org/pdf/2310.09385v2
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Data analysis approach
+CONTRIBUTION: Provides comparative analysis
+LINES COUNT: 45
+TERMS: method, approach, algorithm, technique, model, analysis, study, evaluation, results, propose
+
+BODY:
+Ann Arbor, Michigan, USA {wuyt,ziwa,wluee}@umich.edu Abstract Decoder-only Transformer models such as GPT have demonstrated exceptional performance in text generation, by autoregressively predicting the next token.
+In this work, we propose a PIM accelerator, PIM-GPT, which achieves end-to-end acceleration of GPT inference with high performance and high energy efficiency.
+(a) Parameter and computation cost comparisons leverages DRAM-based PIM designs for executing multiply- of GPT s and Res Net-18.
+(b) Operation/parameter ratios of accumulate (MAC) operations directly in the DRAM chips, CNN and GPT models.
+Transformer modthe feed-forward networks (FFN s) rely on vector-matrix mulels including GPT and BERT have demonstrated superior tiplication (VMM) instead of the more GPU-friendly matrixperformance in many NLP tasks such as text generation matrix multiplication used for processing the entire sen- [6][33], text classification [36][3][9], and machine transtences.
+The sequential processing feature of these designs generally suffer from the following drawbacks: GPT, on the other hand, results in notable under-utilization (1) expensive hardware overhead such as the usage of highbandwidth memory (HBM) and dense in-memory logic; (2) *Equal Contribution;listingorderdeterminedbyrandomdicerolling.
+modelcustomizationsuchasmodelandtokenpruning,which 1 4202 rp A 41 ]RA.sc[ 2 v 58390.0132:vi Xra will make the architecture less flexible and cause accuracy loss; (3) lack of end-to-end acceleration as most studies only focus on the attention computation and feed-forward layers.
+Moreover, many existing Transformer accelerators are designed for encoder-only models like BERT, instead of decoder-only models like GPT [13][14][19][43][38][4][42].
+Recent PIM developments indeed demonstrate efficient acceleration of MAC operations by integrating computation Figure 2.
+In this work, we propose PIM-GPT, a complete hardwaresoftware solution for GPT inference acceleration.
+The original Transformer model consists of an enpared to existing Transformer accelerators [39][18][44], the coderandadecoder,bothcontaining N identicaltransformer proposed PIM-GPT supports large GPT models end-to-end blocks.
+Different from the encoder-only BERT that analysis shows the proposed PIM-GPT achieves state-of-the- processes all input tokens at once [6], GPT is a decoder-only art speedup and energy efficiency for GPT inference tasks.
+Despite the differences, these two • Wedesignahybridsystemtoaccelerate GPT inference models share similar blocks, as shown in Figure 2.
+of dimension 𝑚 by the input embedding layer, where 𝑚 • We propose an optimized mapping scheme that maxi- is the feature dimension of the model.
+By balancing the computation 𝑞𝐾𝑇 Attention (𝑞,𝐾,𝑉) = softmax(√ )𝑉 (1) logic design and bank organization, PNM based PIM can 𝑑 𝑘 achieve both high-performance and energy efficiency.
+To allow the model to learn different relationships for each token, multi-head attention technique is adopted.
+the attention block is then applied as inputs to the next block Earlier PIM implementations focus on VMM acceleration for subsequent processing, repeating through N attention in neural networks.
+The proposed PIM-GPT is an end-to-end 2.2 DRAM-based PIM GPT accelerator with practical considerations in hardware DRAM-based PIM architectures are promising candidates implementation.
+The second approach implements computation in Figure 4, details of which will be elaborated in Section 3 Figure 3.
+Partial MAC results will be computed and forwarded to the SRAM on the ASIC,followed 3.3 ASIC Architecture by downstream partial sum execution on the ASIC.
+multipliers in the computation engines follow the standard Inside each bank, only multipliers and an adder tree are floating-point unit design to support summation and multiimplemented for MAC operation, as shown in Figure 5(c).
+For design reuse and performance considerations, Similar architecture has been proven effective in prior deother computation tasks are implemented with approximasigns [27][7][16].
+The adder tree accumulates the multimax 𝑠(𝑥 𝑖 ) = 𝑒𝑥𝑖 ; (2) Layer Norm 𝑦 = √ 𝑥−𝐸[𝑥] ×𝛾 + 𝛽 ; plication results for downstream computation.
+A proper initial value is required to ensure the fast results from DRAM; (3) Pipelining between data transmisconvergence.
+root algorithm is adopted from Quake III Arena’s source Mapping a model includes storing the weights to the allocode [1], as shown in Algorithm 2.
+For VMM operation, the input approach means the corresponding row only needs to be vector is forwarded from the ASIC buffer to the SRAM buffer activated once to transfer all required data to the row buffer, 6 Algorithm 3: Model Mapping to PIM Banks Data: Computation Graph; PIM Configuration Result: Memory Mapping and Reservation /* Map weights to PIM banks */ for vmm Block in Computation Graph do 1 if vmm Block.multi Head then 2 hit Score ← max Row Hit(nhead, ncol) 3 vmm Block ← concat(hit Score, vmm Block) 4 end 5 Mapping ← max Parallel(vmm Block, nch, nbank) 6 end 7 /* Reserve PIM bank rows for kv */ for wr Block in Computation Graph do 8 if block == write_k then 9 hit Score ← max Row Hit(nhead, ncol, ltoken) 10 wr Block ← concat(hit Score, wr Block) 11 end 12 Mapping ← Reserve(wr Block, ltoken, nch, nbank) 13 Figure 7.
+Value results a wider matrix with width of 768, along with the concatena- are stored in column-major fashion because transpose is tion of input vectors, as shown in Figure 7(b).
+The partial VMM results are with 2 rows of the matrix and execute MAC operations with then accumulated in the ASIC to facilite pipelined operation.
+The system 5 System Evaluation performance in latency and power efficiency is evaluated based on these conservative assumptions.
+Detailed hardware 5.1 Evaluation Method configuration is summarized in Table 1.
+Hardware Configuration To perform realistic estimates, Simulation Configuration Toevaluatethe PIM-GPT sysweuse GDDR 6-based PIM prototypereportedfrom SKH ynix tem performance, we developed an event-driven clock-cycle for performance evaluation [27].
+The design only integrates accurate simulator in C++ that models the system behavior lightweight MAC units near banks.
+and power of the logic components are obtained from the The PIM and ASIC behaviors are modeled as state masynthesis results.
+Benchmark Analysis The performance and energy ef AISC Frequency = 1 GH z, SRAM = 128 KB, # of ficiency of the proposed PIM-GPT system are evaluated us Adders = 256, # of Multipliers = 128, Area ing the simulator and compared to GPU (NVIDIA T 4) and = 0.64 mm 2, Power = 304.59 m W CPU (Intel Xeon Gold 6154 with 16 Gb DDR 4).
+4 GPT 2 [34] and 4 GPT 3 [2] models with up to 1.4 billion parameters For DRAM energy benchmark analysis, we synthesized are used for the single batch inference benchmark analysis.
+method leverages data locality and minimizes the row ACT In each measurement, we generate 1024 tokens and repeat and PRE operations that are energy consuming.
+5.2 Overall System Performance In comparison, DFX only achieves 3.99× higher energy Speedup Asshownin Figure 8,the PIM-GPT systemachieves efficiency compared to the GPU baseline [18].
+The mapping strategy maximizes computation parallelism 5.3 Detailed Performance Analysis and data locality; (3) Different workloads are efficiently distributed between PIM and ASIC.
+We also compare the PIM-GPT performance with previ- For larger Transformer models, the improvement of PIM ously reported Transformer accelerators, as shown in Table GPT over GPU is reduced.
+Both ig- result, the gain over GPU is reduced when compared with nore the layer normalization and residual connections in smaller GPT models, although the performance gain ( > 40×) Transformer models.
+VMM results are transmitted to the ASIC for downstream processing or data synchronization.
+As a result, the energy consumption through DRAM quency scaling is an important technique for power opti I/O in PIM-GPT is less then 10% of total DRAM energy con- mization.
+We conduct a sensitivity study of ASIC frequency sumption in PIM-GPT, as shown in DRAM energy consump- by varying the latency setting in our simulator.
+GPT models, where the latency is normalized with respect Other DRAM operations, such as ACT, PRE and REF, along to the 1 GH z results.
+Even when further scaling the In PIM-GPT, data locality is optimized during model map- frequency down to 100 MH z, which is 10 times slower than ping to reduce the memory access time and enhance the the baseline, the worst case only incurs a performance slowcomputation throughput, which is evaluated by row hit rate.
+
+Key sentences:
+- Ann Arbor, Michigan, USA {wuyt,ziwa,wluee}@umich.edu Abstract Decoder-only Transformer models such as GPT have demonstrated exceptional performance in text generation, by autoregressively predicting the next token.
+- In this work, we propose a PIM accelerator, PIM-GPT, which achieves end-to-end acceleration of GPT inference with high performance and high energy efficiency.
+- (a) Parameter and computation cost comparisons leverages DRAM-based PIM designs for executing multiply- of GPT s and Res Net-18.
+- (b) Operation/parameter ratios of accumulate (MAC) operations directly in the DRAM chips, CNN and GPT models.
+- Transformer modthe feed-forward networks (FFN s) rely on vector-matrix mulels including GPT and BERT have demonstrated superior tiplication (VMM) instead of the more GPU-friendly matrixperformance in many NLP tasks such as text generation matrix multiplication used for processing the entire sen- [6][33], text classification [36][3][9], and machine transtences.
+- The sequential processing feature of these designs generally suffer from the following drawbacks: GPT, on the other hand, results in notable under-utilization (1) expensive hardware overhead such as the usage of highbandwidth memory (HBM) and dense in-memory logic; (2) *Equal Contribution;listingorderdeterminedbyrandomdicerolling.
+- modelcustomizationsuchasmodelandtokenpruning,which 1 4202 rp A 41 ]RA.sc[ 2 v 58390.0132:vi Xra will make the architecture less flexible and cause accuracy loss; (3) lack of end-to-end acceleration as most studies only focus on the attention computation and feed-forward layers.
+- Moreover, many existing Transformer accelerators are designed for encoder-only models like BERT, instead of decoder-only models like GPT [13][14][19][43][38][4][42].
+- Recent PIM developments indeed demonstrate efficient acceleration of MAC operations by integrating computation Figure 2.
+- In this work, we propose PIM-GPT, a complete hardwaresoftware solution for GPT inference acceleration.
+- The original Transformer model consists of an enpared to existing Transformer accelerators [39][18][44], the coderandadecoder,bothcontaining N identicaltransformer proposed PIM-GPT supports large GPT models end-to-end blocks.
+- Different from the encoder-only BERT that analysis shows the proposed PIM-GPT achieves state-of-the- processes all input tokens at once [6], GPT is a decoder-only art speedup and energy efficiency for GPT inference tasks.
+- Despite the differences, these two • Wedesignahybridsystemtoaccelerate GPT inference models share similar blocks, as shown in Figure 2.
+- of dimension 𝑚 by the input embedding layer, where 𝑚 • We propose an optimized mapping scheme that maxi- is the feature dimension of the model.
+- By balancing the computation 𝑞𝐾𝑇 Attention (𝑞,𝐾,𝑉) = softmax(√ )𝑉 (1) logic design and bank organization, PNM based PIM can 𝑑 𝑘 achieve both high-performance and energy efficiency.
+- To allow the model to learn different relationships for each token, multi-head attention technique is adopted.
+- the attention block is then applied as inputs to the next block Earlier PIM implementations focus on VMM acceleration for subsequent processing, repeating through N attention in neural networks.
+- The proposed PIM-GPT is an end-to-end 2.2 DRAM-based PIM GPT accelerator with practical considerations in hardware DRAM-based PIM architectures are promising candidates implementation.
+- The second approach implements computation in Figure 4, details of which will be elaborated in Section 3 Figure 3.
+- Partial MAC results will be computed and forwarded to the SRAM on the ASIC,followed 3.3 ASIC Architecture by downstream partial sum execution on the ASIC.
+- multipliers in the computation engines follow the standard Inside each bank, only multipliers and an adder tree are floating-point unit design to support summation and multiimplemented for MAC operation, as shown in Figure 5(c).
+- For design reuse and performance considerations, Similar architecture has been proven effective in prior deother computation tasks are implemented with approximasigns [27][7][16].
+- The adder tree accumulates the multimax 𝑠(𝑥 𝑖 ) = 𝑒𝑥𝑖 ; (2) Layer Norm 𝑦 = √ 𝑥−𝐸[𝑥] ×𝛾 + 𝛽 ; plication results for downstream computation.
+- A proper initial value is required to ensure the fast results from DRAM; (3) Pipelining between data transmisconvergence.
+- root algorithm is adopted from Quake III Arena’s source Mapping a model includes storing the weights to the allocode [1], as shown in Algorithm 2.
+- For VMM operation, the input approach means the corresponding row only needs to be vector is forwarded from the ASIC buffer to the SRAM buffer activated once to transfer all required data to the row buffer, 6 Algorithm 3: Model Mapping to PIM Banks Data: Computation Graph; PIM Configuration Result: Memory Mapping and Reservation /* Map weights to PIM banks */ for vmm Block in Computation Graph do 1 if vmm Block.multi Head then 2 hit Score ← max Row Hit(nhead, ncol) 3 vmm Block ← concat(hit Score, vmm Block) 4 end 5 Mapping ← max Parallel(vmm Block, nch, nbank) 6 end 7 /* Reserve PIM bank rows for kv */ for wr Block in Computation Graph do 8 if block == write_k then 9 hit Score ← max Row Hit(nhead, ncol, ltoken) 10 wr Block ← concat(hit Score, wr Block) 11 end 12 Mapping ← Reserve(wr Block, ltoken, nch, nbank) 13 Figure 7.
+- Value results a wider matrix with width of 768, along with the concatena- are stored in column-major fashion because transpose is tion of input vectors, as shown in Figure 7(b).
+- The partial VMM results are with 2 rows of the matrix and execute MAC operations with then accumulated in the ASIC to facilite pipelined operation.
+- The system 5 System Evaluation performance in latency and power efficiency is evaluated based on these conservative assumptions.
+- Detailed hardware 5.1 Evaluation Method configuration is summarized in Table 1.
+- Hardware Configuration To perform realistic estimates, Simulation Configuration Toevaluatethe PIM-GPT sysweuse GDDR 6-based PIM prototypereportedfrom SKH ynix tem performance, we developed an event-driven clock-cycle for performance evaluation [27].
+- The design only integrates accurate simulator in C++ that models the system behavior lightweight MAC units near banks.
+- and power of the logic components are obtained from the The PIM and ASIC behaviors are modeled as state masynthesis results.
+- Benchmark Analysis The performance and energy ef AISC Frequency = 1 GH z, SRAM = 128 KB, # of ficiency of the proposed PIM-GPT system are evaluated us Adders = 256, # of Multipliers = 128, Area ing the simulator and compared to GPU (NVIDIA T 4) and = 0.64 mm 2, Power = 304.59 m W CPU (Intel Xeon Gold 6154 with 16 Gb DDR 4).
+- 4 GPT 2 [34] and 4 GPT 3 [2] models with up to 1.4 billion parameters For DRAM energy benchmark analysis, we synthesized are used for the single batch inference benchmark analysis.
+- method leverages data locality and minimizes the row ACT In each measurement, we generate 1024 tokens and repeat and PRE operations that are energy consuming.
+- 5.2 Overall System Performance In comparison, DFX only achieves 3.99× higher energy Speedup Asshownin Figure 8,the PIM-GPT systemachieves efficiency compared to the GPU baseline [18].
+- The mapping strategy maximizes computation parallelism 5.3 Detailed Performance Analysis and data locality; (3) Different workloads are efficiently distributed between PIM and ASIC.
+- We also compare the PIM-GPT performance with previ- For larger Transformer models, the improvement of PIM ously reported Transformer accelerators, as shown in Table GPT over GPU is reduced.
+- Both ig- result, the gain over GPU is reduced when compared with nore the layer normalization and residual connections in smaller GPT models, although the performance gain ( > 40×) Transformer models.
+- VMM results are transmitted to the ASIC for downstream processing or data synchronization.
+- As a result, the energy consumption through DRAM quency scaling is an important technique for power opti I/O in PIM-GPT is less then 10% of total DRAM energy con- mization.
+- We conduct a sensitivity study of ASIC frequency sumption in PIM-GPT, as shown in DRAM energy consump- by varying the latency setting in our simulator.
+- GPT models, where the latency is normalized with respect Other DRAM operations, such as ACT, PRE and REF, along to the 1 GH z results.
+- Even when further scaling the In PIM-GPT, data locality is optimized during model map- frequency down to 100 MH z, which is 10 times slower than ping to reduce the memory access time and enhance the the baseline, the worst case only incurs a performance slowcomputation throughput, which is evaluated by row hit rate.
+
+Important terms: method, approach, algorithm, technique, model, analysis, study, evaluation, results, propose, present, develop, design, implement, neural network, classification, performance, accuracy
+Focus: Data analysis approach
+Contribution: Provides comparative analysis

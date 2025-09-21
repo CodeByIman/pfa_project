@@ -1,0 +1,53 @@
+Title: Towards interpretable prediction of recurrence risk in breast cancer using pathology foundation models
+Authors: Jakub R. Kaczmarzyk, Sarah C. Van Alsten, Alyssa J. Cozzo, Rajarsi Gupta, Peter K. Koo
+Year: 2025
+Paper ID: http://arxiv.org/abs/2508.12025v1
+Link: http://arxiv.org/pdf/2508.12025v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Research study
+CONTRIBUTION: Improves existing methods
+KEY SENTENCES COUNT: 7
+TERMS: framework, model, study, results, introduce, classification, prediction
+
+BODY:
+Transcriptomic assays such as the PAM50-based ROR-P score guide recurrence risk stratification in non-metastatic, ER-positive, HER2-negative breast cancer but are not universally accessible. We introduce MAKO, a benchmarking framework evaluating 12 pathology foundation models
+
+and two non-pathology baselines for predicting ROR-P scores from H&E-stained whole slide images using attention-based multiple instance learning. Models were trained and validated on the Carolina Breast Cancer Study and externally tested on TCGA BRCA.
+
+Several
+foundation models outperformed baselines across classification, regression, and
+survival tasks. All pathology
+models stratified CBCS participants by recurrence similarly to transcriptomic
+ROR-P. Tumor regions were necessary and sufficient for high-risk predictions,
+and we identified candidate tissue biomarkers of recurrence.
+
+These results
+highlight the promise of interpretable, histology-based risk models in
+precision oncology.
+
+Key sentences:
+- Transcriptomic assays such as the PAM50-based ROR-P score guide recurrence
+risk stratification in non-metastatic, ER-positive, HER2-negative breast cancer
+but are not universally accessible.
+- We introduce MAKO, a benchmarking framework
+evaluating 12 pathology foundation models and two non-pathology baselines for
+predicting ROR-P scores from H&E-stained whole slide images using
+attention-based multiple instance learning.
+- Models were trained and validated
+on the Carolina Breast Cancer Study and externally tested on TCGA BRCA.
+- Several
+foundation models outperformed baselines across classification, regression, and
+survival tasks.
+- All pathology
+models stratified CBCS participants by recurrence similarly to transcriptomic
+ROR-P.
+- Tumor regions were necessary and sufficient for high-risk predictions,
+and we identified candidate tissue biomarkers of recurrence.
+- These results
+highlight the promise of interpretable, histology-based risk models in
+precision oncology.
+
+Important terms: framework, model, study, results, introduce, classification, prediction
+Focus: Research study
+Contribution: Improves existing methods

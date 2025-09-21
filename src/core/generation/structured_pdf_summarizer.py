@@ -1,3 +1,26 @@
+def _sanitize_pdf_text(raw: str) -> str:
+    """Lightly sanitize raw PDF text to reduce noise before sectioning.
+    - Remove LaTeX math blocks and inline math
+    - Drop URLs and image/figure/table references
+    - Collapse excessive whitespace while preserving paragraphs
+    """
+    if not raw:
+        return raw
+    text = raw
+    # Remove LaTeX math and inline formulas
+    text = re.sub(r"\$[^$\n]{1,200}\$", " ", text)
+    text = re.sub(r"\\\([\s\S]{1,300}?\\\)", " ", text)
+    text = re.sub(r"\\\[[\s\S]{1,400}?\\\]", " ", text)
+    # Remove URLs
+    text = re.sub(r"https?://\S+", " ", text)
+    # Remove figure/table/page references lines
+    text = re.sub(r"^(?:figure|fig\.|table|tab\.|page)\s+\d+.*$", " ", text, flags=re.IGNORECASE|re.MULTILINE)
+    # Remove citation brackets
+    text = re.sub(r"\[(?:\d+[ ,;-]?)+\]", " ", text)
+    # Collapse 3+ newlines to 2
+    text = re.sub(r"\n\s*\n\s*\n+", "\n\n", text)
+    return text.strip()
+
 """
 Structured PDF Summarization Module
 
@@ -44,270 +67,644 @@ class SectionBoundary:
     confidence: float
     header_text: str
 
+"""
+Enhanced Section Detection for Academic Papers
+Addresses the issues identified in your test results
+"""
 
-class SectionDetector:
-    """Intelligent section detector with multi-pattern matching and scoring"""
+import re
+from typing import Dict, List, Tuple, Optional
+import logging
+
+logger = logging.getLogger(__name__)
+
+class EnhancedSectionDetector:
+    """
+    Improved section detector with multiple detection strategies
+    and better handling of academic paper formats
+    """
     
     def __init__(self):
-        # Comprehensive section patterns with variations
+        # Enhanced patterns with more variations and flexibility
         self.section_patterns = {
             'abstract': [
-                r'(?i)^\s*(?:abstract|summary|résumé)\s*$',
-                r'(?i)^\s*(?:\d+\.?\s*)?abstract\s*$',
+                r'(?i)^\s*(?:\d*\.?\s*)?(?:abstract|summary|résumé)\s*:?\s*$',
+                r'(?i)^\s*(?:[IVX]+\.?\s*)?(?:abstract|summary)\s*$',
+                r'(?i)^abstract\s*$',
             ],
             'introduction': [
-                r'(?i)^\s*(?:\d+\.?\s*)?(?:introduction|background|motivation|overview)\s*$',
-                r'(?i)^\s*(?:i\.?\s*)?introduction\s*$',
-                r'(?i)^\s*(?:chapter\s+\d+\s*:?\s*)?introduction\s*$',
-                r'(?i)^\s*(?:section\s+\d+\s*:?\s*)?(?:introduction|background)\s*$',
-            ],
-            'related_work': [
-                r'(?i)^\s*(?:\d+\.?\s*)?(?:related\s+work|literature\s+review|prior\s+work|previous\s+work)\s*$',
-                r'(?i)^\s*(?:ii\.?\s*)?related\s+work\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?introduction\s*:?\s*$',
+                r'(?i)^\s*(?:[IVX]+\.?\s*)?introduction\s*$',
+                r'(?i)^\s*(?:1\.?\s*)?introduction\s*$',
+                r'(?i)^introduction\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?background\s*$',
             ],
             'methodology': [
-                r'(?i)^\s*(?:\d+\.?\s*)?(?:method(?:ology)?|approach|technique|algorithm|implementation|model|framework)\s*$',
-                r'(?i)^\s*(?:\d+\.?\s*)?(?:materials?\s+and\s+methods?|experimental\s+setup|system\s+design)\s*$',
-                r'(?i)^\s*(?:iii\.?\s*)?(?:method(?:ology)?|approach)\s*$',
-                r'(?i)^\s*(?:\d+\.?\s*)?(?:proposed\s+method|our\s+approach|solution)\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?(?:methodology|methods?|approach|model|technique)\s*:?\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?experimental\s+(?:setup|design|method|procedure)\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?(?:materials?\s+and\s+)?methods?\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?(?:implementation|algorithm|framework)\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?proposed\s+(?:method|approach|model)\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?system\s+(?:design|architecture|overview)\s*$',
             ],
             'results': [
-                r'(?i)^\s*(?:\d+\.?\s*)?(?:results?|findings?|experiments?|evaluation|performance|analysis)\s*$',
-                r'(?i)^\s*(?:\d+\.?\s*)?(?:experimental\s+results?|empirical\s+evaluation|performance\s+analysis)\s*$',
-                r'(?i)^\s*(?:iv\.?\s*)?(?:results?|evaluation)\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?(?:results?|findings?|experiments?|evaluation)\s*:?\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?experimental\s+(?:results?|evaluation)\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?performance\s+(?:evaluation|analysis|results?)\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?(?:empirical\s+)?(?:analysis|study)\s*$',
             ],
             'discussion': [
-                r'(?i)^\s*(?:\d+\.?\s*)?(?:discussion|interpretation|implications|analysis)\s*$',
-                r'(?i)^\s*(?:v\.?\s*)?discussion\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?discussion\s*:?\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?(?:analysis|interpretation)\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?results?\s+and\s+discussion\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?discussion\s+of\s+results?\s*$',
             ],
             'conclusion': [
-                r'(?i)^\s*(?:\d+\.?\s*)?(?:conclusion|summary|final\s+remarks?|closing)\s*$',
-                r'(?i)^\s*(?:\d+\.?\s*)?(?:future\s+work|limitations?\s+and\s+future\s+work)\s*$',
-                r'(?i)^\s*(?:vi\.?\s*)?(?:conclusion|summary)\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?conclusions?\s*:?\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?concluding\s+(?:remarks?|thoughts?)\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?summary\s+and\s+conclusions?\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?final\s+(?:remarks?|thoughts?)\s*$',
+            ],
+            'related_work': [
+                r'(?i)^\s*(?:\d+\.?\s*)?(?:related\s+work|prior\s+work|previous\s+work)\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?(?:background|literature\s+review)\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?state\s+of\s+the\s+art\s*$',
+            ],
+            'future_work': [
+                r'(?i)^\s*(?:\d+\.?\s*)?(?:future\s+work|future\s+directions?)\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?(?:next\s+steps?|future\s+research)\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?(?:open\s+problems?|challenges?)\s*$',
+            ],
+            'limitations': [
+                r'(?i)^\s*(?:\d+\.?\s*)?limitations?\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?(?:challenges?|drawbacks?)\s*$',
+                r'(?i)^\s*(?:\d+\.?\s*)?threats?\s+to\s+validity\s*$',
             ]
         }
         
-        # Position-based section mapping (as fallback)
-        self.position_mapping = {
-            (0.0, 0.15): 'introduction',    # First 15%
-            (0.15, 0.35): 'methodology',   # 15-35%
-            (0.35, 0.65): 'results',       # 35-65%
-            (0.65, 0.85): 'discussion',    # 65-85%
-            (0.85, 1.0): 'conclusion'      # Last 15%
+        # Enhanced content-based indicators with more comprehensive patterns
+        self.content_indicators = {
+            'abstract': [
+                r'(?i)(?:this\s+(?:paper|work|study|research))\s+(?:presents?|proposes?|introduces?|describes?|addresses?)',
+                r'(?i)(?:we|the\s+authors?)\s+(?:present|propose|introduce|develop|investigate)',
+                r'(?i)in\s+this\s+(?:paper|work|study|article)',
+                r'(?i)(?:main\s+)?(?:contribution|result|finding)s?\s+(?:of\s+this\s+work\s+)?(?:are?|include)',
+            ],
+            'introduction': [
+                r'(?i)in\s+recent\s+(?:years?|decades?)',
+                r'(?i)(?:the\s+)?(?:field\s+of|area\s+of|domain\s+of|problem\s+of)',
+                r'(?i)(?:traditional|existing|current|conventional)\s+(?:approaches?|methods?|techniques?)',
+                r'(?i)(?:motivation|rationale)\s+(?:for\s+this\s+work|behind)',
+                r'(?i)(?:the\s+)?(?:main\s+)?(?:research\s+)?(?:question|problem|challenge)',
+            ],
+            'methodology': [
+                r'(?i)(?:our|the\s+proposed)\s+(?:approach|method|algorithm|framework|model|technique)',
+                r'(?i)(?:we|the\s+algorithm)\s+(?:use|employ|implement|develop|design|adopt|utilize)',
+                r'(?i)(?:the\s+)?(?:model|algorithm|system|framework)\s+(?:consists?|works?|operates?)',
+                r'(?i)(?:based\s+on|using|utilizing|leveraging|employing|building\s+upon)',
+                r'(?i)(?:training|optimization|learning)\s+(?:procedure|process|phase)',
+                r'(?i)(?:architecture|design|structure)\s+(?:of\s+)?(?:the\s+)?(?:model|system|network)',
+            ],
+            'results': [
+                r'(?i)(?:experimental\s+)?results?\s+(?:show|demonstrate|indicate|reveal|suggest)',
+                r'(?i)(?:our\s+)?(?:experiments?|evaluation|study)\s+(?:show|demonstrate|reveal)',
+                r'(?i)(?:performance|accuracy|precision|recall|f1-score)\s+(?:of|is|was|reaches?)',
+                r'(?i)(?:outperform|exceed|surpass|beat|improve\s+(?:over|upon))',
+                r'(?i)(?:compared\s+(?:to|with)|versus|vs\.?)\s+(?:baseline|previous|existing)',
+                r'(?i)(?:significant|substantial|dramatic)\s+(?:improvement|gain|increase)',
+            ],
+            'discussion': [
+                r'(?i)(?:these\s+)?results?\s+(?:suggest|indicate|imply|show)',
+                r'(?i)(?:the\s+)?(?:findings|results?|observations?)\s+(?:indicate|suggest|show)',
+                r'(?i)(?:possible\s+)?(?:explanation|reason|cause)\s+(?:for|of)',
+                r'(?i)(?:implications?\s+of|impact\s+of)',
+            ],
+            'conclusion': [
+                r'(?i)in\s+(?:conclusion|summary|closing)',
+                r'(?i)(?:we\s+)?(?:conclude|summarize|find)\s+that',
+                r'(?i)this\s+(?:work|paper|study)\s+has\s+(?:shown|demonstrated|presented)',
+                r'(?i)(?:to\s+)?(?:conclude|summarize)',
+                r'(?i)(?:overall|in\s+general),\s*(?:the|our|this)',
+            ],
+            'limitations': [
+                r'(?i)(?:limitation|drawback|weakness|constraint)s?\s+(?:of|include|are)',
+                r'(?i)(?:however|although|despite|unfortunately|nevertheless)',
+                r'(?i)(?:one|a|the)\s+(?:main\s+)?(?:limitation|drawback|issue|problem)',
+                r'(?i)(?:does\s+not|cannot|unable\s+to|fails\s+to|limited\s+to)',
+            ],
+            'future_work': [
+                r'(?i)(?:future\s+work|future\s+research|further\s+work|next\s+steps?)',
+                r'(?i)(?:plan\s+to|intend\s+to|will|would\s+like\s+to|aim\s+to)',
+                r'(?i)(?:potential\s+)?(?:extension|improvement|enhancement)',
+                r'(?i)(?:interesting\s+)?(?:direction|avenue|area)\s+for\s+future',
+            ]
         }
-    
-    def detect_sections(self, text: str) -> Dict[str, str]:
+
+    def detect_sections_enhanced(self, text: str) -> Dict[str, str]:
         """
-        Detect sections using multi-level approach with fallbacks
+        Enhanced section detection using multiple strategies with improved logic
         """
+        if not text or not text.strip():
+            return {}
+        
+        # Clean and normalize text
+        text = self._clean_text(text)
+        
+        # Strategy 1: Enhanced header-based detection
+        header_sections = self._detect_by_headers_enhanced(text)
+        if len(header_sections) >= 2 and self._validate_sections(header_sections):
+            logger.info(f"Header-based detection found {len(header_sections)} valid sections")
+            return header_sections
+        
+        # Strategy 2: Content-based detection with context
+        content_sections = self._detect_by_content_enhanced(text)
+        if len(content_sections) >= 2 and self._validate_sections(content_sections):
+            logger.info(f"Content-based detection found {len(content_sections)} valid sections")
+            return content_sections
+        
+        # Strategy 3: Hybrid approach combining headers and content
+        hybrid_sections = self._hybrid_detection(text)
+        if len(hybrid_sections) >= 2 and self._validate_sections(hybrid_sections):
+            logger.info(f"Hybrid detection found {len(hybrid_sections)} valid sections")
+            return hybrid_sections
+        
+        # Strategy 4: Intelligent paragraph-based splitting
+        paragraph_sections = self._detect_by_paragraphs_enhanced(text)
+        if len(paragraph_sections) >= 2:
+            logger.info(f"Enhanced paragraph-based detection found {len(paragraph_sections)} sections")
+            return paragraph_sections
+        
+        # Final fallback with better content preservation
+        logger.warning("All detection strategies failed, using enhanced fallback")
+        return self._enhanced_fallback_detection(text)
+
+    def _clean_text(self, text: str) -> str:
+        """Clean and normalize text for better processing"""
+        # Remove excessive whitespace while preserving structure
+        text = re.sub(r'\n\s*\n\s*\n+', '\n\n', text)
+        # Normalize section headers
+        text = re.sub(r'^\s*([IVX]+)\.\s*([A-Z])', r'\1. \2', text, flags=re.MULTILINE)
+        # Fix common OCR issues
+        text = re.sub(r'(?<=\w)(?=[A-Z][a-z])', ' ', text)
+        return text.strip()
+
+    def _detect_by_headers_enhanced(self, text: str) -> Dict[str, str]:
+        """Enhanced header detection with better boundary identification"""
         lines = text.split('\n')
+        sections = {}
+        current_section = None
+        current_content = []
+        header_positions = []
         
-        # Step 1: Pattern-based detection
-        boundaries = self._detect_pattern_boundaries(lines)
-        
-        # Step 2: Validate and resolve conflicts
-        boundaries = self._validate_boundaries(boundaries, len(lines))
-        
-        # Step 3: Position-based fallback if insufficient sections found
-        if len(boundaries) < 3:
-            boundaries = self._position_based_fallback(lines)
-        
-        # Step 4: Extract content between boundaries
-        sections = self._extract_section_content(lines, boundaries)
-        
-        # Step 5: Final fallback - equal division
-        if len(sections) < 3:
-            sections = self._equal_division_fallback(text)
-        
-        return sections
-    
-    def _detect_pattern_boundaries(self, lines: List[str]) -> List[SectionBoundary]:
-        """Detect section boundaries using regex patterns"""
-        boundaries = []
-        
+        # First pass: identify all potential headers
         for i, line in enumerate(lines):
             line_clean = line.strip()
             if not line_clean or len(line_clean) > 100:  # Skip very long lines
                 continue
             
-            # Try each section type
-            for section_type, patterns in self.section_patterns.items():
-                max_confidence = 0.0
+            detected_section = self._identify_section_header(line_clean)
+            if detected_section:
+                header_positions.append((i, detected_section, line_clean))
+        
+        # Second pass: build sections with better content boundaries
+        current_header_idx = 0
+        for i, line in enumerate(lines):
+            # Check if this line is a section header
+            if current_header_idx < len(header_positions) and i == header_positions[current_header_idx][0]:
+                # Save previous section
+                if current_section and current_content:
+                    content = self._clean_section_content('\n'.join(current_content))
+                    if content and len(content) > 20:  # Minimum content length
+                        sections[current_section] = content
                 
-                for pattern in patterns:
-                    if re.match(pattern, line_clean):
-                        # Calculate confidence based on pattern specificity
-                        confidence = self._calculate_pattern_confidence(pattern, line_clean)
-                        max_confidence = max(max_confidence, confidence)
-                
-                if max_confidence > 0.5:  # Threshold for acceptance
-                    boundaries.append(SectionBoundary(
-                        start_idx=i,
-                        end_idx=-1,  # Will be set later
-                        section_type=section_type,
-                        confidence=max_confidence,
-                        header_text=line_clean
-                    ))
-                    break  # Don't match multiple patterns for same line
-        
-        return boundaries
-    
-    def _calculate_pattern_confidence(self, pattern: str, text: str) -> float:
-        """Calculate confidence score for pattern match"""
-        base_confidence = 0.7
-        
-        # Boost confidence for numbered sections
-        if re.search(r'\d+\.?\s*', text):
-            base_confidence += 0.2
-        
-        # Boost for exact matches
-        if len(text.split()) <= 3:  # Short, precise headers
-            base_confidence += 0.1
-        
-        # Reduce for very generic patterns
-        if 'analysis' in text.lower() or 'summary' in text.lower():
-            base_confidence -= 0.1
-        
-        return min(base_confidence, 1.0)
-    
-    def _validate_boundaries(self, boundaries: List[SectionBoundary], total_lines: int) -> List[SectionBoundary]:
-        """Validate and resolve conflicts in detected boundaries"""
-        if not boundaries:
-            return boundaries
-        
-        # Sort by start index
-        boundaries.sort(key=lambda x: x.start_idx)
-        
-        # Remove duplicates and conflicts
-        validated = []
-        for boundary in boundaries:
-            # Check if too close to previous boundary
-            if validated and boundary.start_idx - validated[-1].start_idx < 10:
-                # Keep the one with higher confidence
-                if boundary.confidence > validated[-1].confidence:
-                    validated[-1] = boundary
+                # Start new section
+                current_section = header_positions[current_header_idx][1]
+                current_content = []
+                current_header_idx += 1
             else:
-                validated.append(boundary)
+                # Add to current section
+                if current_section:
+                    current_content.append(line)
         
-        # Set end indices
-        for i, boundary in enumerate(validated):
-            if i < len(validated) - 1:
-                boundary.end_idx = validated[i + 1].start_idx
-            else:
-                boundary.end_idx = total_lines
-        
-        return validated
-    
-    def _position_based_fallback(self, lines: List[str]) -> List[SectionBoundary]:
-        """Fallback to position-based section detection"""
-        logger.info("Using position-based fallback for section detection")
-        
-        total_lines = len(lines)
-        boundaries = []
-        
-        for (start_pct, end_pct), section_type in self.position_mapping.items():
-            start_idx = int(total_lines * start_pct)
-            end_idx = int(total_lines * end_pct)
-            
-            boundaries.append(SectionBoundary(
-                start_idx=start_idx,
-                end_idx=end_idx,
-                section_type=section_type,
-                confidence=0.3,  # Low confidence for position-based
-                header_text=f"Position-based {section_type}"
-            ))
-        
-        return boundaries
-    
-    def _extract_section_content(self, lines: List[str], boundaries: List[SectionBoundary]) -> Dict[str, str]:
-        """Extract content between section boundaries"""
-        sections = {}
-        
-        for boundary in boundaries:
-            content_lines = lines[boundary.start_idx + 1:boundary.end_idx]  # Skip header line
-            content = '\n'.join(line.strip() for line in content_lines if line.strip())
-            
-            if content and len(content) > 50:  # Minimum content threshold
-                sections[boundary.section_type] = content
+        # Save final section
+        if current_section and current_content:
+            content = self._clean_section_content('\n'.join(current_content))
+            if content and len(content) > 20:
+                sections[current_section] = content
         
         return sections
-    
-    def _equal_division_fallback(self, text: str) -> Dict[str, str]:
-        """Final fallback: divide text into equal parts"""
-        logger.warning("Using equal division fallback for section detection")
+
+    def _identify_section_header(self, line: str) -> str:
+        """Identify section type from header line"""
+        line_clean = line.strip()
         
+        # Check each section type
+        for section_type, patterns in self.section_patterns.items():
+            for pattern in patterns:
+                if re.match(pattern, line_clean):
+                    return section_type
+        
+        return None
+
+    def _detect_by_content_enhanced(self, text: str) -> Dict[str, str]:
+        """Enhanced content-based detection with better context analysis"""
+        paragraphs = self._split_into_paragraphs(text)
+        if len(paragraphs) < 3:
+            return {}
+        
+        sections = {}
+        paragraph_assignments = {}
+        
+        # Analyze each paragraph for section indicators
+        for i, paragraph in enumerate(paragraphs):
+            if len(paragraph) < 50:  # Skip very short paragraphs
+                continue
+            
+            best_section = None
+            best_score = 0
+            
+            for section_type, indicators in self.content_indicators.items():
+                score = self._calculate_content_score(paragraph, indicators)
+                if score > best_score:
+                    best_score = score
+                    best_section = section_type
+            
+            if best_section and best_score > 0.5:  # Minimum confidence threshold
+                paragraph_assignments[i] = (best_section, best_score)
+        
+        # Group consecutive paragraphs of the same type
+        current_section = None
+        current_content = []
+        
+        for i, paragraph in enumerate(paragraphs):
+            if i in paragraph_assignments:
+                assigned_section = paragraph_assignments[i][0]
+                
+                if assigned_section != current_section:
+                    # Save previous section
+                    if current_section and current_content:
+                        content = '\n\n'.join(current_content)
+                        if len(content) > 50:
+                            sections[current_section] = content
+                    
+                    # Start new section
+                    current_section = assigned_section
+                    current_content = [paragraph]
+                else:
+                    current_content.append(paragraph)
+            else:
+                # Add unassigned paragraphs to current section
+                if current_section and current_content:
+                    current_content.append(paragraph)
+        
+        # Save final section
+        if current_section and current_content:
+            content = '\n\n'.join(current_content)
+            if len(content) > 50:
+                sections[current_section] = content
+        
+        return sections
+
+    def _hybrid_detection(self, text: str) -> Dict[str, str]:
+        """Hybrid approach combining header and content detection"""
+        header_sections = self._detect_by_headers_enhanced(text)
+        content_sections = self._detect_by_content_enhanced(text)
+        
+        if not header_sections and not content_sections:
+            return {}
+        
+        # Merge strategies, preferring header-based when available
+        merged_sections = {}
+        
+        # Start with header-based sections
+        for section_type, content in header_sections.items():
+            merged_sections[section_type] = content
+        
+        # Add content-based sections that don't conflict
+        for section_type, content in content_sections.items():
+            if section_type not in merged_sections:
+                merged_sections[section_type] = content
+            elif len(content) > len(merged_sections[section_type]):
+                # Use longer content if significantly better
+                merged_sections[section_type] = content
+        
+        return merged_sections
+
+    def _detect_by_paragraphs_enhanced(self, text: str) -> Dict[str, str]:
+        """Enhanced paragraph-based splitting with better content analysis"""
+        paragraphs = self._split_into_paragraphs(text)
+        
+        if len(paragraphs) < 4:
+            return {}
+        
+        sections = {}
+        
+        # More intelligent paragraph assignment based on position and content
+        n_paragraphs = len(paragraphs)
+        
+        # First paragraph - likely abstract or introduction
+        first_para = paragraphs[0]
+        if len(first_para) > 100 and any(pattern in first_para.lower() 
+                                        for pattern in ['this paper', 'we present', 'this work']):
+            sections['abstract'] = first_para
+            start_idx = 1
+        else:
+            sections['introduction'] = first_para
+            start_idx = 1
+        
+        # Distribute remaining paragraphs more intelligently
+        remaining = paragraphs[start_idx:]
+        n_remaining = len(remaining)
+        
+        if n_remaining >= 6:
+            # Full structure: intro/related, methodology, results, discussion, conclusion
+            sections['methodology'] = '\n\n'.join(remaining[:n_remaining//3])
+            sections['results'] = '\n\n'.join(remaining[n_remaining//3:2*n_remaining//3])
+            sections['conclusion'] = '\n\n'.join(remaining[2*n_remaining//3:])
+        elif n_remaining >= 3:
+            # Basic structure: methodology, results, conclusion
+            sections['methodology'] = '\n\n'.join(remaining[:n_remaining//3])
+            sections['results'] = '\n\n'.join(remaining[n_remaining//3:2*n_remaining//3])
+            sections['conclusion'] = '\n\n'.join(remaining[2*n_remaining//3:])
+        else:
+            # Minimal structure
+            sections['other'] = '\n\n'.join(remaining)
+        
+        return sections
+
+    def _enhanced_fallback_detection(self, text: str) -> Dict[str, str]:
+        """Enhanced fallback with better content analysis"""
+        sections = {}
+        
+        # Try to identify abstract at the beginning
+        abstract_content = self._extract_abstract_fallback(text)
+        if abstract_content:
+            sections['abstract'] = abstract_content
+            remaining_text = text.replace(abstract_content, '', 1).strip()
+        else:
+            remaining_text = text
+        
+        # Split remaining text more intelligently
+        text_length = len(remaining_text)
+        if text_length > 1000:
+            # Find natural break points
+            break_points = self._find_natural_breaks(remaining_text)
+            
+            if len(break_points) >= 2:
+                sections['introduction'] = remaining_text[:break_points[0]].strip()
+                sections['methodology'] = remaining_text[break_points[0]:break_points[1]].strip()
+                sections['results'] = remaining_text[break_points[1]:].strip()
+            else:
+                # Simple split
+                mid_point = text_length // 2
+                sections['introduction'] = remaining_text[:mid_point].strip()
+                sections['results'] = remaining_text[mid_point:].strip()
+        else:
+            sections['other'] = remaining_text
+        
+        return {k: v for k, v in sections.items() if v and len(v) > 20}
+
+    def _split_into_paragraphs(self, text: str) -> List[str]:
+        """Split text into meaningful paragraphs"""
+        # Split on double newlines
+        paragraphs = text.split('\n\n')
+        # Clean and filter
+        cleaned = []
+        for para in paragraphs:
+            para = para.strip()
+            if len(para) > 30:  # Minimum paragraph length
+                cleaned.append(para)
+        return cleaned
+
+    def _calculate_content_score(self, paragraph: str, indicators: List[str]) -> float:
+        """Calculate content score based on indicators"""
+        paragraph_lower = paragraph.lower()
+        score = 0.0
+        
+        for indicator in indicators:
+            matches = re.finditer(indicator, paragraph_lower)
+            for match in matches:
+                # Position bonus (earlier matches score higher)
+                position_factor = 1.0 - (match.start() / len(paragraph_lower)) * 0.3
+                score += position_factor
+        
+        # Normalize by paragraph length
+        return min(score / max(len(paragraph) / 100, 1), 2.0)
+
+    def _clean_section_content(self, content: str) -> str:
+        """Clean section content"""
+        content = content.strip()
+        # Remove excessive whitespace
+        content = re.sub(r'\n\s*\n\s*\n+', '\n\n', content)
+        # Remove leading/trailing empty lines
+        content = re.sub(r'^\n+|\n+$', '', content)
+        return content
+
+    def _validate_sections(self, sections: Dict[str, str]) -> bool:
+        """Validate that sections contain meaningful content"""
+        if not sections:
+            return False
+        
+        # Check that sections have reasonable content
+        total_length = sum(len(content) for content in sections.values())
+        if total_length < 200:  # Too little content
+            return False
+        
+        # Check for minimum section diversity
+        if len(sections) == 1 and 'other' in sections:
+            return False
+        
+        return True
+
+    def _extract_abstract_fallback(self, text: str) -> str:
+        """Extract abstract when no clear header is found"""
         lines = text.split('\n')
-        total_lines = len(lines)
-        section_size = total_lines // 5
         
-        sections = {}
-        section_types = ['introduction', 'methodology', 'results', 'discussion', 'conclusion']
+        # Look for abstract indicators in first 30 lines
+        for i, line in enumerate(lines[:30]):
+            line_clean = line.strip().lower()
+            if 'abstract' in line_clean and len(line_clean) < 20:
+                # Found abstract header, collect following content
+                content_lines = []
+                for j in range(i + 1, min(i + 20, len(lines))):
+                    next_line = lines[j].strip()
+                    if not next_line:
+                        continue
+                    if any(keyword in next_line.lower() for keyword in ['introduction', 'keywords', '1.', 'i.']):
+                        break
+                    content_lines.append(next_line)
+                
+                if content_lines and len(' '.join(content_lines)) > 100:
+                    return '\n'.join(content_lines)
         
-        for i, section_type in enumerate(section_types):
-            start_idx = i * section_size
-            end_idx = (i + 1) * section_size if i < 4 else total_lines
+        return None
+
+    def _find_natural_breaks(self, text: str) -> List[int]:
+        """Find natural break points in text"""
+        break_points = []
+        
+        # Look for paragraph boundaries with topic shifts
+        paragraphs = text.split('\n\n')
+        current_pos = 0
+        
+        for i, para in enumerate(paragraphs[:-1]):  # Exclude last paragraph
+            current_pos += len(para) + 2  # +2 for \n\n
             
-            content_lines = lines[start_idx:end_idx]
-            content = '\n'.join(line.strip() for line in content_lines if line.strip())
+            # Look for topic shift indicators
+            next_para = paragraphs[i + 1] if i + 1 < len(paragraphs) else ""
             
-            if content:
-                sections[section_type] = content
+            if self._is_topic_shift(para, next_para):
+                break_points.append(current_pos)
         
-        return sections
+        return break_points
+
+    def _is_topic_shift(self, para1: str, para2: str) -> bool:
+        """Detect if there's a topic shift between paragraphs"""
+        if not para1 or not para2:
+            return False
+        
+        # Look for transition indicators
+        transition_words = ['however', 'moreover', 'furthermore', 'in contrast', 
+                          'on the other hand', 'meanwhile', 'next', 'then']
+        
+        para2_start = para2.lower()[:100]
+        
+        return any(word in para2_start for word in transition_words)
 
 
-def _split_into_sections(text: str) -> Dict[str, str]:
+def improved_split_into_sections(text: str) -> Dict[str, str]:
     """
-    Enhanced section detection with robust multi-pattern matching and fallbacks.
-    
-    Args:
-        text: Full PDF text content
-        
-    Returns:
-        Dictionary with section names as keys and content as values
+    Improved section splitting function with better academic paper understanding
     """
-    if not text or not text.strip():
-        return {}
+    detector = EnhancedSectionDetector()
+    sections = detector.detect_sections_enhanced(text)
     
-    detector = SectionDetector()
-    sections = detector.detect_sections(text)
+    logger.info(f"Enhanced detection found sections: {list(sections.keys())}")
     
-    # Always try to extract abstract separately (often at the beginning)
-    abstract_content = _extract_abstract_separately(text)
-    if abstract_content:
-        sections['abstract'] = abstract_content
+    # Post-processing to ensure quality
+    sections = _post_process_sections(sections, text)
     
-    logger.info(f"Detected sections: {list(sections.keys())}")
     return sections
 
 
-def _extract_abstract_separately(text: str) -> Optional[str]:
-    """Extract abstract using dedicated logic"""
-    lines = text.split('\n')
-    abstract_content = []
-    in_abstract = False
+def _post_process_sections(sections: Dict[str, str], original_text: str) -> Dict[str, str]:
+    """Post-process sections to improve quality and coverage"""
     
-    for i, line in enumerate(lines[:100]):  # Check first 100 lines
-        line_clean = line.strip()
-        if not line_clean:
+    if not sections:
+        return {'other': original_text}
+    
+    # Ensure minimum content coverage
+    total_section_length = sum(len(content) for content in sections.values())
+    original_length = len(original_text)
+    coverage_ratio = total_section_length / original_length
+    
+    if coverage_ratio < 0.7:  # Less than 70% coverage
+        logger.warning(f"Low section coverage: {coverage_ratio:.2f}")
+        
+        # Add missing content as 'other' section
+        all_section_content = '\n\n'.join(sections.values())
+        missing_parts = []
+        
+        # Simple approach: find parts not in any section
+        for paragraph in original_text.split('\n\n'):
+            paragraph = paragraph.strip()
+            if len(paragraph) > 50 and paragraph not in all_section_content:
+                missing_parts.append(paragraph)
+        
+        if missing_parts:
+            if 'other' in sections:
+                sections['other'] += '\n\n' + '\n\n'.join(missing_parts)
+            else:
+                sections['other'] = '\n\n'.join(missing_parts)
+    
+    # Remove sections that are too short
+    min_length = 30
+    sections = {k: v for k, v in sections.items() if len(v.strip()) >= min_length}
+    
+    return sections
+
+
+# Enhanced utility functions remain the same but with improved extraction
+def extract_key_sentences(text: str, keywords: List[str], max_sentences: int = 3) -> str:
+    """
+    Enhanced key sentence extraction with better context preservation
+    """
+    if not text or not keywords:
+        return "Content not available."
+    
+    sentences = re.split(r'[.!?]+', text)
+    scored_sentences = []
+    
+    for i, sentence in enumerate(sentences):
+        sentence = sentence.strip()
+        if len(sentence) < 20:
             continue
         
-        # Start of abstract
-        if re.match(r'(?i)^\s*(?:abstract|summary|résumé)\s*$', line_clean):
-            in_abstract = True
-            continue
+        score = 0
+        sentence_lower = sentence.lower()
         
-        # End of abstract (next section or keywords)
-        if in_abstract:
-            if (re.match(r'(?i)^\s*(?:\d+\.?\s*)?(?:introduction|keywords?|key\s+words)', line_clean) or
-                len(abstract_content) > 30):  # Reasonable length limit
+        # Enhanced scoring
+        for keyword in keywords:
+            if keyword.lower() in sentence_lower:
+                # Context bonus for keywords at sentence beginning
+                if sentence_lower.startswith(keyword.lower()):
+                    score += 1.5
+                else:
+                    score += 1
+        
+        # Position bonus (earlier sentences often more important)
+        position_bonus = max(0, (len(sentences) - i) / len(sentences) * 0.3)
+        score += position_bonus
+        
+        # Length bonus (prefer moderate length)
+        if 50 <= len(sentence) <= 200:
+            score += 0.3
+        elif len(sentence) > 200:
+            score += 0.1
+        
+        # Penalty for too many citations
+        citations = len(re.findall(r'\[[^\]]+\]|\([^)]+\)', sentence))
+        if citations > 3:
+            score -= 0.2
+        
+        # Bonus for sentences with numbers/metrics (often important results)
+        if re.search(r'\d+(?:\.\d+)?%?', sentence):
+            score += 0.2
+        
+        if score > 0.5:  # Minimum threshold
+            scored_sentences.append((sentence, score))
+    
+    # Sort by score and select diverse sentences
+    scored_sentences.sort(key=lambda x: x[1], reverse=True)
+    
+    # Select diverse sentences (avoid too similar content)
+    selected_sentences = []
+    for sentence, score in scored_sentences:
+        if len(selected_sentences) >= max_sentences:
+            break
+        
+        # Check similarity with already selected
+        is_similar = False
+        for selected in selected_sentences:
+            words1 = set(sentence.lower().split())
+            words2 = set(selected.lower().split())
+            if len(words1.intersection(words2)) / len(words1.union(words2)) > 0.6:
+                is_similar = True
                 break
-            abstract_content.append(line_clean)
+        
+        if not is_similar:
+            selected_sentences.append(sentence)
     
-    if abstract_content and len(abstract_content) >= 3:  # Minimum abstract length
-        return '\n'.join(abstract_content)
-    
-    return None
+    if selected_sentences:
+        return '. '.join(selected_sentences) + '.'
+    else:
+        # Fallback: return first substantial sentence
+        for sentence in sentences:
+            sentence = sentence.strip()
+            if 30 <= len(sentence) <= 300:
+                return sentence + '.'
+        return "Relevant content not clearly identified."
+
 
 
 class ContentExtractor:
@@ -520,20 +917,32 @@ class ContentExtractor:
         
         for i, sentence in enumerate(sentences):
             sentence = sentence.strip()
-            if len(sentence) < 25 or len(sentence) > 300:  # Quality filter
+            if len(sentence) < 25 or len(sentence) > 350:  # Quality filter (allow slightly longer)
                 continue
-            
+            # Skip noisy/equation-like sentences
+            if re.search(r"https?://|\\\(|\\\[|\$.*\$", sentence):
+                continue
+            # Skip sentences dominated by symbols/digits
+            total = len(sentence)
+            sym_ratio = sum(1 for ch in sentence if ch in "=+*/^_|<>∑√≈≃≤≥δλξπϕμσ∆∂→↦·•◦□{}[]()") / max(1, total)
+            dig_ratio = sum(1 for ch in sentence if ch.isdigit()) / max(1, total)
+            if sym_ratio > 0.25 or dig_ratio > 0.5:
+                continue
+            # Skip obvious section labels
+            if re.match(r"^(figure|fig\.|table|tab\.|algorithm|theorem|lemma)\b", sentence, flags=re.IGNORECASE):
+                continue
+        
             for pattern in patterns:
                 if re.search(pattern, sentence):
                     # Calculate base score
-                    score = weight * 0.7  # Base score from section weight
+                    score = 1.0 * weight  # Base score from section weight
                     
                     # Position bonus (earlier sentences often more important)
                     position_bonus = max(0, (len(sentences) - i) / len(sentences) * 0.2)
                     score += position_bonus
                     
                     # Length bonus (moderate length preferred)
-                    length_score = min(1.0, len(sentence) / 150) * 0.1
+                    length_score = min(1.0, len(sentence) / 180) * 0.1
                     score += length_score
                     
                     candidates.append({
@@ -1060,25 +1469,43 @@ def _generate_ollama_abstractive_summary(structured_summary: StructuredSummary,
     if not _check_ollama_availability():
         return "Ollama not available for abstractive summarization."
     
-    # Prepare structured input for Ollama
+    # Prepare structured input for Ollama: combine cleaned sections into one extractive block
     authors_str = ', '.join(authors[:3]) + ('...' if len(authors) > 3 else '')
+    sections_block = f"""
+CONTRIBUTIONS:
+{structured_summary.contributions}
+
+METHODOLOGY:
+{structured_summary.methodology}
+
+RESULTS:
+{structured_summary.results}
+
+LIMITATIONS:
+{structured_summary.limitations}
+
+FUTURE_WORK:
+{structured_summary.future_work}
+""".strip()
+    # Light sanitize for LLM
+    sections_block = _sanitize_pdf_text(sections_block)
     
-    prompt = f"""Based on this structured analysis of a research paper, write a clear, fluent summary in 2-3 paragraphs:
+    prompt = f"""
+Using ONLY the following structured extractive content, write a fluent, human-like summary (8–12 sentences, 2–3 paragraphs, no bullets) that starts with "This paper" and explains the problem/context, methodology, key results, and implications.
 
 Title: {title}
 Authors: {authors_str} ({year})
 
-CONTRIBUTIONS: {structured_summary.contributions[:300]}...
+EXTRACTIVE CONTENT:
+<<<
+{sections_block}
+>>>
 
-METHODOLOGY: {structured_summary.methodology[:300]}...
-
-RESULTS: {structured_summary.results[:300]}...
-
-LIMITATIONS: {structured_summary.limitations[:200]}...
-
-FUTURE WORK: {structured_summary.future_work[:200]}...
-
-Write a natural, human-readable summary that flows well and explains what this research is about, how it was done, what was found, and why it matters. Keep it concise but comprehensive."""
+Requirements:
+- Paraphrase; do NOT copy equations, variables, or proof snippets.
+- No figure/table/page references. No citations. No bullet points.
+- Keep it coherent and readable for a general research audience.
+"""
 
     try:
         response = requests.post(
@@ -1088,18 +1515,20 @@ Write a natural, human-readable summary that flows well and explains what this r
                 'prompt': prompt,
                 'stream': False,
                 'options': {
-                    'temperature': 0.5,
+                    'temperature': 0.3,
                     'top_p': 0.9,
-                    'num_predict': 400,
-                    'stop': ['\n\n\n', 'Title:', 'Paper:']
+                    'num_predict': 12000,
+                    'num_ctx': 8192,
+                    'repeat_penalty': 1.1,
+                    'presence_penalty': 0.1
                 }
             },
-            timeout=20
+            timeout=30
         )
         
         if response.status_code == 200:
             result = response.json().get('response', '').strip()
-            if result and len(result) > 100:
+            if result and len(result) > 300:
                 return result
                 
     except Exception as e:
@@ -1133,14 +1562,23 @@ def process_pdf_structured_summary(pdf_path: str, title: str, authors: List[str]
         if not full_text or len(full_text) < 500:
             raise ValueError("PDF text extraction failed or insufficient content")
         
-        # Clean and limit text size
-        cleaned_text = clean_scientific_text(full_text)
-        if len(cleaned_text) > max_chars:
-            cleaned_text = cleaned_text[:max_chars]
+        # Sanitize then clean for NLP
+        text_sanitized = _sanitize_pdf_text(full_text)
+        text_clean = clean_scientific_text(text_sanitized)
+        if len(text_clean) > max_chars:
+            text_clean = text_clean[:max_chars]
             logger.warning(f"Text truncated to {max_chars} characters")
         
+        # Save cleaned text next to the PDF for caching and reuse
+        try:
+            clean_text_path = Path(pdf_path).with_suffix('.clean.txt')
+            with clean_text_path.open('w', encoding='utf-8') as f:
+                f.write(text_clean)
+        except Exception as e:
+            logger.warning(f"Failed to save cleaned text: {e}")
+        
         # Enhanced section detection
-        sections = _split_into_sections(cleaned_text)
+        sections = improved_split_into_sections(text_clean)
         logger.info(f"Identified sections: {list(sections.keys())}")
         
         # Detect paper type and domain for adaptive processing
@@ -1193,6 +1631,7 @@ def process_pdf_structured_summary(pdf_path: str, title: str, authors: List[str]
             'domain': domain,
             'domain_confidence': domain_confidence,
             'sections_detected': list(sections.keys()),
+            'sections_text': sections,  # expose raw sections for frontend
             'adaptive_config': config
         })
         
@@ -1241,7 +1680,7 @@ def download_and_process_pdf(pdf_url: str, title: str, authors: List[str],
         StructuredSummary object
     """
     if not cache_dir:
-        cache_dir = Path("data/cache/pdfs")
+        cache_dir = Path("data/pdfs")
     
     cache_dir.mkdir(parents=True, exist_ok=True)
     
@@ -1279,3 +1718,55 @@ def download_and_process_pdf(pdf_url: str, title: str, authors: List[str],
             short_overview="PDF processing failed",
             abstractive_summary="Unable to generate summary due to PDF access issues"
         )
+
+
+def download_and_process_pdf_with_details(pdf_url: str, title: str, authors: List[str], 
+                           year: str, cache_dir: Optional[Path] = None) -> Tuple[StructuredSummary, Dict[str, Any]]:
+    """
+    Same as download_and_process_pdf, but also returns validation results (includes sections_text).
+    """
+    if not cache_dir:
+        cache_dir = Path("data/pdfs")
+    
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Create safe filename
+    safe_title = re.sub(r'[^\w\s-]', '', title)[:50]
+    pdf_filename = f"{safe_title}_{year}.pdf"
+    pdf_path = cache_dir / pdf_filename
+    
+    try:
+        # Download PDF if not cached
+        if not pdf_path.exists():
+            logger.info(f"Downloading PDF: {pdf_url}")
+            response = requests.get(pdf_url, timeout=30)
+            response.raise_for_status()
+            with open(pdf_path, 'wb') as f:
+                f.write(response.content)
+            logger.info(f"PDF cached at: {pdf_path}")
+        else:
+            logger.info(f"Using cached PDF: {pdf_path}")
+        
+        # Process the PDF
+        structured_summary, validation_results = process_pdf_structured_summary(pdf_path, title, authors, year)
+        return structured_summary, validation_results
+        
+    except Exception as e:
+        logger.error(f"PDF download/processing failed: {e}")
+        return StructuredSummary(
+            contributions=f"Failed to download/process PDF: {str(e)}",
+            methodology="PDF unavailable",
+            results="PDF unavailable", 
+            limitations="PDF unavailable",
+            future_work="PDF unavailable",
+            short_overview="PDF processing failed",
+            abstractive_summary="Unable to generate summary due to PDF access issues"
+        ), {
+            'overall_score': 0.0,
+            'quality_level': 'error',
+            'section_scores': {},
+            'issues': [f"PDF error: {str(e)}"],
+            'recommendations': ["Verify the PDF URL or network connectivity"],
+            'sections_detected': [],
+            'sections_text': {},
+        }

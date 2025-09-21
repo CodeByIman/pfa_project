@@ -1,0 +1,42 @@
+Title: An IoT Framework for Heart Disease Prediction based on MDCNN Classifier
+Authors: Mohammad Ayoub Khan
+Year: 2020
+Paper ID: http://arxiv.org/abs/2012.05999v1
+Link: http://arxiv.org/pdf/2012.05999v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Introduces novel approach
+KEY SENTENCES COUNT: 6
+TERMS: method, framework, results, propose, deep learning, neural network, prediction, performance, accuracy
+
+BODY:
+Internet of Things (IoT) technology has lately been adopted in healthcare systems to collect sensor values for heart disease diagnosis and prediction. Many researchers have focused on the diagnosis of heart disease,
+
+yet the accuracy of the diagnosis results is low. To address this issue, an IoT framework is proposed to evaluate heart disease more accurately using a Modified Deep Convolutional Neural Network (MDCNN).
+
+The performance of the system is analyzed by comparing the proposed MDCNN with existing deep learning neural networks and logistic regression. The results demonstrate that the proposed MDCNN based heart disease
+
+prediction system performs better than other methods. The proposed method shows that for the maximum number of records, the MDCNN achieves an accuracy of 98.2 which is better than existing classifiers.
+
+Key sentences:
+- Internet of Things (IoT) technology has lately been adopted
+in healthcare systems to collect sensor values for heart disease diagnosis and
+prediction.
+- Many researchers have focused on the diagnosis of heart disease,
+yet the accuracy of the diagnosis results is low.
+- To address this issue, an IoT
+framework is proposed to evaluate heart disease more accurately using a
+Modified Deep Convolutional Neural Network (MDCNN).
+- The performance of the system is analyzed
+by comparing the proposed MDCNN with existing deep learning neural networks and
+logistic regression.
+- The results demonstrate that the proposed MDCNN based
+heart disease prediction system performs better than other methods.
+- The
+proposed method shows that for the maximum number of records, the MDCNN
+achieves an accuracy of 98.2 which is better than existing classifiers.
+
+Important terms: method, framework, results, propose, deep learning, neural network, prediction, performance, accuracy
+Focus: Methodological approach
+Contribution: Introduces novel approach

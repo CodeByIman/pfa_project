@@ -1,0 +1,33 @@
+Title: Review of Deep Learning
+Authors: Rong Zhang, Weiping Li, Tong Mo
+Year: 2018
+Paper ID: http://arxiv.org/abs/1804.01653v2
+Link: http://arxiv.org/pdf/1804.01653v2
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Research study
+CONTRIBUTION: Introduces novel approach
+KEY POINTS: On this basis, we further analyze the
+emerging new models of convolution neural networks and recurrent neural
+networks Firstly, three basic models of deep
+learning are outlined, including multilayer perceptrons, convolutional neural
+networks, and recurrent neural networks This paper analyzes and summarizes the latest progress and future
+research directions of deep learning
+TERMS: model, deep learning, neural network
+
+Key sentences:
+- On this basis, we further analyze the
+emerging new models of convolution neural networks and recurrent neural
+networks
+- Firstly, three basic models of deep
+learning are outlined, including multilayer perceptrons, convolutional neural
+networks, and recurrent neural networks
+- This paper analyzes and summarizes the latest progress and future
+research directions of deep learning
+- This paper then summarizes deep learning's applications in many areas
+of artificial intelligence, including speech processing, computer vision,
+natural language processing and so on
+
+Important terms: model, deep learning, neural network
+Focus: Research study
+Contribution: Introduces novel approach

@@ -1,0 +1,131 @@
+Title: RITUAL: Random Image Transformations as a Universal Anti-hallucination Lever in Large Vision Language Models
+Authors: Sangmin Woo, Jaehyuk Jang, Donguk Kim, Yubin Choi, Changick Kim
+Year: 2024
+Paper ID: http://arxiv.org/abs/2405.17821v2
+Link: http://arxiv.org/pdf/2405.17821v2
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Introduces novel approach
+LINES COUNT: 56
+TERMS: method, approach, technique, framework, model, analysis, study, evaluation, experiment, results
+
+BODY:
+Model-agnostic 5 method that reduces hallucinations by leveraging randomly 6 7 transformed images as complementary inputs during decod- (a) (b) on Discriminative Task ing, adjusting the output probability distribution without additional training or external models.
+J images—altered in aspects such as orientation, scale, or color—provide alternative viewpoints that help recalibrate S S K K Detective Conan, which the model’s predictions.
+To further im- (c) on Descriptive Task prove reliability and address potential instability from arbitrary transformations, we introduce RITUAL+, an extension Figure 1.
+RITUAL: A simple yet effective anti-hallucination that selects image transformations based on self-feedback approach for LVLM s.
+Our RITUAL method leverages basic image transformations (e.g., vertical and horizontal flips) to enhance from the LVLM.
+Instead of applying transformations ran LVLM accuracywithoutexternalmodelsortraining.Byintegrating domly, RITUAL+ uses the LVLM to evaluate and choose transformed and original images, RITUAL significantly reduces transformations that are most beneficial for reducing halhallucinations in both discriminative tasks and descriptive tasks.
+This self-adaptive approach Using both versions together enables the model to refine predicmitigates the potential negative impact of certain transfortions, reducing errors and boosting correct responses.
+Experiments demonstrate interpret complex visual scenes and generate contextually that RITUAL and RITUAL+ significantly reduces hallucina- appropriate textual descriptions.
+A range of methods has been introduced to address lance [16, 56], and autonomous driving [29].
+trastive decoding [12, 24, 54, 64], which refines the model We present a simple, training-free approach termed outputs by contrasting the conditional probability of textual RITUAL, which leverages random image transformations responses given the original visual input versus a distorted to complement the original image and enhance models’ ro- visual input.
+Our work adopts a unique approach by applying bustness (see Fig.
+Our core insight is that by exposing the random image transformations to complement the original model to diverse visual transformations—such as changes in image.
+RITUAL introduces these transformed images as complementary inputs during the decoding process, allowing the Image augmentations for model robustness.
+RITUAL employs a technique for improving model robustness, particularly in dual-input strategy that integrates both the original and a computer vision and multimodal tasks.
+By introducing varirandomly transformed image, and the final prediction is an ations in input data, augmentations help models generalize ensemble of the individual predictions generated from both better to unseen scenarios, reduce overfitting, and improve the original and augmented images.
+tive approach does not require additional training or external In the training phase, data augmentation techniques [7, 46], models and is readily compatible with existing LVLM s.
+By which may inadvertently introduce instability in the model’s exposing the model to diverse perspectives of the same input, predictions, ensuring that our method performs consistently TTA reduces sensitivity to noise and ambiguity, stabilizes across a range of tasks and scenarios.
+predictions on difficult cases, and serves as a cost-effective ensembling method without requiring additional model train Our experiments evaluate RITUAL and RITUAL+ across ing.
+Our approach builds on these concepts by using random several benchmarks, including POPE [41], CHAIR [28], and image transformations during inference to provide a broader both MME-Hallucination and MME-Fullset [13].
+Despite visual context, reducing hallucinations in vision-language its simplicity, our approach effectively reduces hallucination models.
+By combining predictions from both the original across these benchmarks, significantly enhancing the general and transformed images, our method enhances robustness.
+Approach: RITUAL lines [6, 12, 24] on all tested benchmarks, achieving superior performance with comparable latency.
+We present a simple yet effective decoding method that is training-free and operates without the need for external mod 2.
+Our approach aims to mitigate these visual hallucinations with a simple yet effective modification to the input handling.
+RITUAL first randomly apply common image transformations (e.g., Crop, Flip, Rotate, etc.) to the original visual input V, This results in a transformed version of the visual input, V(T).
+In RITUAL+, the model evaluates various potential transformations and selects the most beneficial one to improve answer accuracy within the given context, further refining reliability.
+We employ a predefined set of image transformations to enhance model robustness, divided into geometric and appearance transformations.
+Our method aims to reduce hallucinations in performance.
+To align with these criteria, we select Despite the diverse views offered by random transformabaseline methods that meet these requirements.
+Recent contions by RITUAL, the effectiveness of each transformation trastive decoding methods fit well within this scope, and we varies depending on the image, query, and task.
+This To further enhance reliability and address these inconsisamplifies factual knowledge stored in the upper layers while tencies, we propose RITUAL+, a self-adaptive extension of suppressinglinguisticpatternsfromthelowerlayersthatmay RITUAL.
+Additionally, we report results from uate the impact of each transformation within the specific OPERA [18], which mitigates hallucinations in LVLM s via context of the image and query.
+In contrast augmentation, it selects transformations that are most effecto all other methods, OPERA uses beam search during retiveinminimizinghallucinationsandenhancingtask-specific sponse generation, contributing to its higher performance.
+All methods fects, such as the disruption of positional understanding or were reimplemented in our evaluation setup to ensure a fair feature distortions, and ensures more robust and consistent comparison.
+Experiments assessment as a binary classification task using yes/no questions about object presence (e.g., "Is there a dog 4.1.
+Note: All baseline methods were reimplemented within our evaluation setup for fair comparison.
+Method CHAIR ↓ CHAIR ↓ S I base 174.58 155.42 81.67 141.25 552.92 (±4.17) (±10.03) (±14.72) (±13.29) (±9.94) VCD 170.00 138.75 81.25 138.75 528.75 (±0.00) (±6.44) (±12.65) (±5.51) (±12.50) M 3 ID 176.25 157.92 81.67 142.50 558.33 (±4.79) (±9.75) (±14.72) (±12.51) (±10.28) Do La 175.00 151.67 82.09 139.58 548.33 (±5.77) (±5.61) (±14.17) (±5.51) (±8.92) RITUAL 185.00 (±4.08) 159.58 (±13.57) 77.50 (±9.57) 160.42 (±4.59) 582.5 (±21.71) RITUAL+ 189.44 (±5.09) 159.45 (±5.36) 83.33 (±20.48) 162.22 (±8.55) 594.45 (±39.48) 5.1 AV a LL base 26.2 9.3 VCD 22.4 7.6 M 3 ID 23.0 6.8 Do La 23.2 7.8 RITUAL 20.6 6.9 RITUAL+ 19.6 6.8 OPERA(beam) 23.0 7.5 PILB tcurtsn I base 28.6 10.3 VCD 27.2 9.1 M 3 ID 31.8 10.4 Do La 36.6 12.5 RITUAL 26.0 8.8 RITUAL+ 24.2 8.0 OPERA(beam) 25.6 8.3 2 lw O-GULP m base 25.8 8.4 VCD 24.0 7.8 M 3 ID 22.8 7.3 Do La 26.2 8.5 RITUAL 19.2 6.4 RITUAL+ 18.0 5.5 OPERA(beam) 18.2 5.5 LVLM benchmark assessing 14 subtasks, including object Results on MME-Hallucination.
+In Table 3, we compare hallucination through tasks like object existence, count, the results on the MME-hallucination benchmark [13] to position, and color.
+Table 2 compares various decodingtransformations based on self-feedback, thereby overcoming based hallucination mitigation methods on the POPE benchchallenges associated with individual transformations and mark [28], reporting results from the same sampling-based improving performance.
+With m PLUG-Owl 2, our method decoding approach (sampling from a multinomial distribudemonstrates strong performance as well, particularly extion).
+For a fair comparison, we set RITUAL+ achieves performance comparable to the beam the maximum number of new tokens to 64 across all methsearch-based method OPERA [18], despite its simpler de- ods.
+Although M 3 ID slightly outperforms RITUAL on CHAIR I , RITUAL delivers comparable results while signif- LL a VA 1.5 LL a VA 1.5 Method Method icantly excelling in CHAIR S .
+3, we evaluate the impact of different tiveness of our method in generating grammatically correct decoding methods on LVLM performance across these catand fluent text while also improving hallucination mitigation egories.
+In our experiments, Do La [6] range of tasks, establishing itself as a robust and flexible has minimal overhead compared to normal decoding, with method for improving LVLM performance.
+However, despite the additional visual slightly higher accuracy than RITUAL, but our method is significantly faster than OPERA.
+There are trade-offs among information provided, some tasks still exhibit slightly lower performance due to inherent challenges within LVLM s, such the methods, but RITUAL offers clear advantages.
+5, the model’s performance declines when using only age context, selecting transformations more strategically.
+Conclusion formed images together (V + V(T)) significantly enhances the model’s performance.
+This combined approach offers the We presented RITUAL, a simple decoding method that model a richer, multiview representation, allowing it to leverreduces hallucinations in LVLM s by incorporating randomly age complementary perspectives from each view.
+Our approach is traininging RITUAL with contrastive Method LL a VA 1.5 free, model-agnostic, easy-to-implement, and requires no decoding methods like VCD Acc.
+↑ F 1 ↑ external models, yet it delivers strong performance.
+This and M 3 ID yields additional RITUAL 88.87 88.81 makes it a robust solution for enhancing LVLM accuracy performance gains, underand trustworthiness across diverse applications.
+Like other contrastive decoding methods [6, + M 3 ID 89.00 88.88 complementary strengths of 12, 24], RITUAL requires two forward passes, nearly douthese approaches.
+This introduces a trade-off hallucinations, leading to notable improvements in accuracy between improved hallucination mitigation and increased and F 1 scores, demonstrating the potential of integrating latency, which may impact usability in time-sensitive applidiverse decoding strategies to enhance LVLM reliability and cations.
+In International conference on language models can identify distracted driver behavior from machine learning, pages 1597–1607.
+Contrastive decoding: Open-ended text generation as transferable visual models from natural language supervioptimization.
+
+Key sentences:
+- Model-agnostic 5 method that reduces hallucinations by leveraging randomly 6 7 transformed images as complementary inputs during decod- (a) (b) on Discriminative Task ing, adjusting the output probability distribution without additional training or external models.
+- J images—altered in aspects such as orientation, scale, or color—provide alternative viewpoints that help recalibrate S S K K Detective Conan, which the model’s predictions.
+- To further im- (c) on Descriptive Task prove reliability and address potential instability from arbitrary transformations, we introduce RITUAL+, an extension Figure 1.
+- RITUAL: A simple yet effective anti-hallucination that selects image transformations based on self-feedback approach for LVLM s.
+- Our RITUAL method leverages basic image transformations (e.g., vertical and horizontal flips) to enhance from the LVLM.
+- Instead of applying transformations ran LVLM accuracywithoutexternalmodelsortraining.Byintegrating domly, RITUAL+ uses the LVLM to evaluate and choose transformed and original images, RITUAL significantly reduces transformations that are most beneficial for reducing halhallucinations in both discriminative tasks and descriptive tasks.
+- This self-adaptive approach Using both versions together enables the model to refine predicmitigates the potential negative impact of certain transfortions, reducing errors and boosting correct responses.
+- Experiments demonstrate interpret complex visual scenes and generate contextually that RITUAL and RITUAL+ significantly reduces hallucina- appropriate textual descriptions.
+- A range of methods has been introduced to address lance [16, 56], and autonomous driving [29].
+- trastive decoding [12, 24, 54, 64], which refines the model We present a simple, training-free approach termed outputs by contrasting the conditional probability of textual RITUAL, which leverages random image transformations responses given the original visual input versus a distorted to complement the original image and enhance models’ ro- visual input.
+- Our work adopts a unique approach by applying bustness (see Fig.
+- Our core insight is that by exposing the random image transformations to complement the original model to diverse visual transformations—such as changes in image.
+- RITUAL introduces these transformed images as complementary inputs during the decoding process, allowing the Image augmentations for model robustness.
+- RITUAL employs a technique for improving model robustness, particularly in dual-input strategy that integrates both the original and a computer vision and multimodal tasks.
+- By introducing varirandomly transformed image, and the final prediction is an ations in input data, augmentations help models generalize ensemble of the individual predictions generated from both better to unseen scenarios, reduce overfitting, and improve the original and augmented images.
+- tive approach does not require additional training or external In the training phase, data augmentation techniques [7, 46], models and is readily compatible with existing LVLM s.
+- By which may inadvertently introduce instability in the model’s exposing the model to diverse perspectives of the same input, predictions, ensuring that our method performs consistently TTA reduces sensitivity to noise and ambiguity, stabilizes across a range of tasks and scenarios.
+- predictions on difficult cases, and serves as a cost-effective ensembling method without requiring additional model train Our experiments evaluate RITUAL and RITUAL+ across ing.
+- Our approach builds on these concepts by using random several benchmarks, including POPE [41], CHAIR [28], and image transformations during inference to provide a broader both MME-Hallucination and MME-Fullset [13].
+- Despite visual context, reducing hallucinations in vision-language its simplicity, our approach effectively reduces hallucination models.
+- By combining predictions from both the original across these benchmarks, significantly enhancing the general and transformed images, our method enhances robustness.
+- Approach: RITUAL lines [6, 12, 24] on all tested benchmarks, achieving superior performance with comparable latency.
+- We present a simple yet effective decoding method that is training-free and operates without the need for external mod 2.
+- Our approach aims to mitigate these visual hallucinations with a simple yet effective modification to the input handling.
+- RITUAL first randomly apply common image transformations (e.g., Crop, Flip, Rotate, etc.) to the original visual input V, This results in a transformed version of the visual input, V(T).
+- In RITUAL+, the model evaluates various potential transformations and selects the most beneficial one to improve answer accuracy within the given context, further refining reliability.
+- We employ a predefined set of image transformations to enhance model robustness, divided into geometric and appearance transformations.
+- Our method aims to reduce hallucinations in performance.
+- To align with these criteria, we select Despite the diverse views offered by random transformabaseline methods that meet these requirements.
+- Recent contions by RITUAL, the effectiveness of each transformation trastive decoding methods fit well within this scope, and we varies depending on the image, query, and task.
+- This To further enhance reliability and address these inconsisamplifies factual knowledge stored in the upper layers while tencies, we propose RITUAL+, a self-adaptive extension of suppressinglinguisticpatternsfromthelowerlayersthatmay RITUAL.
+- Additionally, we report results from uate the impact of each transformation within the specific OPERA [18], which mitigates hallucinations in LVLM s via context of the image and query.
+- In contrast augmentation, it selects transformations that are most effecto all other methods, OPERA uses beam search during retiveinminimizinghallucinationsandenhancingtask-specific sponse generation, contributing to its higher performance.
+- All methods fects, such as the disruption of positional understanding or were reimplemented in our evaluation setup to ensure a fair feature distortions, and ensures more robust and consistent comparison.
+- Experiments assessment as a binary classification task using yes/no questions about object presence (e.g., "Is there a dog 4.1.
+- Note: All baseline methods were reimplemented within our evaluation setup for fair comparison.
+- Method CHAIR ↓ CHAIR ↓ S I base 174.58 155.42 81.67 141.25 552.92 (±4.17) (±10.03) (±14.72) (±13.29) (±9.94) VCD 170.00 138.75 81.25 138.75 528.75 (±0.00) (±6.44) (±12.65) (±5.51) (±12.50) M 3 ID 176.25 157.92 81.67 142.50 558.33 (±4.79) (±9.75) (±14.72) (±12.51) (±10.28) Do La 175.00 151.67 82.09 139.58 548.33 (±5.77) (±5.61) (±14.17) (±5.51) (±8.92) RITUAL 185.00 (±4.08) 159.58 (±13.57) 77.50 (±9.57) 160.42 (±4.59) 582.5 (±21.71) RITUAL+ 189.44 (±5.09) 159.45 (±5.36) 83.33 (±20.48) 162.22 (±8.55) 594.45 (±39.48) 5.1 AV a LL base 26.2 9.3 VCD 22.4 7.6 M 3 ID 23.0 6.8 Do La 23.2 7.8 RITUAL 20.6 6.9 RITUAL+ 19.6 6.8 OPERA(beam) 23.0 7.5 PILB tcurtsn I base 28.6 10.3 VCD 27.2 9.1 M 3 ID 31.8 10.4 Do La 36.6 12.5 RITUAL 26.0 8.8 RITUAL+ 24.2 8.0 OPERA(beam) 25.6 8.3 2 lw O-GULP m base 25.8 8.4 VCD 24.0 7.8 M 3 ID 22.8 7.3 Do La 26.2 8.5 RITUAL 19.2 6.4 RITUAL+ 18.0 5.5 OPERA(beam) 18.2 5.5 LVLM benchmark assessing 14 subtasks, including object Results on MME-Hallucination.
+- In Table 3, we compare hallucination through tasks like object existence, count, the results on the MME-hallucination benchmark [13] to position, and color.
+- Table 2 compares various decodingtransformations based on self-feedback, thereby overcoming based hallucination mitigation methods on the POPE benchchallenges associated with individual transformations and mark [28], reporting results from the same sampling-based improving performance.
+- With m PLUG-Owl 2, our method decoding approach (sampling from a multinomial distribudemonstrates strong performance as well, particularly extion).
+- For a fair comparison, we set RITUAL+ achieves performance comparable to the beam the maximum number of new tokens to 64 across all methsearch-based method OPERA [18], despite its simpler de- ods.
+- Although M 3 ID slightly outperforms RITUAL on CHAIR I , RITUAL delivers comparable results while signif- LL a VA 1.5 LL a VA 1.5 Method Method icantly excelling in CHAIR S .
+- 3, we evaluate the impact of different tiveness of our method in generating grammatically correct decoding methods on LVLM performance across these catand fluent text while also improving hallucination mitigation egories.
+- In our experiments, Do La [6] range of tasks, establishing itself as a robust and flexible has minimal overhead compared to normal decoding, with method for improving LVLM performance.
+- However, despite the additional visual slightly higher accuracy than RITUAL, but our method is significantly faster than OPERA.
+- There are trade-offs among information provided, some tasks still exhibit slightly lower performance due to inherent challenges within LVLM s, such the methods, but RITUAL offers clear advantages.
+- 5, the model’s performance declines when using only age context, selecting transformations more strategically.
+- Conclusion formed images together (V + V(T)) significantly enhances the model’s performance.
+- This combined approach offers the We presented RITUAL, a simple decoding method that model a richer, multiview representation, allowing it to leverreduces hallucinations in LVLM s by incorporating randomly age complementary perspectives from each view.
+- Our approach is traininging RITUAL with contrastive Method LL a VA 1.5 free, model-agnostic, easy-to-implement, and requires no decoding methods like VCD Acc.
+- ↑ F 1 ↑ external models, yet it delivers strong performance.
+- This and M 3 ID yields additional RITUAL 88.87 88.81 makes it a robust solution for enhancing LVLM accuracy performance gains, underand trustworthiness across diverse applications.
+- Like other contrastive decoding methods [6, + M 3 ID 89.00 88.88 complementary strengths of 12, 24], RITUAL requires two forward passes, nearly douthese approaches.
+- This introduces a trade-off hallucinations, leading to notable improvements in accuracy between improved hallucination mitigation and increased and F 1 scores, demonstrating the potential of integrating latency, which may impact usability in time-sensitive applidiverse decoding strategies to enhance LVLM reliability and cations.
+- In International conference on language models can identify distracted driver behavior from machine learning, pages 1597–1607.
+- Contrastive decoding: Open-ended text generation as transferable visual models from natural language supervioptimization.
+
+Important terms: method, approach, technique, framework, model, analysis, study, evaluation, experiment, results, propose, present, introduce, implement, machine learning, deep learning, classification, prediction, optimization, performance, accuracy
+Focus: Methodological approach
+Contribution: Introduces novel approach

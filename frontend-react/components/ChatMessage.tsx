@@ -23,6 +23,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   const [expandedMetadata, setExpandedMetadata] = React.useState<{[key: string]: boolean}>({})
   const [pdfSummaries, setPdfSummaries] = React.useState<{[key: string]: PDFSummaryResponse}>({})
   const [loadingPdf, setLoadingPdf] = React.useState<{[key: string]: boolean}>({})
+  const [showFinal, setShowFinal] = React.useState<{[key: string]: boolean}>({})
+
+  // Disable auto-fetch of PDF summaries to avoid long processing; summaries will be fetched on-demand via button
+  // React.useEffect(() => {}, [searchResults])
 
   const toggleSummary = (paperId: string, summaryType: string) => {
     const key = `${paperId}-${summaryType}`
@@ -52,6 +56,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
       case 'abstractive': return '🤖'
       case 'tfidf': return '📊'
       case 'lsa': return '🔍'
+      case 'extractive': return '🧩'
       case 'combined': return '🔗'
       default: return '📝'
     }
@@ -63,6 +68,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
       case 'abstractive': return 'Résumé Abstractif (IA)'
       case 'tfidf': return 'Résumé TF-IDF'
       case 'lsa': return 'Résumé LSA'
+      case 'extractive': return 'Résumé Extractif (utilisé par Ollama)'
       case 'combined': return 'Résumé Combiné'
       default: return 'Résumé'
     }
@@ -298,28 +304,36 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                       )}
 
                       <div className="space-y-3">
-                        {/* Primary summary - prioritize Ollama if available */}
-                        {(result.ollama_summary || result.abstractive_summary) && (
-                          <div>
+                        {/* Final summary on demand: only show when user clicks */}
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setShowFinal(prev => ({ ...prev, [result.paper_id]: !prev[result.paper_id] }))}
+                            className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm"
+                          >
+                            {showFinal[result.paper_id] ? 'Masquer le Résumé' : 'Obtenir le Résumé'}
+                          </button>
+                          {loadingPdf[result.paper_id] && (
+                            <span className="text-xs text-gray-500">(Analyse PDF en cours...)</span>
+                          )}
+                        </div>
+
+                        {showFinal[result.paper_id] && (
+                          <div className="mt-3">
                             <h6 className="font-medium text-gray-800 mb-2 flex items-center">
-                              {result.ollama_summary ? (
-                                <>
-                                  🦙 Résumé Ollama (Principal)
-                                  <span className="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
-                                    IA Avancée
-                                  </span>
-                                </>
-                              ) : (
-                                '🤖 Résumé Abstractif (IA) - Principal'
-                              )}
+                              ✨ Résumé Final (Mistral)
+                              <span className="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
+                                IA Avancée
+                              </span>
                             </h6>
-                            <p className="text-sm text-gray-700 bg-green-50 p-3 rounded-lg border-l-4 border-green-400">
-                              {result.ollama_summary || result.abstractive_summary}
+                            <p className={`text-sm text-gray-700 p-3 rounded-lg border-l-4 bg-green-50 border-green-400`}>
+                              {result.final_response && result.final_response.trim() !== 'Final response not available'
+                                ? result.final_response
+                                : (result.ollama_summary || result.abstractive_summary || 'Résumé indisponible')}
                             </p>
                           </div>
                         )}
 
-                        {/* All available summaries */}
+                        {/* All available summaries (hide technical ones by default) */}
                         {result.summaries && Object.keys(result.summaries).length > 0 && (
                           <div className="border-t pt-3">
                             <h6 className="font-medium text-gray-800 mb-3 flex items-center">
@@ -327,15 +341,19 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                             </h6>
                             
                             {Object.entries(result.summaries)
-                              .filter(([_, summaryText]: [string, any]) => summaryText && summaryText.trim() !== '')
+                              .filter(([type, summaryText]: [string, any]) => {
+                                if (!summaryText || (typeof summaryText === 'string' && summaryText.trim() === '')) return false
+                                // Hide technical summaries (tfidf, lsa, combined)
+                                return !['tfidf', 'lsa', 'combined'].includes(type)
+                              })
                               .sort(([typeA], [typeB]) => getSummaryPriority(typeB) - getSummaryPriority(typeA))
                               .map(([summaryType, summaryText]: [string, any]) => {
                                 const key = `${result.paper_id}-${summaryType}`
                                 const isExpanded = expandedSummaries[key]
-                                const isMainSummary = summaryType === 'ollama' && result.ollama_summary
+                                const isMainSummary = false
                                 
                                 // Skip if this is the main summary already displayed
-                                if (isMainSummary && result.ollama_summary) return null
+                                if (isMainSummary) return null
                                 
                                 return (
                                   <div key={summaryType} className="mb-3">
@@ -355,6 +373,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                                         className={`mt-2 text-sm text-gray-700 p-3 rounded-lg border-l-4 ${
                                           summaryType === 'ollama' ? 'bg-green-50 border-green-300' :
                                           summaryType === 'abstractive' ? 'bg-blue-50 border-blue-300' :
+                                          summaryType === 'extractive' ? 'bg-yellow-50 border-yellow-300' :
                                           'bg-gray-50 border-gray-300'
                                         }`}
                                       >
@@ -396,35 +415,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                               <FileText className="w-5 h-5 mr-2 text-blue-600" />
                               Analyse Complète du PDF
                             </h6>
-                            
-                            {/* Short Overview */}
-                            <div className="mb-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
-                              <div className="font-medium text-blue-800 mb-2">📋 Résumé Court</div>
-                              <p className="text-sm text-blue-700">{pdfSummaries[result.paper_id].short_summary}</p>
-                            </div>
 
-                            {/* Structured Long Summary */}
-                            <div className="space-y-3 mb-4">
-                              <div className="font-medium text-gray-800">📚 Analyse Structurée</div>
-                              
-                              {Object.entries(pdfSummaries[result.paper_id].long_summary).map(([section, content]) => (
-                                <div key={section} className="p-3 bg-gray-50 rounded-lg border-l-4 border-gray-300">
-                                  <div className="font-medium text-gray-700 mb-1 capitalize">
-                                    {section === 'contributions' && '🎯 Contributions'}
-                                    {section === 'methodology' && '🔬 Méthodologie'}
-                                    {section === 'results' && '📊 Résultats'}
-                                    {section === 'limitations' && '⚠️ Limitations'}
-                                    {section === 'future_work' && '🚀 Travaux Futurs'}
-                                  </div>
-                                  <p className="text-sm text-gray-600">{content}</p>
-                                </div>
-                              ))}
-                            </div>
-
-                            {/* Abstractive Summary */}
-                            <div className="p-3 bg-green-50 rounded-lg border-l-4 border-green-400">
-                              <div className="font-medium text-green-800 mb-2">🦙 Résumé Abstractif (Ollama)</div>
-                              <p className="text-sm text-green-700">{pdfSummaries[result.paper_id].abstractive_summary}</p>
+                            {/* Only show the long Ollama-generated summary */}
+                            <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+                              <div className="font-semibold text-green-900 mb-2">🦙 Résumé du PDF (Ollama)</div>
+                              <p className="text-sm text-green-800 whitespace-pre-wrap">{pdfSummaries[result.paper_id].abstractive_summary}</p>
                             </div>
                           </div>
                         )}

@@ -1,0 +1,40 @@
+Title: Federated Learning for Smart Healthcare: A Survey
+Authors: Dinh C. Nguyen, Quoc-Viet Pham, Pubudu N. Pathirana, Ming Ding, Aruna Seneviratne
+Year: 2021
+Paper ID: http://arxiv.org/abs/2111.08834v1
+Link: http://arxiv.org/pdf/2111.08834v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Research study
+CONTRIBUTION: Presents findings
+KEY SENTENCES COUNT: 5
+TERMS: technique, present, design
+
+BODY:
+Traditionally, AI techniques require centralized data collection and processing that may be infeasible in realistic healthcare scenarios due to the high scalability of modern healthcare networks and growing data privacy concerns. Accordingly,
+
+we provide a comprehensive survey on the use of FL in smart healthcare. First, we present the recent advances in FL, the motivations, and the requirements of using FL in smart healthcare.
+
+The recent FL designs for smart healthcare are then discussed, ranging from resource-aware FL, secure and privacy-aware FL to incentive FL and personalized FL. Subsequently, we
+
+provide a state-of-the-art review on the emerging applications of FL in key healthcare domains, including health data management, remote health monitoring, medical imaging, and COVID-19 detection.
+
+Key sentences:
+- Traditionally, AI techniques require centralized data collection and processing
+that may be infeasible in realistic healthcare scenarios due to the high
+scalability of modern healthcare networks and growing data privacy concerns.
+- Accordingly, we provide a comprehensive survey on the use of FL in smart
+healthcare.
+- First, we present the recent advances in FL, the motivations, and
+the requirements of using FL in smart healthcare.
+- The recent FL designs for
+smart healthcare are then discussed, ranging from resource-aware FL, secure and
+privacy-aware FL to incentive FL and personalized FL.
+- Subsequently, we provide
+a state-of-the-art review on the emerging applications of FL in key healthcare
+domains, including health data management, remote health monitoring, medical
+imaging, and COVID-19 detection.
+
+Important terms: technique, present, design
+Focus: Research study
+Contribution: Presents findings

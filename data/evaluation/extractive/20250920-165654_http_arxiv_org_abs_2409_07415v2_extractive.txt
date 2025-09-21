@@ -1,0 +1,113 @@
+Title: SoK: Security and Privacy Risks of Healthcare AI
+Authors: Yuanhaur Chang, Han Liu, Chenyang Lu, Ning Zhang
+Year: 2024
+Paper ID: http://arxiv.org/abs/2409.07415v2
+Link: http://arxiv.org/pdf/2409.07415v2
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Data analysis approach
+CONTRIBUTION: Introduces novel approach
+LINES COUNT: 47
+TERMS: method, approach, algorithm, technique, framework, model, analysis, study, evaluation, experiment
+
+BODY:
+Our survey presents Besides the differencein research volume,there is also a disa systematic overview of healthcare AI attacks and defenses, connect between the security and the biomedical community andpointsout challengesand researchopportunitiesforeach in the assumed threat models and technologies under study.
+Through our ex Given the increasing role AI plays in delivering healthcare perimental analysis of different threat models and feasibilsolutions, we aim to identify this gap and contextualize the ity studies on under-exploredadversarial attacks, we provide risks of AI applications in different healthcare sub-domains.
+As technology adveloped the systematization of healthcare application of AI s, vances, software systems play an increasingly vital role in basedonwhich,itthenbecomespossibletocontextualizethe commercial products and are becoming integral in the medithreatmodel forthe analysis ofthe securityworks.
+The development of AI/ML has transformed stand the current state-of-the-art of security and privacy for modern healthcare systems, providing valuable new insights healthcare AI, we collected 101 articles from both the secuobtained from the vast amount of data collected through parity venues (IEEE S&P, USENIX Security, ACM CCS, etc.) tient diagnostics, monitoring, and healthcare research [138].
+To test our findings 1 regardingresearch opportunitiesin under-exploreddomains, we conducted proof-of-concept validations with attack ex- 1000 periments considering realistic threat models in healthcare.
+Althoughgenerativemodels raise new security risks for healthcare providers, the security community has largely overlooked these concerns (Appendix B).
+To bridge the gaps, we aim to present a systematic survey unifying existing works and propose a comprehensive framework that helps shed light on challenges and opportunities for future research.
+(§3 - §7) • We conducted proof-of-concept validation of research opportunities with tailored attack experiments in diverse under-explored healthcare domains.
+We specifically sought to explore the S&P risks of generative AI in healthcare, along with traditional ML methods and deep neural networks (DNN), through experiments to validate the reasoning of our insights.
+Malicious patients can be motivated to generate false-negative diagnostic results to avoid social stigma associated with certain medical conditions or generate falsepositiveresultsto receivehigherpriorityonsurgerywaitlists.
+Since their main task is to obtain prediction results from the models, compared to the patients, they have the added capabilities of query access and testing data control.
+the training algorithm, model architecture, model parameters, training data, training data distribution, and the num 3 Healthcare Diagnostics Systems ber of training samples.
+The primary category of availability attacks employs poisoning strategies to indiscriminately 3.1 Image Diagnostics compromise the performance of entire machine learning models.
+In healthcare, classification tasks separate medical imability, where an auxiliary model is used to generate poisonages into categories according to the type of image or the ing samples that aim to degrade the target model’s overall presence of different conditions for a specific disease [55].
+Instead of output accuracy, cybercriminals can Attacks on Medical Image Classification.
+[99]demonstrated 4 different untargeted white-box classification eva 2.4 Framework for Under-explored Attacks sion attacks on 5 distinct medical datasets.
+We aim to develop a framework are also widely explored.
+We cat- multi-label disease classification system using chest radiogegorizedattackfeasibilityacrosstwodimensions: thetechni- raphy, assuming attackers have training data control.
+Due to notable differences in data and models, we attacks with centralized and federated training schemes for analyze each healthcare sub-domain separately.
+[71] at To determine whether an attack can succeed in under- tacked Med CLIP, a contrastive learning-basedmedical founexplored scenarios, we drew on existing research in analo- dation model designed using unpaired image-text training.
+[101] proposed Jekyll, which was able to transfer chest attack assuming stronger adversarial capabilities within the X-ray or retinal images into one that can be misdiagnosed same domain is present, it also suggests the feasibility of as having an attacker-chosen disease.
+Integrity Confidentiality Availability Membership Model Data Evasion Poison Backdoor Inference Inversion Reconstruction A [99] A[18,209] õ[103] õ[47,120] õ[174] Classification A®[127] õ[115,161] ®[56] ®[184] Image õÆ[71] õÆ[71] A®[43,48] õÆ[76] Diagnostic Healthcare õAÆ[143] Diagnostics A®[101] õ[47] Detection õ[172] A[193] õÆ[104] A®[125,155] Segmentation õ[47] õ®[30] ®[170] õ[92] A®[43,182] A [59,124] Electrogram Diagnostics A [4] õ[66] ®[1] õ[66] A®[25,85] A®[113,162] ®[27] Multi-omics Diagnostic õ[148] ®[14,126] A®[52] ®[57] A [173] Cross-modal Diagnostic õ[73] ®[206] ®[184] A®[5] ®[109] Clinical Summary A®[7] Clinical Decision õ[39] Æ[39] ®[67] ®[117] ®[88] Generation A®[46,180] Support ®[64] Automated A [132] ?
+õ[144] Population Health Development Research Epidemiology Analysis A [107] ?
+[52] also evaluated the sus D 12 • - - - !jú Image Diagnostics [74] D 13 - • - - (cid:9) Multi-omics Diagnostics [12] ceptibility of CNN models in computational pathology, and D 15 - • - - È Electrogram Diagnostics [1] D 14 - • - - Motion Sensor Monitoring&Intervention [19] proved that vision transformers (Vi Ts) are inherently more D 16 - • - - Body Measurements Therapeutic Effect Prediction [189] D 17 - • - - Contact Patterns Epidemiology Analysis [140] robust against input perturbations.
+Their threat model involves a benevolent D 21 - • - - æ(cid:144) Medical Image Classification [208] D 22 - • - - 4 Medical Image Classification [129] cloud collaborator, whose goal is to identify biased informa D 23 - • - - æ Image Diagnostics [190] D 24 - • - - (cid:4) Cross-modal Diagnostics [32] tion in the dataset without hampering the predictive model’s D 25 - • - - (cid:4) Cross-modal Diagnostics [139] D 26 - • - - J Image Diagnostics [174] performance.
+Their attack on ECG classification tasks ten, entity mining is used to realize semantic perception and showed a significant performance impact on classification correlation mining to support data fusion [78].
+TRIPOD or CONSORT-AI) do Besides diagnostics and administrative tasks, AI in intraopnot require any model security analysis [36,96].
+[111] proposed BERT-based adversarial example gen There are also existing attacks targeting the confidentiality eration using domain-specific synonym replacement for aspect of medical language models.
+Releveraged imperceptible typo-based adversarial attack to cently, digital twin technology has emerged as a promisdowngrade the performance of clinical ICD-code prediction ing solution for computer-assisted surgery for its ability systems.
+Overfitting prognostic models may be rejected by physicians due to a to the training data can also potentially make inference atlack of trust in outputs [177]; this has led to an increase in tacks easier, and requires strategies such as differential primodel explainability through methods like feature impor- vacy to guarantee confidentiality [140].
+proposed Med Attacker [195], showing that the accuintegrated into healthcare Io T devices for real-time infection racy of clinical risk prediction systems can be influenced by identification [2].
+8 Table 3: The median, mean 𝑙 distortion and model accuracy 2 for attacks under 𝜖 = 8/255 (PGD) and 𝜖 = 3 (C&W).
+largely Method Median Distance Mean Distance Robust Accuracy PGDT argeted 0.026 0.028 0.32 PGDU ntargeted 0.012 0.014 0.05 C&WT argeted 2.731 2.899 0.37 C&WU ntargeted 2.084 2.249 0.03 lanigir O debrutre P lanigir O debrutre P egam I egam I egam I egam I 100 80 60 40 20 0 0.01 0.05 0.1 0.3 0.5 Poisoning Ratio Figure 3: Visualization of original and adversarial images.
+8 Under-Explored Attacks in Healthcare AI To validate the applicability of our framework to underexplored attacks, we conducted case studies examining four representative attack types across various healthcare subdomains and tasks.
+Aiming to shed light on newly arising vulnerabilities, we have investigated adversarial threats against emerging AI techniques applied in healthcare, including multi-modal biomedical foundation models (§8.1), federated learning (§8.2.2), and diffusion models (§8.4.1).
+Following the paper, we focused on biomedical image classification and selected images from the following categories: adenocarcinoma histopathology, brain MRI, squamous cell carcinoma ycarucc A Benign Accuracy 100 Backdoor Accuracy 80 60 40 20 0 0.01 0.05 0.1 0.3 0.5 Poisoning Ratio (a) Length Ratio 2% ycarucc A Benign Accuracy Backdoor Accuracy (b) Length Ratio 5% Figure 4: Backdoor attack performance against ECG-based CNN with different trigger lengths and poisoning ratios.
+Additionally, we evaluated the model’s robust 𝜖 accuracy under a given perturbation budget .
+The results are shown in Table 3, which indicate that white-box adversarial attacks remain highly effectiveagainstmulti-modalfoundationmodels.
+Forinstance, undera perturbationbudget of 8/255,the untargeted PGD attack reduces the model’s accuracy to 0.05.
+9 Table 4: Performance of backdoored FL-based ECG diag 600 400 400 nostics models with varying client and data poisoning ratios.
+8.2.2 Federated Learning-based ECG Diagnostics Federated learning (FL) has emerged as a promising ap 8.2.1 ECG Diagnostics proach for developing high-performance models using distributed medical datasets across multiple institutions while Attack Method.
+We used a 13-layer CNN that won the Empirical Results.
+The empirical results are shown in Ta 2017 Physio Net/Cin C Challenge [54] as our target model.
+As observed, varying the client poisoning ratio and This model has achieved a training accuracy of 98.57% and data poisoning ratio results in only a modest drop in benign a testing accuracy of 85.08% on the target dataset.
+We repeatedthe trial 5 times with the randomgeneration of triggers and random subset selection and evaluated 8.2.3 Disease Risk Prediction the accuracy of the benign and poisoned data.
+Inputs for disease risk prediction are hetnostic CNN is highly vulnerable to our proposed backdoor erogeneous,containingbothcontinuousandcategoricalvariattacks.
+When the trigger length ratio design our trigger as additive Gaussian perturbationsapplied is 2% and the poisoning ratio is 0.01, backdoor accuracy is only to those changeable numerical features.
+
+Key sentences:
+- Our survey presents Besides the differencein research volume,there is also a disa systematic overview of healthcare AI attacks and defenses, connect between the security and the biomedical community andpointsout challengesand researchopportunitiesforeach in the assumed threat models and technologies under study.
+- Through our ex Given the increasing role AI plays in delivering healthcare perimental analysis of different threat models and feasibilsolutions, we aim to identify this gap and contextualize the ity studies on under-exploredadversarial attacks, we provide risks of AI applications in different healthcare sub-domains.
+- As technology adveloped the systematization of healthcare application of AI s, vances, software systems play an increasingly vital role in basedonwhich,itthenbecomespossibletocontextualizethe commercial products and are becoming integral in the medithreatmodel forthe analysis ofthe securityworks.
+- The development of AI/ML has transformed stand the current state-of-the-art of security and privacy for modern healthcare systems, providing valuable new insights healthcare AI, we collected 101 articles from both the secuobtained from the vast amount of data collected through parity venues (IEEE S&P, USENIX Security, ACM CCS, etc.) tient diagnostics, monitoring, and healthcare research [138].
+- To test our findings 1 regardingresearch opportunitiesin under-exploreddomains, we conducted proof-of-concept validations with attack ex- 1000 periments considering realistic threat models in healthcare.
+- Althoughgenerativemodels raise new security risks for healthcare providers, the security community has largely overlooked these concerns (Appendix B).
+- To bridge the gaps, we aim to present a systematic survey unifying existing works and propose a comprehensive framework that helps shed light on challenges and opportunities for future research.
+- (§3 - §7) • We conducted proof-of-concept validation of research opportunities with tailored attack experiments in diverse under-explored healthcare domains.
+- We specifically sought to explore the S&P risks of generative AI in healthcare, along with traditional ML methods and deep neural networks (DNN), through experiments to validate the reasoning of our insights.
+- Malicious patients can be motivated to generate false-negative diagnostic results to avoid social stigma associated with certain medical conditions or generate falsepositiveresultsto receivehigherpriorityonsurgerywaitlists.
+- Since their main task is to obtain prediction results from the models, compared to the patients, they have the added capabilities of query access and testing data control.
+- the training algorithm, model architecture, model parameters, training data, training data distribution, and the num 3 Healthcare Diagnostics Systems ber of training samples.
+- The primary category of availability attacks employs poisoning strategies to indiscriminately 3.1 Image Diagnostics compromise the performance of entire machine learning models.
+- In healthcare, classification tasks separate medical imability, where an auxiliary model is used to generate poisonages into categories according to the type of image or the ing samples that aim to degrade the target model’s overall presence of different conditions for a specific disease [55].
+- Instead of output accuracy, cybercriminals can Attacks on Medical Image Classification.
+- [99]demonstrated 4 different untargeted white-box classification eva 2.4 Framework for Under-explored Attacks sion attacks on 5 distinct medical datasets.
+- We aim to develop a framework are also widely explored.
+- We cat- multi-label disease classification system using chest radiogegorizedattackfeasibilityacrosstwodimensions: thetechni- raphy, assuming attackers have training data control.
+- Due to notable differences in data and models, we attacks with centralized and federated training schemes for analyze each healthcare sub-domain separately.
+- [71] at To determine whether an attack can succeed in under- tacked Med CLIP, a contrastive learning-basedmedical founexplored scenarios, we drew on existing research in analo- dation model designed using unpaired image-text training.
+- [101] proposed Jekyll, which was able to transfer chest attack assuming stronger adversarial capabilities within the X-ray or retinal images into one that can be misdiagnosed same domain is present, it also suggests the feasibility of as having an attacker-chosen disease.
+- Integrity Confidentiality Availability Membership Model Data Evasion Poison Backdoor Inference Inversion Reconstruction A [99] A[18,209] õ[103] õ[47,120] õ[174] Classification A®[127] õ[115,161] ®[56] ®[184] Image õÆ[71] õÆ[71] A®[43,48] õÆ[76] Diagnostic Healthcare õAÆ[143] Diagnostics A®[101] õ[47] Detection õ[172] A[193] õÆ[104] A®[125,155] Segmentation õ[47] õ®[30] ®[170] õ[92] A®[43,182] A [59,124] Electrogram Diagnostics A [4] õ[66] ®[1] õ[66] A®[25,85] A®[113,162] ®[27] Multi-omics Diagnostic õ[148] ®[14,126] A®[52] ®[57] A [173] Cross-modal Diagnostic õ[73] ®[206] ®[184] A®[5] ®[109] Clinical Summary A®[7] Clinical Decision õ[39] Æ[39] ®[67] ®[117] ®[88] Generation A®[46,180] Support ®[64] Automated A [132] ?
+- õ[144] Population Health Development Research Epidemiology Analysis A [107] ?
+- [52] also evaluated the sus D 12 • - - - !jú Image Diagnostics [74] D 13 - • - - (cid:9) Multi-omics Diagnostics [12] ceptibility of CNN models in computational pathology, and D 15 - • - - È Electrogram Diagnostics [1] D 14 - • - - Motion Sensor Monitoring&Intervention [19] proved that vision transformers (Vi Ts) are inherently more D 16 - • - - Body Measurements Therapeutic Effect Prediction [189] D 17 - • - - Contact Patterns Epidemiology Analysis [140] robust against input perturbations.
+- Their threat model involves a benevolent D 21 - • - - æ(cid:144) Medical Image Classification [208] D 22 - • - - 4 Medical Image Classification [129] cloud collaborator, whose goal is to identify biased informa D 23 - • - - æ Image Diagnostics [190] D 24 - • - - (cid:4) Cross-modal Diagnostics [32] tion in the dataset without hampering the predictive model’s D 25 - • - - (cid:4) Cross-modal Diagnostics [139] D 26 - • - - J Image Diagnostics [174] performance.
+- Their attack on ECG classification tasks ten, entity mining is used to realize semantic perception and showed a significant performance impact on classification correlation mining to support data fusion [78].
+- TRIPOD or CONSORT-AI) do Besides diagnostics and administrative tasks, AI in intraopnot require any model security analysis [36,96].
+- [111] proposed BERT-based adversarial example gen There are also existing attacks targeting the confidentiality eration using domain-specific synonym replacement for aspect of medical language models.
+- Releveraged imperceptible typo-based adversarial attack to cently, digital twin technology has emerged as a promisdowngrade the performance of clinical ICD-code prediction ing solution for computer-assisted surgery for its ability systems.
+- Overfitting prognostic models may be rejected by physicians due to a to the training data can also potentially make inference atlack of trust in outputs [177]; this has led to an increase in tacks easier, and requires strategies such as differential primodel explainability through methods like feature impor- vacy to guarantee confidentiality [140].
+- proposed Med Attacker [195], showing that the accuintegrated into healthcare Io T devices for real-time infection racy of clinical risk prediction systems can be influenced by identification [2].
+- 8 Table 3: The median, mean 𝑙 distortion and model accuracy 2 for attacks under 𝜖 = 8/255 (PGD) and 𝜖 = 3 (C&W).
+- largely Method Median Distance Mean Distance Robust Accuracy PGDT argeted 0.026 0.028 0.32 PGDU ntargeted 0.012 0.014 0.05 C&WT argeted 2.731 2.899 0.37 C&WU ntargeted 2.084 2.249 0.03 lanigir O debrutre P lanigir O debrutre P egam I egam I egam I egam I 100 80 60 40 20 0 0.01 0.05 0.1 0.3 0.5 Poisoning Ratio Figure 3: Visualization of original and adversarial images.
+- 8 Under-Explored Attacks in Healthcare AI To validate the applicability of our framework to underexplored attacks, we conducted case studies examining four representative attack types across various healthcare subdomains and tasks.
+- Aiming to shed light on newly arising vulnerabilities, we have investigated adversarial threats against emerging AI techniques applied in healthcare, including multi-modal biomedical foundation models (§8.1), federated learning (§8.2.2), and diffusion models (§8.4.1).
+- Following the paper, we focused on biomedical image classification and selected images from the following categories: adenocarcinoma histopathology, brain MRI, squamous cell carcinoma ycarucc A Benign Accuracy 100 Backdoor Accuracy 80 60 40 20 0 0.01 0.05 0.1 0.3 0.5 Poisoning Ratio (a) Length Ratio 2% ycarucc A Benign Accuracy Backdoor Accuracy (b) Length Ratio 5% Figure 4: Backdoor attack performance against ECG-based CNN with different trigger lengths and poisoning ratios.
+- Additionally, we evaluated the model’s robust 𝜖 accuracy under a given perturbation budget .
+- The results are shown in Table 3, which indicate that white-box adversarial attacks remain highly effectiveagainstmulti-modalfoundationmodels.
+- Forinstance, undera perturbationbudget of 8/255,the untargeted PGD attack reduces the model’s accuracy to 0.05.
+- 9 Table 4: Performance of backdoored FL-based ECG diag 600 400 400 nostics models with varying client and data poisoning ratios.
+- 8.2.2 Federated Learning-based ECG Diagnostics Federated learning (FL) has emerged as a promising ap 8.2.1 ECG Diagnostics proach for developing high-performance models using distributed medical datasets across multiple institutions while Attack Method.
+- We used a 13-layer CNN that won the Empirical Results.
+- The empirical results are shown in Ta 2017 Physio Net/Cin C Challenge [54] as our target model.
+- As observed, varying the client poisoning ratio and This model has achieved a training accuracy of 98.57% and data poisoning ratio results in only a modest drop in benign a testing accuracy of 85.08% on the target dataset.
+- We repeatedthe trial 5 times with the randomgeneration of triggers and random subset selection and evaluated 8.2.3 Disease Risk Prediction the accuracy of the benign and poisoned data.
+- Inputs for disease risk prediction are hetnostic CNN is highly vulnerable to our proposed backdoor erogeneous,containingbothcontinuousandcategoricalvariattacks.
+- When the trigger length ratio design our trigger as additive Gaussian perturbationsapplied is 2% and the poisoning ratio is 0.01, backdoor accuracy is only to those changeable numerical features.
+
+Important terms: method, approach, algorithm, technique, framework, model, analysis, study, evaluation, experiment, results, findings, propose, present, introduce, develop, design, machine learning, neural network, classification, prediction, performance, accuracy
+Focus: Data analysis approach
+Contribution: Introduces novel approach

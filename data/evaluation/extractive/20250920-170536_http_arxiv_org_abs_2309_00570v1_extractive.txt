@@ -1,0 +1,95 @@
+Title: Mechanism of feature learning in convolutional neural networks
+Authors: Daniel Beaglehole, Adityanarayanan Radhakrishnan, Parthe Pandit, Mikhail Belkin
+Year: 2023
+Paper ID: http://arxiv.org/abs/2309.00570v1
+Link: http://arxiv.org/pdf/2309.00570v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Improves existing methods
+LINES COUNT: 38
+TERMS: method, approach, algorithm, technique, model, analysis, study, experiment, results, present
+
+BODY:
+Mechanism of feature learning in convolutional neural networks Daniel Beaglehole∗,2 Adityanarayanan Radhakrishnan∗,3,4 Parthe Pandit 1 Mikhail Belkin 1,2 1 Halıcıoğlu Data Science Institute, UC San Diego.
+Abstract Understanding the mechanism of how convolutional neural networks learn features from image data is a fundamental problem in machine learning and computer vision.
+We refer to the resulting algorithm as (Deep) Conv RFM and show that our algorithm recovers similar features to deep convolutional networks including the notable emergence of edge detectors.
+1 Introduction Neural networks have achieved impressive empirical results across various tasks in natural language processing [8], computer vision [39], and biology [50].
+The work [24] demonstrates an advantage of feature learning in convolutional networks by showing that these models are able to threshold noise and identify signal in image data unlike convolutional kernel methods including Convolutional Neural Tangent Kernels [4].
+Moreover, such a mechanism could be used to learn analogous features with any machine learning model such as convolutional kernel machines.
+We present empirical evidence for the CNFA by demonstrating high average Pearson correlation (in most cases > .9) between AGOP on patches and the covariance of filters across all layers of pre-trained convolutional networks on Image Net [40] and across all layers of Simple Net [18] trained on several standard image classification datasets.
+We demonstrate that Deep Conv RFM learns features similar to those learned by deep convolutional neural networks.
+Lastly, we demonstrate that Deep Conv RFM provides improvement over CNTK and Conv RFM on several standard image classification datasets, indicating a benefit to deep feature learning.
+Our results advance understanding of how convolutional networks automatically learn features from data and provide a path toward integrating convolutional feature learning into general machine learning models.
+The first set of experiments provides evidence for the ansatz in large-scale state-of-the-art models on Image Net.
+1, we present these correlations for Alex Net, all VGG models and all Res Net models pre-trained on Image Net, which are available for download from the Py Torch library [36].4 As a control, we verify that weights at the end of training are far from initialization (see the red bars in Fig.
+We note Simple Net had achieved state-of-the-art results on several of these tasks at the time of its release (e.g., > 95% test accuracy on CIFAR 10).
+We train Simple Net models using the same optimization procedure provided from [18] (i.e., Adadelta [57] with weight decay and manual learning rate scheduling).
+We note that we were able to recover high test accuracies across all datasets consistent with the results from [18] (see test accuracies for these trained Simple Net models in Appendix Fig.
+Moreover, our results imply that the mathematical origin of edge detectors in convolutional neural networks is the average gradient outer product.
+ℓ 3 CNFA as a general mechanism for convolutional feature learning We now show that the CNFA allows us to introduce a feature learning mechanism in any machine learning model on patches to capture features akin to those of convolutional networks.
+Given recent work connecting neural networks to kernel machines [22], we focus on convolutional kernels given by the Convolutional Neural Tangent Kernel (CNTK) [4] as our candidate model class.
+While such models have achieved impressive performance [1, 6, 7, 29, 38, 42], these models do not automatically learn features from data unlike CNN s.
+We will demonstrate that Conv RFM accurately captures first layer feature learning in CNN s and can recover edge detectors as features when trained on standard image classification datasets.
+We show that Deep Conv RFM: (1) improves performance of CNTK s on local signal adaptivity tasks considered in [24] ; and (2) improves performance of CNTK s on several image classification tasks.
+3.1 Convolutional Recursive Feature Machine (Conv RFM) We present the algorithm for Conv RFM in Algorithm 1.
+The Conv RFM algorithm recursively learns a feature extractor on patches of a given image by implementing the AGOP across patches of training data.
+We provide a concrete example of this algorithm for the convolutional neural network Gausssian process (CNNGP) [9, 28] of a one hidden layer convolutional network with fully connected last layer operating on black and white images below.
+In our experiments, we analyze performance when M ˇ replacing ϕ with the Mahanolobis Laplace kernel used in [37] and with the CNTK of a deep convolutional ˇ Re LU network with fully connected last layer.
+Training details for all methods are presented in Appendix B.
+We present further experiments demonstrating emergence of edge detectors from convolutional kernels trained on CIFAR 10 and GTSRB in Appendix Figs.
+To enable deep feature learning, we introduce Deep Conv RFM (see Algorithm 2) by sequentially learning features with AGOP in a manner similar to layerwise training in CNN s.
+Features are learned via the AGOP and models are trained by solving kernel regression, which is a convex optimization problem.
+We now demonstrate that by incorporating feature learning through patch-AGOP s, Deep Conv RFM exhibits local signal adaptivity on the tasks considered in [24] and thus, similar to CNN s, yield significantly improved performance over convolutional kernels.
+In particular, we begin by comparing performance of CNTK, Conv RFM, Deep Conv RFM, and corresponding CNN s on the following two image classification tasks from [24]: (1) images of black and white horizontal bars placed in a random position on larger images of Gaussian noise ; (2) MNIST images placed in a random position on larger images of Gausssian noise.
+Lastly, we analyze performance of CNTK, Conv RFM, Deep Conv RFM, and the corresponding three convolutional layer CNN on standard image classification datasets available for download from Py Torch.
+Performance comparison of Deep Conv RFM with the corresponding CNTK and CNN on benchmark image classification datasets from Py Torch.
+Since the AGOP with respect to patches can be computed on any function operating on image patches, we could use the AGOP to enable feature learning in any machine learning model operating on image patches.
+We demonstrated that Conv RFM and Deep Conv RFM recover features similar to those of deep convolutional neural networks, including evidence that features learned by these models can serve as universal edge detectors, akin to features learned in convolutional networks.
+Lastly, we showed a benefit to deep feature learning by demonstrating improvement in performance of Deep Conv RFM over Conv RFM and the CNTK on standard image classification benchmarks.
+Understanding the mechanisms driving success of neural networks is an important problem for developing effective, interpretable and safe machine learning models.
+We demonstrated that the AGOP with respect to patches of a large class of convolutional models (convolutional neural networks and convolutional kernels) trained on various standard image classification tasks consistently recovered edge detectors (see Fig.
+
+Key sentences:
+- Mechanism of feature learning in convolutional neural networks Daniel Beaglehole∗,2 Adityanarayanan Radhakrishnan∗,3,4 Parthe Pandit 1 Mikhail Belkin 1,2 1 Halıcıoğlu Data Science Institute, UC San Diego.
+- Abstract Understanding the mechanism of how convolutional neural networks learn features from image data is a fundamental problem in machine learning and computer vision.
+- We refer to the resulting algorithm as (Deep) Conv RFM and show that our algorithm recovers similar features to deep convolutional networks including the notable emergence of edge detectors.
+- 1 Introduction Neural networks have achieved impressive empirical results across various tasks in natural language processing [8], computer vision [39], and biology [50].
+- The work [24] demonstrates an advantage of feature learning in convolutional networks by showing that these models are able to threshold noise and identify signal in image data unlike convolutional kernel methods including Convolutional Neural Tangent Kernels [4].
+- Moreover, such a mechanism could be used to learn analogous features with any machine learning model such as convolutional kernel machines.
+- We present empirical evidence for the CNFA by demonstrating high average Pearson correlation (in most cases > .9) between AGOP on patches and the covariance of filters across all layers of pre-trained convolutional networks on Image Net [40] and across all layers of Simple Net [18] trained on several standard image classification datasets.
+- We demonstrate that Deep Conv RFM learns features similar to those learned by deep convolutional neural networks.
+- Lastly, we demonstrate that Deep Conv RFM provides improvement over CNTK and Conv RFM on several standard image classification datasets, indicating a benefit to deep feature learning.
+- Our results advance understanding of how convolutional networks automatically learn features from data and provide a path toward integrating convolutional feature learning into general machine learning models.
+- The first set of experiments provides evidence for the ansatz in large-scale state-of-the-art models on Image Net.
+- 1, we present these correlations for Alex Net, all VGG models and all Res Net models pre-trained on Image Net, which are available for download from the Py Torch library [36].4 As a control, we verify that weights at the end of training are far from initialization (see the red bars in Fig.
+- We note Simple Net had achieved state-of-the-art results on several of these tasks at the time of its release (e.g., > 95% test accuracy on CIFAR 10).
+- We train Simple Net models using the same optimization procedure provided from [18] (i.e., Adadelta [57] with weight decay and manual learning rate scheduling).
+- We note that we were able to recover high test accuracies across all datasets consistent with the results from [18] (see test accuracies for these trained Simple Net models in Appendix Fig.
+- Moreover, our results imply that the mathematical origin of edge detectors in convolutional neural networks is the average gradient outer product.
+- ℓ 3 CNFA as a general mechanism for convolutional feature learning We now show that the CNFA allows us to introduce a feature learning mechanism in any machine learning model on patches to capture features akin to those of convolutional networks.
+- Given recent work connecting neural networks to kernel machines [22], we focus on convolutional kernels given by the Convolutional Neural Tangent Kernel (CNTK) [4] as our candidate model class.
+- While such models have achieved impressive performance [1, 6, 7, 29, 38, 42], these models do not automatically learn features from data unlike CNN s.
+- We will demonstrate that Conv RFM accurately captures first layer feature learning in CNN s and can recover edge detectors as features when trained on standard image classification datasets.
+- We show that Deep Conv RFM: (1) improves performance of CNTK s on local signal adaptivity tasks considered in [24] ; and (2) improves performance of CNTK s on several image classification tasks.
+- 3.1 Convolutional Recursive Feature Machine (Conv RFM) We present the algorithm for Conv RFM in Algorithm 1.
+- The Conv RFM algorithm recursively learns a feature extractor on patches of a given image by implementing the AGOP across patches of training data.
+- We provide a concrete example of this algorithm for the convolutional neural network Gausssian process (CNNGP) [9, 28] of a one hidden layer convolutional network with fully connected last layer operating on black and white images below.
+- In our experiments, we analyze performance when M ˇ replacing ϕ with the Mahanolobis Laplace kernel used in [37] and with the CNTK of a deep convolutional ˇ Re LU network with fully connected last layer.
+- Training details for all methods are presented in Appendix B.
+- We present further experiments demonstrating emergence of edge detectors from convolutional kernels trained on CIFAR 10 and GTSRB in Appendix Figs.
+- To enable deep feature learning, we introduce Deep Conv RFM (see Algorithm 2) by sequentially learning features with AGOP in a manner similar to layerwise training in CNN s.
+- Features are learned via the AGOP and models are trained by solving kernel regression, which is a convex optimization problem.
+- We now demonstrate that by incorporating feature learning through patch-AGOP s, Deep Conv RFM exhibits local signal adaptivity on the tasks considered in [24] and thus, similar to CNN s, yield significantly improved performance over convolutional kernels.
+- In particular, we begin by comparing performance of CNTK, Conv RFM, Deep Conv RFM, and corresponding CNN s on the following two image classification tasks from [24]: (1) images of black and white horizontal bars placed in a random position on larger images of Gaussian noise ; (2) MNIST images placed in a random position on larger images of Gausssian noise.
+- Lastly, we analyze performance of CNTK, Conv RFM, Deep Conv RFM, and the corresponding three convolutional layer CNN on standard image classification datasets available for download from Py Torch.
+- Performance comparison of Deep Conv RFM with the corresponding CNTK and CNN on benchmark image classification datasets from Py Torch.
+- Since the AGOP with respect to patches can be computed on any function operating on image patches, we could use the AGOP to enable feature learning in any machine learning model operating on image patches.
+- We demonstrated that Conv RFM and Deep Conv RFM recover features similar to those of deep convolutional neural networks, including evidence that features learned by these models can serve as universal edge detectors, akin to features learned in convolutional networks.
+- Lastly, we showed a benefit to deep feature learning by demonstrating improvement in performance of Deep Conv RFM over Conv RFM and the CNTK on standard image classification benchmarks.
+- Understanding the mechanisms driving success of neural networks is an important problem for developing effective, interpretable and safe machine learning models.
+- We demonstrated that the AGOP with respect to patches of a large class of convolutional models (convolutional neural networks and convolutional kernels) trained on various standard image classification tasks consistently recovered edge detectors (see Fig.
+
+Important terms: method, approach, algorithm, technique, model, analysis, study, experiment, results, present, introduce, develop, implement, machine learning, deep learning, neural network, data science, classification, optimization, performance, accuracy
+Focus: Methodological approach
+Contribution: Improves existing methods

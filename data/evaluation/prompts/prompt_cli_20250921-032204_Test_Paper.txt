@@ -1,0 +1,12 @@
+Based on this text extracted from a research paper, reorganize the information.
+Using ONLY the following structured extractive content, write a fluent, human-like summary (8–12 sentences, 2–3 paragraphs, no bullets) that starts with "This paper" and explains the problem/context, methodology, key results, and implications.
+
+PAPER DETAILS (if available):
+Title: Test Paper
+Authors: John Doe, Jane Smith
+Year: 2024
+
+CONTENT TO SUMMARIZE (between <<< and >>>):
+<<<
+This paper introduces Acc Align, a novel multilingual word aligner based on multilingual sentence transformers (LaBSE). The method first induces word alignments directly from LaBSE and then applies a simple adapter-based finetuning to further improve performance. Experiments on seven language pairs show state-of-the-art AER, including strong zero-shot results. The approach is parameter-efficient and supports multiple language pairs in a single model.
+>>>

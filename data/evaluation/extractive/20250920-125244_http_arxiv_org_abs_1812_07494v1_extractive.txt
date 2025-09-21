@@ -1,0 +1,50 @@
+Title: Review of studies in field of the effects of nanotechnology on breast cancer
+Authors: Parisa Teimoori Baghaee, Atena Donya
+Year: 2018
+Paper ID: http://arxiv.org/abs/1812.07494v1
+Link: http://arxiv.org/pdf/1812.07494v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Introduces novel approach
+KEY SENTENCES COUNT: 6
+TERMS: method, study, present, develop
+
+BODY:
+Cancer is the main cause of mortality at the developed countries and is the second cause of mortality at the developing countries
+
+and breast cancer is the most prevalent malignancy and the first cause of mortality among women of the world. At the US,
+
+28% of new cancer cases and 15% of mortality caused by that in 2010 was caused by breast cancer. According to the
+
+mentioned, the study has tried to assess the effect of nanotechnology in form of a review to diagnose and treat breast cancer.
+
+The method applied in this study is descriptive analytical method and library method has been used for data collection purpose. In the data collection method, 45 articles relevant to structure of types of
+
+nanoparticles and their uses in diagnosis, imaging and medicine delivery systems and breast cancer treatment have been
+
+used. The most underlying headlines of the present study include mineral nanoparticles, antibodies and tumor imaging methods.
+
+Key sentences:
+- Cancer is the main cause of mortality at the developed countries and is the
+second cause of mortality at the developing countries and breast cancer is the
+most prevalent malignancy and the first cause of mortality among women of the
+world.
+- At the US, 28% of new cancer cases and 15% of mortality caused by that
+in 2010 was caused by breast cancer.
+- According to the mentioned, the
+study has tried to assess the effect of nanotechnology in form of a review to
+diagnose and treat breast cancer.
+- The method applied in this study is
+descriptive analytical method and library method has been used for data
+collection purpose.
+- In the data collection method, 45 articles relevant to
+structure of types of nanoparticles and their uses in diagnosis, imaging and
+medicine delivery systems and breast cancer treatment have been used.
+- The most underlying
+headlines of the present study include mineral nanoparticles, antibodies and
+tumor imaging methods.
+
+Important terms: method, study, present, develop
+Focus: Methodological approach
+Contribution: Introduces novel approach

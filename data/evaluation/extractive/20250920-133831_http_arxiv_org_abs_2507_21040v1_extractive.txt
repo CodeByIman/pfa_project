@@ -1,0 +1,73 @@
+Title: Transformers as Unrolled Inference in Probabilistic Laplacian Eigenmaps: An Interpretation and Potential Improvements
+Authors: Aditya Ravuri, Neil D. Lawrence
+Year: 2025
+Paper ID: http://arxiv.org/abs/2507.21040v1
+Link: http://arxiv.org/pdf/2507.21040v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Data analysis approach
+CONTRIBUTION: Improves existing methods
+LINES COUNT: 27
+TERMS: method, approach, algorithm, framework, model, analysis, experiment, propose, present, introduce
+
+BODY:
+Lawrence University of Cambridge Abstract We propose a probabilistic interpretation of transformers as unrolled inference steps assuming a probabilistic Laplacian Eigenmaps model from the Prob DR framework.
+We demonstrate that simply subtracting the identity from the attention matrix (and thereby taking a graph diffusion step) improves validation performance on a language model and a simple vision transformer.
+(2017), have been an incredibly successful architecture found for deep learning, leading to vastly scaled models used for language, as part of Large Language Models (LLM s), such as BERT (Devlin et al., 2019), vision transformers (Vi Ts) (Dosovitskiy et al., 2021), foundation models for speech (e.g.
+Inspired by the idea that transformers perform dimensionality reduction, we roughly follow the approach of Yu et al.
+As part of a visual experiment, we show that MNIST flattened images cluster tightly by class when input to a transformer.
+We also show that a modification, simply subtracting an identity matrix from the attention matrix (in other words, performing graph diffusion, or Laplacian smoothing in the attention step), follows from our interpretation, and we show that this architectural change can be more performant on a language model and vision transformer fit on the tiny Shakespeare and Open Web Text datasets (Karpathy, 2015; Gokaslan et al., 2019), and the downsampled Imagenet datasets (Russakovsky et al., 2015; Chrabaszcz et al., 2017) respectively.
+Related Work In our work, we interpret the attention matrix as an adjacency matrix of a nearest-neighbour graph, and show that unrolled optimisation in a dimensionality reduction model leads to the transformer architecture.
+In our work, we show that the graph diffusion steps also increase the performance of the architecture.
+perform optimisation in a latent variable model with just n blocks number of steps); an overview of this field and its major ideas is presented in Chen et al.
+Laplacian Eigenmaps is a dimensionality reduction algorithm that reduces the size of a dataset Y ∈ Rn×d to a smaller matrix of representations X ∈ Rn×d q,d << d.
+The probabilistic Laplacian Eigenmaps model is a q probabilistic interpretation of the algorithm (i.e.
+a model, inference within which leads to the algorithm in question).
+p(Xˆ|Y) ij ij k kj The variational interpretation of Sim Siam, a Semi-Supervised Learning method We make a short digression to show how the model graph of Prob DR is not atypical in the representation learning field.
+Sim Siam, introduced in i i Chen & He (2020), is a semi-supervised learning method that constructs representations of the data by minimising the negative inner product, X L = − f(h(Y m a))⊤f(Y m b), i i i m ,m a b P 1 We denote the adjacency matrix as A, hence L = D−A, with D = A .
+If an optimisation step corresponding to the model preserves/improves these properties (and does not make f degenerate or collapse), we can rely on the variational constraint to always provide an approximate but valid “view” of the data for the model to approach.
+(2023) showed that the gradient descent operation T is very similar to the operations that occur in an (encoder) transformer block, assuming a Gaussian mixture model with a sparse prior on the latent representations X.
+We note that due to the representations being latent, the model considered in Yu et al.
+3 Transformers as Prob DR Inference In this work, we present an alternative interpretation to that of Yu et al.
+(2023), that shows that transformers perform gradient descent on a variational objective derived using a variational form of the probabilistic Laplacian Eigenmaps model of Ravuri et al.
+We modify the model by adding a prior on the latents, (cid:0) (cid:1) logp(Γ,Z) = log W Γ|(ZZ⊤ + βI)−1 ,d) + log U∗(Z).
+4 Experiments We provide three main experiments to show validity of the ideas presented thus far.
+In the second, we show that removing an identity matrix from the attention matrix as suggested by our derivations increases performance on the Shakespeare dataset and a downsampled (16-by 16) version of Imagenet.
+4.1 Transformers perform Dimensionality Reduction The details of our dimensionality reduction experiment are as follows.
+4.2 Graph Diffusion improves performance In the second experiment, we simply replace the attention matrix A within a transformer architecture, found in nano GPT (Karpathy, 2022) with the negative graph Laplacian A − I, and run the model multiple times on the Shakespeare dataset.
+(2017) achieves 40% validation accuracy, whereas our naïve Vi T acheives around 26%.
+In both cases however, validation performance improves when we replace the attention matrix by the negative graph Laplacian.
+wav 2 vec 2.0: A framework for self-supervised learning of speech representations, 2020.
+
+Key sentences:
+- Lawrence University of Cambridge Abstract We propose a probabilistic interpretation of transformers as unrolled inference steps assuming a probabilistic Laplacian Eigenmaps model from the Prob DR framework.
+- We demonstrate that simply subtracting the identity from the attention matrix (and thereby taking a graph diffusion step) improves validation performance on a language model and a simple vision transformer.
+- (2017), have been an incredibly successful architecture found for deep learning, leading to vastly scaled models used for language, as part of Large Language Models (LLM s), such as BERT (Devlin et al., 2019), vision transformers (Vi Ts) (Dosovitskiy et al., 2021), foundation models for speech (e.g.
+- Inspired by the idea that transformers perform dimensionality reduction, we roughly follow the approach of Yu et al.
+- As part of a visual experiment, we show that MNIST flattened images cluster tightly by class when input to a transformer.
+- We also show that a modification, simply subtracting an identity matrix from the attention matrix (in other words, performing graph diffusion, or Laplacian smoothing in the attention step), follows from our interpretation, and we show that this architectural change can be more performant on a language model and vision transformer fit on the tiny Shakespeare and Open Web Text datasets (Karpathy, 2015; Gokaslan et al., 2019), and the downsampled Imagenet datasets (Russakovsky et al., 2015; Chrabaszcz et al., 2017) respectively.
+- Related Work In our work, we interpret the attention matrix as an adjacency matrix of a nearest-neighbour graph, and show that unrolled optimisation in a dimensionality reduction model leads to the transformer architecture.
+- In our work, we show that the graph diffusion steps also increase the performance of the architecture.
+- perform optimisation in a latent variable model with just n blocks number of steps); an overview of this field and its major ideas is presented in Chen et al.
+- Laplacian Eigenmaps is a dimensionality reduction algorithm that reduces the size of a dataset Y ∈ Rn×d to a smaller matrix of representations X ∈ Rn×d q,d << d.
+- The probabilistic Laplacian Eigenmaps model is a q probabilistic interpretation of the algorithm (i.e.
+- a model, inference within which leads to the algorithm in question).
+- p(Xˆ|Y) ij ij k kj The variational interpretation of Sim Siam, a Semi-Supervised Learning method We make a short digression to show how the model graph of Prob DR is not atypical in the representation learning field.
+- Sim Siam, introduced in i i Chen & He (2020), is a semi-supervised learning method that constructs representations of the data by minimising the negative inner product, X L = − f(h(Y m a))⊤f(Y m b), i i i m ,m a b P 1 We denote the adjacency matrix as A, hence L = D−A, with D = A .
+- If an optimisation step corresponding to the model preserves/improves these properties (and does not make f degenerate or collapse), we can rely on the variational constraint to always provide an approximate but valid “view” of the data for the model to approach.
+- (2023) showed that the gradient descent operation T is very similar to the operations that occur in an (encoder) transformer block, assuming a Gaussian mixture model with a sparse prior on the latent representations X.
+- We note that due to the representations being latent, the model considered in Yu et al.
+- 3 Transformers as Prob DR Inference In this work, we present an alternative interpretation to that of Yu et al.
+- (2023), that shows that transformers perform gradient descent on a variational objective derived using a variational form of the probabilistic Laplacian Eigenmaps model of Ravuri et al.
+- We modify the model by adding a prior on the latents, (cid:0) (cid:1) logp(Γ,Z) = log W Γ|(ZZ⊤ + βI)−1 ,d) + log U∗(Z).
+- 4 Experiments We provide three main experiments to show validity of the ideas presented thus far.
+- In the second, we show that removing an identity matrix from the attention matrix as suggested by our derivations increases performance on the Shakespeare dataset and a downsampled (16-by 16) version of Imagenet.
+- 4.1 Transformers perform Dimensionality Reduction The details of our dimensionality reduction experiment are as follows.
+- 4.2 Graph Diffusion improves performance In the second experiment, we simply replace the attention matrix A within a transformer architecture, found in nano GPT (Karpathy, 2022) with the negative graph Laplacian A − I, and run the model multiple times on the Shakespeare dataset.
+- (2017) achieves 40% validation accuracy, whereas our naïve Vi T acheives around 26%.
+- In both cases however, validation performance improves when we replace the attention matrix by the negative graph Laplacian.
+- wav 2 vec 2.0: A framework for self-supervised learning of speech representations, 2020.
+
+Important terms: method, approach, algorithm, framework, model, analysis, experiment, propose, present, introduce, deep learning, neural network, classification, performance, accuracy
+Focus: Data analysis approach
+Contribution: Improves existing methods

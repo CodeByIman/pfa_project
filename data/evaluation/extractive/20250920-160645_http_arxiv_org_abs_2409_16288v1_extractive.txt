@@ -1,0 +1,135 @@
+Title: Self-Supervised Any-Point Tracking by Contrastive Random Walks
+Authors: Ayush Shrivastava, Andrew Owens
+Year: 2024
+Paper ID: http://arxiv.org/abs/2409.16288v1
+Link: http://arxiv.org/pdf/2409.16288v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Introduces novel approach
+LINES COUNT: 58
+TERMS: method, approach, technique, model, evaluation, experiment, results, propose, present, introduce
+
+BODY:
+We present a simple, self-supervised approach to the Tracking Any Point (TAP) problem.
+The ability to perform “all pairs” comparisons between points allows the model to obtain high spatial precision and to obtain a strong contrastive learning signal, while avoiding many of the complexities of recent approaches (such as coarse-to-fine matching).
+To do this, we propose a number of design decisions that allow global matching architectures to be trained through self-supervision using cycle consistency.
+For example, we identify that transformer-based methods are sensitive to shortcut solutions, and propose a data augmentation scheme to address them.
+Our method achieves strong performance on the Tap Vid benchmarks, outperforming previous self-supervised tracking methods, such as DIFT, and is competitive with several supervised methods.
+While a number of such methods have been proposed for space-time correspondence [2,19,44,46,52], these methods are not well suited to the challenge of tracking physical points over long time horizons, the core challenge of Tracking Any Point (Fig.
+We present a self-supervised method for tracking all physical points over the course of a video, i.e., the Tracking Any Point problem [7].
+Our model uses a global matching transformer [49] to track points cycle consistently over time, using the contrastive random walk [19].
+Our approach outperforms self-supervised tracking methods, such as self-supervised DIFT [40] and supervised optical flow methods, like RAFT [42], on the TAP-Vid benchmark [7].
+In this paper, we propose a simple and effective self-supervised approach to the Tracking Any Point problem.
+Additionally, we identify that global matching architectures are susceptible to shortcut solutions (e.g., due to their use of positional encodings), and that previously proposed methods for addressing these shortcuts are insufficient [41].
+We therefore propose a type of data augmentation that removes these shortcuts.
+Our approach obtains strong performance on the TAP-Vid [7] benchmark, significantly outperforming previous self-supervised tracking methods on TAPV id DAVIS and Kubric.
+Through experiments, we show: Self-supervised models can obtain strong performance on the Tracking Any • Point task, e.g., obtaining competitive performance to TAP-Net [7] on many metrics.
+A variety of recent methods have been proposed for learning to track pixels through video via self-supervision.
+[44] learned a representation in which pixels were photoconsistent, providing the model with only grayscale images during training and using the held-out colors to assess the quality of the match.
+While this approach is effective, it implicitly assumes that objects are photo-consistent over time, an assumption that is frequently violated [22].
+[46] used a model based on spatial transformers to track pixels forward in time, then backwards, learning a representation that minimized the distance from their point of origin.
+We extend this approach and use a transformer architecture that allows for global matching and finer correspondences.
+[2] showed that the contrastive random walk can obtain pixel-accurate matches through multi-scale matching, and proposed several extensions that unify it with self-supervised optical flow methods [22].
+However, we note that multi-scale matching could be combined with our method to obtain more accurate results.
+They proposed a data augmentation technique to use different image crops for the forward and backward cycles of the random walk.
+Different from prior flow approaches, GMF low [49] formulated optical flow prediction as a global matching problem that identifies correspondences by directly comparing feature similarities.
+[51] proposed a unified model for flow, rectified stereo matching and unrectified stereo 4 A.
+Rather than predicting two-frame velocity estimates which most optical flow methods do, we learn probabilistic matches between frames.
+However, instead of supervising the model to generate flow estimates, we train it to perform a contrastive random walk.
+[56] proposed to use cycle consistency as a supervisory signal across different instances of the same category to train correspondence models.
+Other methods have used cycle-consistency to detect occlusions [1,18,26,38], such as within unsupervised flow models [20,22,47,57].
+Recently, many works have focused on supervised methods for longterm pixel tracking along with the introduction of new benchmarks.
+TAP-Vid [7] proposed a new test-bed for tracking any point in a video.
+Concurrently, Persistent Independent Particles (PIP s) [15] introduced a tracking method that searches over a local neighborhood and smooths the estimates over time by iterative refinement.
+TAPIR [8] uses a two-stage approach: matching stage that provides an initial location of the query point in every frame and a refinement stage that updates the tracks based on local neighborhoods, essentially combining techniques from TAP-Net and PIP s models.
+Omni Motion [45] introduces a test-time optimization method by building globally consistent motion representations.
+All these methods use ground-truth tracks or trajectories computed from pretrained optical flow methods for training, whereas we use self-supervision to train our model provided by cycle-consistency as the supervisory signal.
+3 Method: Global Matching Random Walk We propose a self-supervised method for tracking points in video.
+Our model takes a pair of images I and I as input t t+1 over which it computes correspondences.
+To compute tracks during evaluation, we can take an expectation over the affinity matrix to get coordinates (x,y).
+Following recent supervised approaches [7], we create a model that operates on a pair of (not necessarily temporally adjacent) video frames.
+We use global matching to define a transition matrix for the contrastive random walk, which allows us to model the motion of a very large number of points at once.
+For example, in our experiments we divide an 256 256 resolution image × into a 64 64 grid , whereas Jabri et al.
+We extract d-dimensional features ϕ(I ) RH×W ×d for each t c c ∈ image I from a convolutional neural network where c = 4.
+Our model uses probabilities from the affinity matrix to find correspondences.
+We implement this by upsampling the original image by the stride.
+We vary our sampling strides among s = 1,2,4 and { } mention the stride used during training and evaluation in our experiments.
+We propose label warping as a remedy to avoid shortcut solutions that arise when we use transformer-based models for contrastive random walks.
+Instead of warping the last feature to match the first feature, we propose to warpthelabelusedforcycleconsistency.Foranimagepair I t ,I t+1 ,weapplydifferent affine transformations Tf, Tb to the forward and backward cycle.
+We then supervise it with the warped identity matrix Tb f (I) where Tb f represents the transformation to go from Tf to Tb.
+We use the cycle con- sistency objective introduced contrastive random walks in Jabri et al.
+Since the transformer model has a positional encoding, and our architecture has a large number of global self-attention layers, this solution is easy to find.
+s 4 Experiments Our model estimates space-time correspondences between a pair of video frames, from which we can compute expected coordinates for each track.
+We evaluate our method on the four Tap-Vid benchmarks and use the standard evaluation metrics [7].
+Unlike other models that address TAP, we do not use any labels from the training data, as our method is entirely selfsupervised.
+4.2 Evaluation To validate our approach and to test the generalization of our trained models, we run evaluations on the Tap Vid benchmarks [7], namely on Kubric, DAVIS, Kinetics, and RGB-Stacking.
+(2) Occlusion Accuracy which is a classification accuracy for predicting where a point is visible or occluded.
+5 Results We compare our method to previous supervised and self-supervised approaches, and evaluate a number of different design decisions.
+5.1 Comparison to other methods In Table 1, we compare our method to previously proposed self-supervised tracking and supervised approaches.
+[45], we run all self-supervised methods in Chained (-C) and Direct (-D) settings and show their performance in Table 1 (bottom section).
+For all self-supervised methods (none of which explicitly predict occlusion masks), we test for occlusion using cycle consistency over the predicted tracks using the same approach used in our method.
+
+Key sentences:
+- We present a simple, self-supervised approach to the Tracking Any Point (TAP) problem.
+- The ability to perform “all pairs” comparisons between points allows the model to obtain high spatial precision and to obtain a strong contrastive learning signal, while avoiding many of the complexities of recent approaches (such as coarse-to-fine matching).
+- To do this, we propose a number of design decisions that allow global matching architectures to be trained through self-supervision using cycle consistency.
+- For example, we identify that transformer-based methods are sensitive to shortcut solutions, and propose a data augmentation scheme to address them.
+- Our method achieves strong performance on the Tap Vid benchmarks, outperforming previous self-supervised tracking methods, such as DIFT, and is competitive with several supervised methods.
+- While a number of such methods have been proposed for space-time correspondence [2,19,44,46,52], these methods are not well suited to the challenge of tracking physical points over long time horizons, the core challenge of Tracking Any Point (Fig.
+- We present a self-supervised method for tracking all physical points over the course of a video, i.e., the Tracking Any Point problem [7].
+- Our model uses a global matching transformer [49] to track points cycle consistently over time, using the contrastive random walk [19].
+- Our approach outperforms self-supervised tracking methods, such as self-supervised DIFT [40] and supervised optical flow methods, like RAFT [42], on the TAP-Vid benchmark [7].
+- In this paper, we propose a simple and effective self-supervised approach to the Tracking Any Point problem.
+- Additionally, we identify that global matching architectures are susceptible to shortcut solutions (e.g., due to their use of positional encodings), and that previously proposed methods for addressing these shortcuts are insufficient [41].
+- We therefore propose a type of data augmentation that removes these shortcuts.
+- Our approach obtains strong performance on the TAP-Vid [7] benchmark, significantly outperforming previous self-supervised tracking methods on TAPV id DAVIS and Kubric.
+- Through experiments, we show: Self-supervised models can obtain strong performance on the Tracking Any • Point task, e.g., obtaining competitive performance to TAP-Net [7] on many metrics.
+- A variety of recent methods have been proposed for learning to track pixels through video via self-supervision.
+- [44] learned a representation in which pixels were photoconsistent, providing the model with only grayscale images during training and using the held-out colors to assess the quality of the match.
+- While this approach is effective, it implicitly assumes that objects are photo-consistent over time, an assumption that is frequently violated [22].
+- [46] used a model based on spatial transformers to track pixels forward in time, then backwards, learning a representation that minimized the distance from their point of origin.
+- We extend this approach and use a transformer architecture that allows for global matching and finer correspondences.
+- [2] showed that the contrastive random walk can obtain pixel-accurate matches through multi-scale matching, and proposed several extensions that unify it with self-supervised optical flow methods [22].
+- However, we note that multi-scale matching could be combined with our method to obtain more accurate results.
+- They proposed a data augmentation technique to use different image crops for the forward and backward cycles of the random walk.
+- Different from prior flow approaches, GMF low [49] formulated optical flow prediction as a global matching problem that identifies correspondences by directly comparing feature similarities.
+- [51] proposed a unified model for flow, rectified stereo matching and unrectified stereo 4 A.
+- Rather than predicting two-frame velocity estimates which most optical flow methods do, we learn probabilistic matches between frames.
+- However, instead of supervising the model to generate flow estimates, we train it to perform a contrastive random walk.
+- [56] proposed to use cycle consistency as a supervisory signal across different instances of the same category to train correspondence models.
+- Other methods have used cycle-consistency to detect occlusions [1,18,26,38], such as within unsupervised flow models [20,22,47,57].
+- Recently, many works have focused on supervised methods for longterm pixel tracking along with the introduction of new benchmarks.
+- TAP-Vid [7] proposed a new test-bed for tracking any point in a video.
+- Concurrently, Persistent Independent Particles (PIP s) [15] introduced a tracking method that searches over a local neighborhood and smooths the estimates over time by iterative refinement.
+- TAPIR [8] uses a two-stage approach: matching stage that provides an initial location of the query point in every frame and a refinement stage that updates the tracks based on local neighborhoods, essentially combining techniques from TAP-Net and PIP s models.
+- Omni Motion [45] introduces a test-time optimization method by building globally consistent motion representations.
+- All these methods use ground-truth tracks or trajectories computed from pretrained optical flow methods for training, whereas we use self-supervision to train our model provided by cycle-consistency as the supervisory signal.
+- 3 Method: Global Matching Random Walk We propose a self-supervised method for tracking points in video.
+- Our model takes a pair of images I and I as input t t+1 over which it computes correspondences.
+- To compute tracks during evaluation, we can take an expectation over the affinity matrix to get coordinates (x,y).
+- Following recent supervised approaches [7], we create a model that operates on a pair of (not necessarily temporally adjacent) video frames.
+- We use global matching to define a transition matrix for the contrastive random walk, which allows us to model the motion of a very large number of points at once.
+- For example, in our experiments we divide an 256 256 resolution image × into a 64 64 grid , whereas Jabri et al.
+- We extract d-dimensional features ϕ(I ) RH×W ×d for each t c c ∈ image I from a convolutional neural network where c = 4.
+- Our model uses probabilities from the affinity matrix to find correspondences.
+- We implement this by upsampling the original image by the stride.
+- We vary our sampling strides among s = 1,2,4 and { } mention the stride used during training and evaluation in our experiments.
+- We propose label warping as a remedy to avoid shortcut solutions that arise when we use transformer-based models for contrastive random walks.
+- Instead of warping the last feature to match the first feature, we propose to warpthelabelusedforcycleconsistency.Foranimagepair I t ,I t+1 ,weapplydifferent affine transformations Tf, Tb to the forward and backward cycle.
+- We then supervise it with the warped identity matrix Tb f (I) where Tb f represents the transformation to go from Tf to Tb.
+- We use the cycle con- sistency objective introduced contrastive random walks in Jabri et al.
+- Since the transformer model has a positional encoding, and our architecture has a large number of global self-attention layers, this solution is easy to find.
+- s 4 Experiments Our model estimates space-time correspondences between a pair of video frames, from which we can compute expected coordinates for each track.
+- We evaluate our method on the four Tap-Vid benchmarks and use the standard evaluation metrics [7].
+- Unlike other models that address TAP, we do not use any labels from the training data, as our method is entirely selfsupervised.
+- 4.2 Evaluation To validate our approach and to test the generalization of our trained models, we run evaluations on the Tap Vid benchmarks [7], namely on Kubric, DAVIS, Kinetics, and RGB-Stacking.
+- (2) Occlusion Accuracy which is a classification accuracy for predicting where a point is visible or occluded.
+- 5 Results We compare our method to previous supervised and self-supervised approaches, and evaluate a number of different design decisions.
+- 5.1 Comparison to other methods In Table 1, we compare our method to previously proposed self-supervised tracking and supervised approaches.
+- [45], we run all self-supervised methods in Chained (-C) and Direct (-D) settings and show their performance in Table 1 (bottom section).
+- For all self-supervised methods (none of which explicitly predict occlusion masks), we test for occlusion using cycle consistency over the predicted tracks using the same approach used in our method.
+
+Important terms: method, approach, technique, model, evaluation, experiment, results, propose, present, introduce, design, implement, neural network, classification, prediction, optimization, performance, accuracy
+Focus: Methodological approach
+Contribution: Introduces novel approach

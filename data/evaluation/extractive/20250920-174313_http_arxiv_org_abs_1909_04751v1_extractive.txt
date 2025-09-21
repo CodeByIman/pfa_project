@@ -1,0 +1,169 @@
+Title: Reinforcement Learning and Video Games
+Authors: Yue Zheng
+Year: 2019
+Paper ID: http://arxiv.org/abs/1909.04751v1
+Link: http://arxiv.org/pdf/1909.04751v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Improves existing methods
+LINES COUNT: 75
+TERMS: method, approach, algorithm, technique, framework, model, study, evaluation, experiment, results
+
+BODY:
+Name: Yue Zheng Abstract Reinforcement learning has exceeded human-level performance in game playing AI with deep learning methods according to the experiments from Deep Mind on Go and Atari games.
+Deep learning solves high dimension input problems which stop the development of reinforcement for many years.
+This study uses both two techniques to create several agents with different algorithms that successfully learn to play T-rex Runner.
+Deep Q network algorithm and three types of improvements are implemented to train the agent.
+The results from some of them are far from satisfactory but others are better than human experts.
+Batch normalization is a method to solve internal covariate shift problems in deep neural network.
+The positive influence of this on reinforcement learning has also been proved in this study.
+Eleni Vasilaki for assigning me this project and her guidance across this study.
+28 3.6.2 Comparison of different Deep Q Network Algorithms .
+30 4 Results and Discussion 31 iv CONTENTS v 4.1 Hyper Parameter Tuning .
+6 2.3 A simple deep neural network with three hidden layers.
+27 3.4 Convolutional Neural Network architecture for Deep Q Network.
+28 3.5 Convolutional Neural Network architecture for Dueling Deep Q Network.
+38 4.11 Boxplot for test result with eight different algorithms .
+40 vi List of Tables 2.1 Dimension description of the deep neural network .
+As one part of them, Reinforcement Learning has achieved incredible results in game playing.
+An intelligent agent will be created and trained with reinforcement learning algorithms to fulfill this tasks.
+Deep learning methods such as convolutional neural network contributes a lot to this because these techniques solves the problem of dealing with high dimension input data and feature extraction.
+1.2 Aim of the project The aim of this project is to create an agent using different algorithms to play T-rex Runner and compare the performance of them.
+Internal covariate shift is the change of distribution in each layer of during the training which may result in longer training time especially in deep neural network.
+The same problem may also occur in deep reinforcement learning because the decision is based on neural network.
+Beyond the comparison of different reinforcement learning algorithms, this project will also investigate the effect of batch normalization.
+INTRODUCTION 2 • Create an agent to play T-rex Runner • Compare the difference among different reinforcement learning algorithms • Investigate the effect of batch normalization in reinforcement learning 1.3 Overview This study opens with a literature review on deep learning and reinforcement learning.
+Each section includes the history of the field and the techniques related to this study.
+Chapter 3 includes the description of the game and the choice of algorithms according the literature review.
+The entire processing step will be shown as well as the architecture of the model.
+The design of the experiments and the evaluation methods are presented in this chapter too.
+Chapter 4 shows the result of all the experiments and the discussion of each experiment.
+Chapter 5 presents the conclusion of this study and the proposed future works.
+Chapter 2 Literature Survey This chapter introduces the techniques used in developing an agent to play T-rex Runner.
+There are two main sections which are Deep Learning and Reinforcement Learning.
+Brief history and some milestones will be described and some important methods will be shown in detail.
+2.1 Deep Learning Deep learning is a class of Machine Learning model based on Artificial Neural Network (ANN).
+There two kinds of deep learning model which is widely used in recent years.
+Recurrent Neural Network is one of them which shows its power in Natural Language Processing.
+The other one plays an important role in deep reinforcement learning called Convolutional Neural Network (CNN).
+It is one of the most effective models for computer vision problems such as object detection and image classification.
+This section gives a brief introduction of deep learning and detailed information about convolutional neural network.
+2.1.1 History of Deep Learning An artificial neural network is a computation system inspired by biological neural networks which were first proposed by Mc Culloch, a neurophysiologist [24].
+Three years later, his experiments show this algorithm can recognize some of alphabets [32].
+show that some useful representations can be learned with multi-layer perceptron, which is also called neural network, and backpropagation algorithm [33] in 1988.
+first used a five-layer neural network and backpropagation to solved digit classification problem and achieved great results [21].
+His innovative model is known as Le Net which is the beginning of the convolutional neural network.
+LITERATURE SURVEY 4 The origin of CNN was proposed by Fukushima named Neocognitron which was a selforganized neural network model with multiple layers [10].
+This model achieved a good result in object detection tasks because it is not position-sensitive.
+The model used convolutions and sub-sampling which is called convolution layer and pooling layer today to convert the original images into feature vectors and perform classification with fully connected layers.
+At the same time, some neural network models show some acceptable results in face recognition [20], speech recognition [51] and object detection [49].
+Two years later, Simonyan and Zisserman introduced a sixteen-layer neural network (VGGN et) and won the first prize in ILSVRC 2014 classification and localization tasks [41].
+This model got the state-of-the-art result with 7.3% error rate at that time.
+In the same year, Goog Le Net [46], the best model of ILSVRC 2014 classification and detection tasks, first used inception which was proposed by Lin [23] to solve vanishing gradient problem.
+Another problem of the deep neural network was degradation resulting in high training error caused by optimization difficulty.
+proposed a deep residual learning framework (Res Net) using a residual mapping instead of stacking layers directly [12].
+His experiments show that this new framework can not only solve degradation problems but also can improve the computing efficiency.
+The former one combined improved inception techniques into Res Net.
+Parameter Description Dimension X Input data 4 × m W Weight between input layer and hidden layer 1 m × 8 1 W Weight between hidden layer 1 and hidden layer 2 8 × 6 2 W Weight between hidden layer 2 and hidden layer 3 6 × 8 3 W Weight between hidden layer 3 and output layer 8 × 1 4 Table 2.1: Dimension description of the deep neural network 2.1.3 Backpropagation Algorithm Section 2.1.2 introduces the way to estimated label using deep neural network.
+n 1 (cid:88) 2 J(w,x) = (y − yˆ ) (2.6) i i 2 i=1 where x is the input data and w represent all weights used in the model.
+Thus, the optimization problem can be described as following min J(w,x) (2.7) w Stochastic Gradient Descent (SGD) is an effective way to solve this optimization problem CHAPTER 2.
+However, it still shows acceptable results in deep neural network even though there is no guarantee for global optimal point in non-convex optimization [11].
+Using gradient methods such as SGD to optimize the cost function in neural network is called backpropagation algorithm.
+Considering the deep neural network shown in 2.3 and the techniques of matrix calculus [13], the gradient of J with respect to W is 4 ∂J T = a ((a − y) (cid:12) ∇f (z )) (2.9) 3 4 4 4 ∂W 4 where (cid:12) is element-wise matrix multiplication and ∇f (z ) is the gradient with respect to 4 4 z .
+Results for other W can be calculated in a similar way.
+Considering a classification problem as shown in Figure 2.6, an image with a size of 64 × 64 is fed into CNN and output a scalar which represents its class.
+Layer Numbers Size Stride Padding Output dimension Convolution 1 8 8×8 2 0 8×28×28 Max Pooling 8 2×2 2 / 8×14×14 Convolution 2 16 6×6 2 0 16×4×4 Table 2.2: Property of convolutional layer and pooling layer The backpropagation algorithm in convolutional neural network is a little different from described in section 2.1.3 because of two extra layer type.
+This idea was first proposed and implemented by Samuel [35].
+In 1983, Sutton developed and implemented the actor-critic architecture in trial-and-error learning based on the idea from Klopf [2].
+Five years later, he proposed TD(λ) algorithms which used additional step information for update policy and made TD learning a general prediction method for deterministic problems [42].
+LITERATURE SURVEY 12 temporal-difference problems and developed the Q-learning algorithm which estimated delayed reward by action value function [53].
+With the development of the deep neural network, Deep Mind proposed Deep Q-learning Network (DQN) algorithm which used a convolutional neural network to solve high dimensionality of the state in reinforcement learning problems [27].
+This new neural network architecture was helpful when there was no strong relationship between actions and the environment.
+In 2016, Deep Mind proposed Double DQN which show the higher stability of the policy by reducing overestimated action values [50].
+Although a series of algorithms based on DQN show human-level performance on Atari games, they still failed to deal with some specific games.
+Based on this, Open AI proposed a new family of algorithms such as Proximal Policy Optimization (PPO) [38].
+PPO used a statistical method called importance sampling which was used to estimate a distribution by sampling data from another distribution and this simple modification show a better performance in Roboschool Humanoid Flagrun.
+Similar to valuebased method, Actor-critic method was proposed to solve this problem [18].
+The famous improved actor-critic based algorithm is asynchronous advantage actor-critic (A 3 C) [26].
+
+Key sentences:
+- Name: Yue Zheng Abstract Reinforcement learning has exceeded human-level performance in game playing AI with deep learning methods according to the experiments from Deep Mind on Go and Atari games.
+- Deep learning solves high dimension input problems which stop the development of reinforcement for many years.
+- This study uses both two techniques to create several agents with different algorithms that successfully learn to play T-rex Runner.
+- Deep Q network algorithm and three types of improvements are implemented to train the agent.
+- The results from some of them are far from satisfactory but others are better than human experts.
+- Batch normalization is a method to solve internal covariate shift problems in deep neural network.
+- The positive influence of this on reinforcement learning has also been proved in this study.
+- Eleni Vasilaki for assigning me this project and her guidance across this study.
+- 28 3.6.2 Comparison of different Deep Q Network Algorithms .
+- 30 4 Results and Discussion 31 iv CONTENTS v 4.1 Hyper Parameter Tuning .
+- 6 2.3 A simple deep neural network with three hidden layers.
+- 27 3.4 Convolutional Neural Network architecture for Deep Q Network.
+- 28 3.5 Convolutional Neural Network architecture for Dueling Deep Q Network.
+- 38 4.11 Boxplot for test result with eight different algorithms .
+- 40 vi List of Tables 2.1 Dimension description of the deep neural network .
+- As one part of them, Reinforcement Learning has achieved incredible results in game playing.
+- An intelligent agent will be created and trained with reinforcement learning algorithms to fulfill this tasks.
+- Deep learning methods such as convolutional neural network contributes a lot to this because these techniques solves the problem of dealing with high dimension input data and feature extraction.
+- 1.2 Aim of the project The aim of this project is to create an agent using different algorithms to play T-rex Runner and compare the performance of them.
+- Internal covariate shift is the change of distribution in each layer of during the training which may result in longer training time especially in deep neural network.
+- The same problem may also occur in deep reinforcement learning because the decision is based on neural network.
+- Beyond the comparison of different reinforcement learning algorithms, this project will also investigate the effect of batch normalization.
+- INTRODUCTION 2 • Create an agent to play T-rex Runner • Compare the difference among different reinforcement learning algorithms • Investigate the effect of batch normalization in reinforcement learning 1.3 Overview This study opens with a literature review on deep learning and reinforcement learning.
+- Each section includes the history of the field and the techniques related to this study.
+- Chapter 3 includes the description of the game and the choice of algorithms according the literature review.
+- The entire processing step will be shown as well as the architecture of the model.
+- The design of the experiments and the evaluation methods are presented in this chapter too.
+- Chapter 4 shows the result of all the experiments and the discussion of each experiment.
+- Chapter 5 presents the conclusion of this study and the proposed future works.
+- Chapter 2 Literature Survey This chapter introduces the techniques used in developing an agent to play T-rex Runner.
+- There are two main sections which are Deep Learning and Reinforcement Learning.
+- Brief history and some milestones will be described and some important methods will be shown in detail.
+- 2.1 Deep Learning Deep learning is a class of Machine Learning model based on Artificial Neural Network (ANN).
+- There two kinds of deep learning model which is widely used in recent years.
+- Recurrent Neural Network is one of them which shows its power in Natural Language Processing.
+- The other one plays an important role in deep reinforcement learning called Convolutional Neural Network (CNN).
+- It is one of the most effective models for computer vision problems such as object detection and image classification.
+- This section gives a brief introduction of deep learning and detailed information about convolutional neural network.
+- 2.1.1 History of Deep Learning An artificial neural network is a computation system inspired by biological neural networks which were first proposed by Mc Culloch, a neurophysiologist [24].
+- Three years later, his experiments show this algorithm can recognize some of alphabets [32].
+- show that some useful representations can be learned with multi-layer perceptron, which is also called neural network, and backpropagation algorithm [33] in 1988.
+- first used a five-layer neural network and backpropagation to solved digit classification problem and achieved great results [21].
+- His innovative model is known as Le Net which is the beginning of the convolutional neural network.
+- LITERATURE SURVEY 4 The origin of CNN was proposed by Fukushima named Neocognitron which was a selforganized neural network model with multiple layers [10].
+- This model achieved a good result in object detection tasks because it is not position-sensitive.
+- The model used convolutions and sub-sampling which is called convolution layer and pooling layer today to convert the original images into feature vectors and perform classification with fully connected layers.
+- At the same time, some neural network models show some acceptable results in face recognition [20], speech recognition [51] and object detection [49].
+- Two years later, Simonyan and Zisserman introduced a sixteen-layer neural network (VGGN et) and won the first prize in ILSVRC 2014 classification and localization tasks [41].
+- This model got the state-of-the-art result with 7.3% error rate at that time.
+- In the same year, Goog Le Net [46], the best model of ILSVRC 2014 classification and detection tasks, first used inception which was proposed by Lin [23] to solve vanishing gradient problem.
+- Another problem of the deep neural network was degradation resulting in high training error caused by optimization difficulty.
+- proposed a deep residual learning framework (Res Net) using a residual mapping instead of stacking layers directly [12].
+- His experiments show that this new framework can not only solve degradation problems but also can improve the computing efficiency.
+- The former one combined improved inception techniques into Res Net.
+- Parameter Description Dimension X Input data 4 × m W Weight between input layer and hidden layer 1 m × 8 1 W Weight between hidden layer 1 and hidden layer 2 8 × 6 2 W Weight between hidden layer 2 and hidden layer 3 6 × 8 3 W Weight between hidden layer 3 and output layer 8 × 1 4 Table 2.1: Dimension description of the deep neural network 2.1.3 Backpropagation Algorithm Section 2.1.2 introduces the way to estimated label using deep neural network.
+- n 1 (cid:88) 2 J(w,x) = (y − yˆ ) (2.6) i i 2 i=1 where x is the input data and w represent all weights used in the model.
+- Thus, the optimization problem can be described as following min J(w,x) (2.7) w Stochastic Gradient Descent (SGD) is an effective way to solve this optimization problem CHAPTER 2.
+- However, it still shows acceptable results in deep neural network even though there is no guarantee for global optimal point in non-convex optimization [11].
+- Using gradient methods such as SGD to optimize the cost function in neural network is called backpropagation algorithm.
+- Considering the deep neural network shown in 2.3 and the techniques of matrix calculus [13], the gradient of J with respect to W is 4 ∂J T = a ((a − y) (cid:12) ∇f (z )) (2.9) 3 4 4 4 ∂W 4 where (cid:12) is element-wise matrix multiplication and ∇f (z ) is the gradient with respect to 4 4 z .
+- Results for other W can be calculated in a similar way.
+- Considering a classification problem as shown in Figure 2.6, an image with a size of 64 × 64 is fed into CNN and output a scalar which represents its class.
+- Layer Numbers Size Stride Padding Output dimension Convolution 1 8 8×8 2 0 8×28×28 Max Pooling 8 2×2 2 / 8×14×14 Convolution 2 16 6×6 2 0 16×4×4 Table 2.2: Property of convolutional layer and pooling layer The backpropagation algorithm in convolutional neural network is a little different from described in section 2.1.3 because of two extra layer type.
+- This idea was first proposed and implemented by Samuel [35].
+- In 1983, Sutton developed and implemented the actor-critic architecture in trial-and-error learning based on the idea from Klopf [2].
+- Five years later, he proposed TD(λ) algorithms which used additional step information for update policy and made TD learning a general prediction method for deterministic problems [42].
+- LITERATURE SURVEY 12 temporal-difference problems and developed the Q-learning algorithm which estimated delayed reward by action value function [53].
+- With the development of the deep neural network, Deep Mind proposed Deep Q-learning Network (DQN) algorithm which used a convolutional neural network to solve high dimensionality of the state in reinforcement learning problems [27].
+- This new neural network architecture was helpful when there was no strong relationship between actions and the environment.
+- In 2016, Deep Mind proposed Double DQN which show the higher stability of the policy by reducing overestimated action values [50].
+- Although a series of algorithms based on DQN show human-level performance on Atari games, they still failed to deal with some specific games.
+- Based on this, Open AI proposed a new family of algorithms such as Proximal Policy Optimization (PPO) [38].
+- PPO used a statistical method called importance sampling which was used to estimate a distribution by sampling data from another distribution and this simple modification show a better performance in Roboschool Humanoid Flagrun.
+- Similar to valuebased method, Actor-critic method was proposed to solve this problem [18].
+- The famous improved actor-critic based algorithm is asynchronous advantage actor-critic (A 3 C) [26].
+
+Important terms: method, approach, algorithm, technique, framework, model, study, evaluation, experiment, results, propose, present, introduce, develop, design, implement, machine learning, deep learning, neural network, classification, prediction, optimization, performance
+Focus: Methodological approach
+Contribution: Improves existing methods

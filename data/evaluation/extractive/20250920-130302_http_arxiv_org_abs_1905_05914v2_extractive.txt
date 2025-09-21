@@ -1,0 +1,41 @@
+Title: Deep Reinforcement Learning for Scheduling in Cellular Networks
+Authors: Jian Wang, Chen Xu, Yourui Huangfu, Rong Li, Yiqun Ge
+Year: 2019
+Paper ID: http://arxiv.org/abs/1905.05914v2
+Link: http://arxiv.org/pdf/1905.05914v2
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Introduces novel approach
+KEY SENTENCES COUNT: 5
+TERMS: method, results, propose, introduce, develop, performance
+
+BODY:
+In this paper, we take deep reinforcement learning (DRL) based scheduling as an example to investigate how expert knowledge can help with AI module in cellular networks. A simulation platform, which has considered link adaption, feedback and other practical
+
+mechanisms, is developed to facilitate the investigation. Besides the traditional way, which is learning directly from the environment, for training DRL agent, we propose two novel methods, i.e., learning from a dual AI module and learning from the expert solution.
+
+The results show that, for the considering scheduling problem, DRL training procedure can be improved on both performance and convergence speed by involving the expert knowledge. Hence, instead of replacing
+
+conventional scheduling module in the system, adding a newly introduced AI module, which is capable to interact with the conventional module and provide more flexibility, is a more feasible solution.
+
+Key sentences:
+- In
+this paper, we take deep reinforcement learning (DRL) based scheduling as an
+example to investigate how expert knowledge can help with AI module in cellular
+networks.
+- A simulation platform, which has considered link adaption, feedback
+and other practical mechanisms, is developed to facilitate the investigation.
+- Besides the traditional way, which is learning directly from the environment,
+for training DRL agent, we propose two novel methods, i.e., learning from a
+dual AI module and learning from the expert solution.
+- The results show that,
+for the considering scheduling problem, DRL training procedure can be improved
+on both performance and convergence speed by involving the expert knowledge.
+- Hence, instead of replacing conventional scheduling module in the system,
+adding a newly introduced AI module, which is capable to interact with the
+conventional module and provide more flexibility, is a more feasible solution.
+
+Important terms: method, results, propose, introduce, develop, performance
+Focus: Methodological approach
+Contribution: Introduces novel approach

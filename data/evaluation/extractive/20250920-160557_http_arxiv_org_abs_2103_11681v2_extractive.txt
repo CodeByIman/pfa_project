@@ -1,0 +1,137 @@
+Title: Transformer Meets Tracker: Exploiting Temporal Context for Robust Visual Tracking
+Authors: Ning Wang, Wengang Zhou, Jie Wang, Houqaing Li
+Year: 2021
+Paper ID: http://arxiv.org/abs/2103.11681v2
+Link: http://arxiv.org/pdf/2103.11681v2
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Introduces novel approach
+LINES COUNT: 59
+TERMS: method, approach, algorithm, technique, framework, model, study, evaluation, experiment, results
+
+BODY:
+Take the popular Siamese tracker as an exam Our transformer-assisted tracking framework is neat and ple, only the initial target is considered for template matchtrained in an end-to-end manner.
+In other tracking frameworks with update meching pipeline, our method sets several new state-of-the-art anisms [20, 40, 8, 60, 62, 3], previous prediction results records on prevalent tracking benchmarks.
+We argue that the video frames should not be in the video flow is of vital importance for visual track- treated in isolation and the performance potential is largely ing.
+transformer architecture [47] to the visual tracking commu- †Sourcecode,pretrainedmodel,andrawtrackingresultsareavailable athttps://github.com/594422814/Transformer Track.
+With our r B e t Transformer designed transformer, a simple Siamese matching pipeline a lp Encoder m is able to outperform the current top-performing trackers.
+e T By combining with the recent discriminative approach [3], Feature and Mask our transformer-assisted tracker shows outstanding results Propagation h Search Patch Search Feature c n on seven prevalent tracking benchmarks including La SOT a r Decoded B Transformer h Decoder Feature [13], Tracking Net [39], GOT-10 k [23], UAV 123 [37], Nf S c r a [24], OTB-2015 [58], and VOT 2018 [26] and sets several e S new state-of-the-art records.
+Top: the transformer encoder receives multiple template In summary, we make three-fold contributions: features to mutually aggregate representations.
+Bottom: the trans Transformed Feature and Mask • Wepresentaneatandnoveltransformer-assistedtrackformerdecoderpropagatesthetemplatefeaturesandtheirassigned Mask Propagation Feature Propagation ing framework.
+To our best knowledge, this is the first masks to the search patch feature for representation enhancement.
+architecture, we show that its transformation characteristic • To verify the generalization, we integrate our designed naturally fits the tracking scenario.
+Our attentionmechanism[47,57], isreadytoestablishthepixeltrackers exhibit encouraging results on 7 benchmarks.
+Related Work Generally, mosttrackingmethods[1,46,29,43,7,3]can be formulated into a Siamese-like framework, where the top Visual Tracking.
+caded frameworks [14, 50], and model update mechanisms The proposed transformer facilitates visual tracking via: [16, 17, 60, 62].
+The recent advances show that the ridge regression model generation.
+can be solved in the deep learning frameworks [43, 33, 7, 3], • Transformer Decoder.
+As shown in Figure 2, our These methods learn a discriminative CNN kernel to condecoder simultaneously transfers features and spatial volve with the search area for response generation.
+verify the generalization of our designed transformer, we Despitetheimpressiveperformance, most existingmeth 2 ods[40,1,29,7,3,34,49]generallyregardthetrackingtask Template Patch Different Tracking Options as the per-frame object detection problem, failing to ade CNN Crop DCF quately exploit the temporal characteristic of the tracking task.
+Some previous works explore the temporal informa Tracking Tracking Weight Sharing tion using graph neural network [16], spatial-temporal regu- Search Patch Model Model larization [30], optical flow [66], etc.
+Differently, we lever CNN Conv Conv age the transformer to model the frame-wise relationship Result Result and propagate the temporal cues, which is neat and ready to Feature Extraction Siamese Pipeline DCF Pipeline integrate with the modern deep trackers.
+These tracking approaches can be formulated into a Siamese-like pipeline, where the top branch is responsible for transformer is the attention module, which aggregates inforthe model generation and the bottom branch localizes the target.
+Asanotherpopularframework, deeplearningbased DCF Similarly, non-local neural network [57] also introduces a method optimizes the tracking model f under a ridge reself-attention block to acquire global representations, which gression formulation [43, 7, 3] as follows: has been adopted in many vision tasks including visual obmin(cid:107)f ∗ Ψ(z(cid:63)) − y(cid:107)2 + λ(cid:107)f(cid:107)2, (2) ject tracking [61].
+Notethatz(cid:63) ismuchlargerthantheexemformer based object detection approach is proposed in [5], plar patch z in Siamese trackers.
+Revisting Tracking Frameworks timizes the above ridge regression via a meta-learner in an end-to-end manner, showing state-of-the-art performance.
+Before elaborating our transformer for object tracking, we briefly review the recent popular tracking approaches 4.
+We aim to formulated into the Siamese-like pipeline, where the top improve such a general tracking framework by frame-wise branch learns the tracking model using templates and the relationship modeling and temporal context propagation, bottom branch focuses on the target localization.
+encoded Rn×C×H×W for tracking model generation, e.g., the DCF Since our transformer receives image feature embeddings, model in Section 4.4.
+approach, following [47], we also adopt the dot-product to ˆ Mask Transformation.
+Tracking response maps of the Di MP baseline [3] with- (cid:16) (cid:17) ˆ (cid:48) ˆ out (second column) and with (third column) our designed trans S = Ins.
+Following the end-to-end DCF opticonvey target representations while the background scenes mizationin Di MP approach[3], wegenerateadiscrimtend to change drastically in a video, which is unreasonable inative CNN kernel using T to convolve with to temporally propagate.
+Then, with the After obtaining the tracking response, we utilize the classicross-attention matrix A , the transformed feature can fication loss proposed in Di MP [3] to jointly train the back T→S becomputedvia A (T ˆ ⊗M (cid:48) ) ∈ RN S ×C, whichisadded bone network, our transformer, and the tracking model in T→S ˆ an end-to-end manner.
+Nevertheless, in the experiments, we show Transformer structure facilitates the tracking process by that with the help of our transformer architecture, a clasgenerating high-qualitytemplate feature T and search sic Siamese pipeline is able to perform against the recent encoded feature S .
+Meanwhile, with our transformer, the Di MP tracker decoded encoded following two popular paradigms: acquires further performance improvements.
+0.25 ity, our designed transformer further assists it to restrain the Only Mask Transf.
+Training loss plots of the Siamese pipeline (left) and ing frameworks, in the following experiments, we denote DCF pipeline (right).
+By combining both feature and mask transour Transformer-assisted trackers as Tr Siam and Tr Di MP, formations, our approach significantly reduces the training losses.
+Ablative experiments of our transformer for the Siamese and decoder, we additionally add one convolutional layer and Di MP pipelines i.e., Tr Siam and Tr Di MP trackers.
+The evaluation metric is average overlap ing optimization model [3] and Io UN et [9]) in an end-to- (AO) score on the GOT-10 k test set.
+Our framework is trained for 50 epochs with 1500 iterations per epoch and 36 image pairs per batch.
+Ablation Study observe that this block effectively reduces the losses of two To verify the effectiveness of our designed transformer baselines as shown in Figure 6.
+This mechanism propagates tempovideos to validate our Tr Siam and Tr Di MP methods 1.
+It is worth mentioning that Di MP already achieves outstanding results while our approach con 1 With the probabilistic Io UN et [9] and a larger search area, our basesistently improves such a strong baseline.
+With our transline performance is better than the standard Di MP [3].
+Our Tr Di MP and Tr Siam exhibit promising results.
+Comparison results on the GOT-10 k test set [23] in terms of average overlap (AO), and success rates (SR) at overlap thresholds 0.5 and 0.75.
+We show the tracking results without (w/o) and with (w/) additional training data (LTC: La SOT, Tracking Net, and COCO).
+Due to this weight-sharing design, we also do Location error threshold not stack multiple encoder/decoder layers like the classic transformer [47], which will divide the template and search representations into different feature subspaces.
+In the tracking scenario, we observe that this block potentially causes the overfitting issue due to its overmany parameters, which does not bring performance gains and hurts the efficiency.
+In the experiments, we observe that increasing the head number slightly improves the accuracy but hinders the tracking efficiency from real-time.
+We thus choose the single-head attention to achieve a good balance of performance and efficiency.
+We evaluate our methods on the test set of Tracking Net, which consists of 511 videos.
+Note that Pr Di MP and KYS improve the Di MP tracker via probabilistic regression and tracking scene exploration, representing the current leading algorithms on several datasets.
+With our designed transformer, the simple Siamese matching baseline (i.e., Tr Siam) also shows outstanding performance with a normalized precision score of 82.9% and a success score of 78.1%.
+Both our Tr Di MP and Tr Siam exhibit outstanding results on all benchmarks with competitive efficiency.
+models or online optimization techniques, still outperforms existing methods and operates in real-time.
+The precision and success plots of the state-of-thetrackers also achieve promising results in comparison to the art methods are shown in Figure 7, where the recently prorecent remarkable approaches in Table 5.
+Overall, our Tr Di MP (63.9% AUC and 26 FPS) ex 71.1%, surpassing the recently proposed Siam RPN++ [28], hibits very competitive performance and efficiency in com Pr Di MP-50 [9], Siam R-CNN [48], and KYS [2].
+the tracking frameworks, which bridges the isolated frames In Table 10, we further show the accuracy, robustness, in the video flow and conveys the rich temporal cues across and EAO scores of the recent top-performing trackers in- frames.
+With the proposed transformer, two popular trackers with these recently proposed approaches, our Tr Di MP ap- gain consistent performance improvements and set several proach still exhibits satisfactory results.
+Our approaches set Natural Science Foundationof Chinaunder Contract 61836011,61822208, new state-of-the-art records on this benchmark.
+
+Key sentences:
+- Take the popular Siamese tracker as an exam Our transformer-assisted tracking framework is neat and ple, only the initial target is considered for template matchtrained in an end-to-end manner.
+- In other tracking frameworks with update meching pipeline, our method sets several new state-of-the-art anisms [20, 40, 8, 60, 62, 3], previous prediction results records on prevalent tracking benchmarks.
+- We argue that the video frames should not be in the video flow is of vital importance for visual track- treated in isolation and the performance potential is largely ing.
+- transformer architecture [47] to the visual tracking commu- †Sourcecode,pretrainedmodel,andrawtrackingresultsareavailable athttps://github.com/594422814/Transformer Track.
+- With our r B e t Transformer designed transformer, a simple Siamese matching pipeline a lp Encoder m is able to outperform the current top-performing trackers.
+- e T By combining with the recent discriminative approach [3], Feature and Mask our transformer-assisted tracker shows outstanding results Propagation h Search Patch Search Feature c n on seven prevalent tracking benchmarks including La SOT a r Decoded B Transformer h Decoder Feature [13], Tracking Net [39], GOT-10 k [23], UAV 123 [37], Nf S c r a [24], OTB-2015 [58], and VOT 2018 [26] and sets several e S new state-of-the-art records.
+- Top: the transformer encoder receives multiple template In summary, we make three-fold contributions: features to mutually aggregate representations.
+- Bottom: the trans Transformed Feature and Mask • Wepresentaneatandnoveltransformer-assistedtrackformerdecoderpropagatesthetemplatefeaturesandtheirassigned Mask Propagation Feature Propagation ing framework.
+- To our best knowledge, this is the first masks to the search patch feature for representation enhancement.
+- architecture, we show that its transformation characteristic • To verify the generalization, we integrate our designed naturally fits the tracking scenario.
+- Our attentionmechanism[47,57], isreadytoestablishthepixeltrackers exhibit encouraging results on 7 benchmarks.
+- Related Work Generally, mosttrackingmethods[1,46,29,43,7,3]can be formulated into a Siamese-like framework, where the top Visual Tracking.
+- caded frameworks [14, 50], and model update mechanisms The proposed transformer facilitates visual tracking via: [16, 17, 60, 62].
+- The recent advances show that the ridge regression model generation.
+- can be solved in the deep learning frameworks [43, 33, 7, 3], • Transformer Decoder.
+- As shown in Figure 2, our These methods learn a discriminative CNN kernel to condecoder simultaneously transfers features and spatial volve with the search area for response generation.
+- verify the generalization of our designed transformer, we Despitetheimpressiveperformance, most existingmeth 2 ods[40,1,29,7,3,34,49]generallyregardthetrackingtask Template Patch Different Tracking Options as the per-frame object detection problem, failing to ade CNN Crop DCF quately exploit the temporal characteristic of the tracking task.
+- Some previous works explore the temporal informa Tracking Tracking Weight Sharing tion using graph neural network [16], spatial-temporal regu- Search Patch Model Model larization [30], optical flow [66], etc.
+- Differently, we lever CNN Conv Conv age the transformer to model the frame-wise relationship Result Result and propagate the temporal cues, which is neat and ready to Feature Extraction Siamese Pipeline DCF Pipeline integrate with the modern deep trackers.
+- These tracking approaches can be formulated into a Siamese-like pipeline, where the top branch is responsible for transformer is the attention module, which aggregates inforthe model generation and the bottom branch localizes the target.
+- Asanotherpopularframework, deeplearningbased DCF Similarly, non-local neural network [57] also introduces a method optimizes the tracking model f under a ridge reself-attention block to acquire global representations, which gression formulation [43, 7, 3] as follows: has been adopted in many vision tasks including visual obmin(cid:107)f ∗ Ψ(z(cid:63)) − y(cid:107)2 + λ(cid:107)f(cid:107)2, (2) ject tracking [61].
+- Notethatz(cid:63) ismuchlargerthantheexemformer based object detection approach is proposed in [5], plar patch z in Siamese trackers.
+- Revisting Tracking Frameworks timizes the above ridge regression via a meta-learner in an end-to-end manner, showing state-of-the-art performance.
+- Before elaborating our transformer for object tracking, we briefly review the recent popular tracking approaches 4.
+- We aim to formulated into the Siamese-like pipeline, where the top improve such a general tracking framework by frame-wise branch learns the tracking model using templates and the relationship modeling and temporal context propagation, bottom branch focuses on the target localization.
+- encoded Rn×C×H×W for tracking model generation, e.g., the DCF Since our transformer receives image feature embeddings, model in Section 4.4.
+- approach, following [47], we also adopt the dot-product to ˆ Mask Transformation.
+- Tracking response maps of the Di MP baseline [3] with- (cid:16) (cid:17) ˆ (cid:48) ˆ out (second column) and with (third column) our designed trans S = Ins.
+- Following the end-to-end DCF opticonvey target representations while the background scenes mizationin Di MP approach[3], wegenerateadiscrimtend to change drastically in a video, which is unreasonable inative CNN kernel using T to convolve with to temporally propagate.
+- Then, with the After obtaining the tracking response, we utilize the classicross-attention matrix A , the transformed feature can fication loss proposed in Di MP [3] to jointly train the back T→S becomputedvia A (T ˆ ⊗M (cid:48) ) ∈ RN S ×C, whichisadded bone network, our transformer, and the tracking model in T→S ˆ an end-to-end manner.
+- Nevertheless, in the experiments, we show Transformer structure facilitates the tracking process by that with the help of our transformer architecture, a clasgenerating high-qualitytemplate feature T and search sic Siamese pipeline is able to perform against the recent encoded feature S .
+- Meanwhile, with our transformer, the Di MP tracker decoded encoded following two popular paradigms: acquires further performance improvements.
+- 0.25 ity, our designed transformer further assists it to restrain the Only Mask Transf.
+- Training loss plots of the Siamese pipeline (left) and ing frameworks, in the following experiments, we denote DCF pipeline (right).
+- By combining both feature and mask transour Transformer-assisted trackers as Tr Siam and Tr Di MP, formations, our approach significantly reduces the training losses.
+- Ablative experiments of our transformer for the Siamese and decoder, we additionally add one convolutional layer and Di MP pipelines i.e., Tr Siam and Tr Di MP trackers.
+- The evaluation metric is average overlap ing optimization model [3] and Io UN et [9]) in an end-to- (AO) score on the GOT-10 k test set.
+- Our framework is trained for 50 epochs with 1500 iterations per epoch and 36 image pairs per batch.
+- Ablation Study observe that this block effectively reduces the losses of two To verify the effectiveness of our designed transformer baselines as shown in Figure 6.
+- This mechanism propagates tempovideos to validate our Tr Siam and Tr Di MP methods 1.
+- It is worth mentioning that Di MP already achieves outstanding results while our approach con 1 With the probabilistic Io UN et [9] and a larger search area, our basesistently improves such a strong baseline.
+- With our transline performance is better than the standard Di MP [3].
+- Our Tr Di MP and Tr Siam exhibit promising results.
+- Comparison results on the GOT-10 k test set [23] in terms of average overlap (AO), and success rates (SR) at overlap thresholds 0.5 and 0.75.
+- We show the tracking results without (w/o) and with (w/) additional training data (LTC: La SOT, Tracking Net, and COCO).
+- Due to this weight-sharing design, we also do Location error threshold not stack multiple encoder/decoder layers like the classic transformer [47], which will divide the template and search representations into different feature subspaces.
+- In the tracking scenario, we observe that this block potentially causes the overfitting issue due to its overmany parameters, which does not bring performance gains and hurts the efficiency.
+- In the experiments, we observe that increasing the head number slightly improves the accuracy but hinders the tracking efficiency from real-time.
+- We thus choose the single-head attention to achieve a good balance of performance and efficiency.
+- We evaluate our methods on the test set of Tracking Net, which consists of 511 videos.
+- Note that Pr Di MP and KYS improve the Di MP tracker via probabilistic regression and tracking scene exploration, representing the current leading algorithms on several datasets.
+- With our designed transformer, the simple Siamese matching baseline (i.e., Tr Siam) also shows outstanding performance with a normalized precision score of 82.9% and a success score of 78.1%.
+- Both our Tr Di MP and Tr Siam exhibit outstanding results on all benchmarks with competitive efficiency.
+- models or online optimization techniques, still outperforms existing methods and operates in real-time.
+- The precision and success plots of the state-of-thetrackers also achieve promising results in comparison to the art methods are shown in Figure 7, where the recently prorecent remarkable approaches in Table 5.
+- Overall, our Tr Di MP (63.9% AUC and 26 FPS) ex 71.1%, surpassing the recently proposed Siam RPN++ [28], hibits very competitive performance and efficiency in com Pr Di MP-50 [9], Siam R-CNN [48], and KYS [2].
+- the tracking frameworks, which bridges the isolated frames In Table 10, we further show the accuracy, robustness, in the video flow and conveys the rich temporal cues across and EAO scores of the recent top-performing trackers in- frames.
+- With the proposed transformer, two popular trackers with these recently proposed approaches, our Tr Di MP ap- gain consistent performance improvements and set several proach still exhibits satisfactory results.
+- Our approaches set Natural Science Foundationof Chinaunder Contract 61836011,61822208, new state-of-the-art records on this benchmark.
+
+Important terms: method, approach, algorithm, technique, framework, model, study, evaluation, experiment, results, propose, present, introduce, design, implement, deep learning, neural network, prediction, optimization, performance, accuracy
+Focus: Methodological approach
+Contribution: Introduces novel approach

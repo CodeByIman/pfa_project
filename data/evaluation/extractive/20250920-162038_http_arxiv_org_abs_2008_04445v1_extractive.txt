@@ -1,0 +1,75 @@
+Title: A Synthetic Network Generator for Covert Network Analytics
+Authors: Amr Elsisy, Aamir Mandviwalla, Boleslaw Szymanski, Thomas Sharkey
+Year: 2020
+Paper ID: http://arxiv.org/abs/2008.04445v1
+Link: http://arxiv.org/pdf/2008.04445v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Introduces novel approach
+LINES COUNT: 28
+TERMS: method, approach, algorithm, model, study, experiment, results, propose, present, introduce
+
+BODY:
+Szymanskia,b,∗, Thomas Sharkeyb,c a Department of Computer Science, Rensselaer Polytechnic Institute, Troy, NY 12180, USA b Network Science and Technology Center, Rensselaer Polytechnic Institute, Troy, NY 12180, USA c Industrial and Systems Engineering, Rensselaer Polytechnic Institute, Troy, NY 12180, USA Abstract We study social networks and focus on covert (also known as hidden) networks, such as terrorist or criminal networks.
+To address these challenges, we introduce here a network generator for synthetic networks that are statistically similar to a real network but void of personal information about its members.
+It generates randomized instances of the Stochastic Block model of the network groups but preserves this network organizational structure.
+Such a use has become popular since Erdós and Rényi introduced the random network model (Erdös and Rényi, 1959).
+Yet, despite interesting mathematical properties of this model, later research discovered that random networks rarely arise in nature or engineering practice.
+The more advanced models proposed later include the scale-free network model (Barabási and Albert, 1999) and its variants that represent the structures of many social and naturally arising networks.
+Another one is the Stochastic Block Model (SBM) (Holland et al., 1983) which extends the random network model by grouping nodes into blocks.
+This model produces community structure resembling those arising in real networks but limits the differences between degrees of individual nodes located in the same block.
+This weakness is addressed by SBM variants, such as the degree planted SBM (Karrer and Newman, 2011) or the degree-corrected planted partition model (Newman, 2016).
+These networks are often used to test community detection methods.
+A model presented in (Xiao et al., 2020) generates synthetic networks by rewiring edges in real-life networks.
+Another generative model creates a hierarchical multi-layer networks that are often used to represent the hierarchical management structures (Ravasz and Barabási, 2003).
+The synthetic networks created by our generator can also be useful for analyzing the social networks with partial information about their structures and bio-medical networks in which massive collection of experimental data about network dynamics makes the data partially incomplete and incorrect.
+A model of organizations represented by covert networks Discovery and monitoring of covert networks often rely on getting access to information flows among nodes suspected to be involved in network activities.
+We refer to an organization represented by such a network as covert and to the nodes as members.
+Our model represents each group by parameters such as the average density of edges inside the group, from this group to other groups, 4 and the placements of group members in the organization hierarchy.
+As a result, our model combines two network models: SBM for groups and hierarchical network for management structure.
+Most of the previously proposed synthetic network generators rely only on one network generative model.
+A network generator presented in (Guo and Kraines, 2009) implements small-world social networks with the desired high clustering coefficient.
+Data To present our generator in action, we use the Caviar and Ciel datasets (Morselli, 2009).
+We also present the results obtained with the Ciel dataset (Morselli, Figure 1: Illustration of our model integration of the stochastic block model (SBM) with the hierarchical multi-layer network model in the Caviar network.
+For both networks, we use the Louvain community detection algorithm (Blondel et al., 2008) to find 6 groups and the relative betweenness centrality to find nodes involved in managerial roles.
+Since criminal networks often have sparse connectivity because of attempts to hide network activities, we execute a version of Louvain algorithm for graphs with undirected edges.
+We use it for ease of comparison of the results.
+Within SBM, we use one of the two models to assign weights to edges.
+We introduce here an alternative approach, named Bernoulli Weighted Random Network (BWRN) model.
+Detecting groups in the generated networks To test the accuracy of our synthetic network generator, we ran the Louvain community detection algorithm Blondel et al.
+(2015), which we triesd and it yielded similar results, CPM Traag et al.
+
+Key sentences:
+- Szymanskia,b,∗, Thomas Sharkeyb,c a Department of Computer Science, Rensselaer Polytechnic Institute, Troy, NY 12180, USA b Network Science and Technology Center, Rensselaer Polytechnic Institute, Troy, NY 12180, USA c Industrial and Systems Engineering, Rensselaer Polytechnic Institute, Troy, NY 12180, USA Abstract We study social networks and focus on covert (also known as hidden) networks, such as terrorist or criminal networks.
+- To address these challenges, we introduce here a network generator for synthetic networks that are statistically similar to a real network but void of personal information about its members.
+- It generates randomized instances of the Stochastic Block model of the network groups but preserves this network organizational structure.
+- Such a use has become popular since Erdós and Rényi introduced the random network model (Erdös and Rényi, 1959).
+- Yet, despite interesting mathematical properties of this model, later research discovered that random networks rarely arise in nature or engineering practice.
+- The more advanced models proposed later include the scale-free network model (Barabási and Albert, 1999) and its variants that represent the structures of many social and naturally arising networks.
+- Another one is the Stochastic Block Model (SBM) (Holland et al., 1983) which extends the random network model by grouping nodes into blocks.
+- This model produces community structure resembling those arising in real networks but limits the differences between degrees of individual nodes located in the same block.
+- This weakness is addressed by SBM variants, such as the degree planted SBM (Karrer and Newman, 2011) or the degree-corrected planted partition model (Newman, 2016).
+- These networks are often used to test community detection methods.
+- A model presented in (Xiao et al., 2020) generates synthetic networks by rewiring edges in real-life networks.
+- Another generative model creates a hierarchical multi-layer networks that are often used to represent the hierarchical management structures (Ravasz and Barabási, 2003).
+- The synthetic networks created by our generator can also be useful for analyzing the social networks with partial information about their structures and bio-medical networks in which massive collection of experimental data about network dynamics makes the data partially incomplete and incorrect.
+- A model of organizations represented by covert networks Discovery and monitoring of covert networks often rely on getting access to information flows among nodes suspected to be involved in network activities.
+- We refer to an organization represented by such a network as covert and to the nodes as members.
+- Our model represents each group by parameters such as the average density of edges inside the group, from this group to other groups, 4 and the placements of group members in the organization hierarchy.
+- As a result, our model combines two network models: SBM for groups and hierarchical network for management structure.
+- Most of the previously proposed synthetic network generators rely only on one network generative model.
+- A network generator presented in (Guo and Kraines, 2009) implements small-world social networks with the desired high clustering coefficient.
+- Data To present our generator in action, we use the Caviar and Ciel datasets (Morselli, 2009).
+- We also present the results obtained with the Ciel dataset (Morselli, Figure 1: Illustration of our model integration of the stochastic block model (SBM) with the hierarchical multi-layer network model in the Caviar network.
+- For both networks, we use the Louvain community detection algorithm (Blondel et al., 2008) to find 6 groups and the relative betweenness centrality to find nodes involved in managerial roles.
+- Since criminal networks often have sparse connectivity because of attempts to hide network activities, we execute a version of Louvain algorithm for graphs with undirected edges.
+- We use it for ease of comparison of the results.
+- Within SBM, we use one of the two models to assign weights to edges.
+- We introduce here an alternative approach, named Bernoulli Weighted Random Network (BWRN) model.
+- Detecting groups in the generated networks To test the accuracy of our synthetic network generator, we ran the Louvain community detection algorithm Blondel et al.
+- (2015), which we triesd and it yielded similar results, CPM Traag et al.
+
+Important terms: method, approach, algorithm, model, study, experiment, results, propose, present, introduce, design, implement, accuracy
+Focus: Methodological approach
+Contribution: Introduces novel approach

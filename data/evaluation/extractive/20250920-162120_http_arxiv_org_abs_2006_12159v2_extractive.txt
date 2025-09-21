@@ -1,0 +1,75 @@
+Title: Covert Communications with Constrained Age of Information
+Authors: Yida Wang, Shihao Yan, Weiwei Yang, Yueming Cai
+Year: 2020
+Paper ID: http://arxiv.org/abs/2006.12159v2
+Link: http://arxiv.org/pdf/2006.12159v2
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Research study
+CONTRIBUTION: Provides comparative analysis
+LINES COUNT: 28
+TERMS: technique, framework, model, analysis, study, results, propose, present, introduce, design
+
+BODY:
+To the best of our knowledge, this question and mation freshness in covert communications for the first time.
+the average age of information (Ao I) constraint to optimize the In this letter, we consider a covert communication system in transmit probability of information signal.
+In particular, the transmit probability not only represents the generation rate of block Rayleigh fading channels, where a FD receiver always information signal but also represents the prior probability of the transmits AN to shield the potential information transmission alternative hypothesis in covert communications, which builds with status updates.
+For the first time, we propose a framework up a bridge between information freshness and communication of covert communications with the requirement of information covertness.
+Our analysis shows that the best transmit probability is not always 0.5, which differs from the equal prior probabilities freshness, i.e., adjusting the transmit probability of information assumption in most related works on covert communications.
+Our analysis shows that the strict limitation of the average As an emerging security solution in wireless communi- Ao I forces the transmitter to transmit information signal with a cations, covert communication is immune to the detection larger probability, even larger than 0.5, which is different from from a warden and thus can enable communication even the equal prior probabilities assumption in existing works (e.g., when it is prohibited [1].
+In general, the performance of [3–6]).
+In the literature, [3] introduced does not exist in the case without the constraint on information the artificial noise (AN) generated from a jammer to expand freshness.
+SYSTEM MODEL in covert communications, which could be eliminated at the We consider a covert wireless communicationsystem, where receiver by interference cancellation techniques.
+covert communications application scenarios, e.g., business We denote the transmit power of Alice and Bob as P and A activities, telehealth monitoring, or military actions, etc.
+It is noted that And we consider the channels within the system follow block improving first-order metrics such as, providing high through- Rayleigh fading.
+Recently, a new metric termed as Age one time slot to another.
+W W Let t represent the instant of the i-th transmission with the i status update at Alice and t = 0.
+ANALYSIS OF THE AVERAGE AGE OF INFORMATION information decoding and the aforementioned discard pattern, the information with the status update generated at Alice is In this section, we analyze the average Ao I at Bob.
+Thus, we denote end, we first present Lemma 1 for the subsequent derivation t′ as the instant of the k-th successful information decoding of the Ao I performance.
+1 k| k E (X )= , (10) For the ease of understanding the Ao I evolution at Bob, we k pq further introduce some variables to simplify the calculation of the Ao I.
+(11) information decoding at Bob till t, given by k (pq) 2 (cid:0) (cid:1) N =max(k t′ <t), (4) Proof: The detailed proof is presented in Appendix A.
+(cid:0) (cid:1) 2 0 − PB (cid:16) (cid:17) With the help of Lemma 1 and (14), the average Ao I can Proof: The detailed proof is presented in Appendix B.
+Covert Communications Design 1 From the perspective of the covert communication pair, i.e., Alice and Bob, we formulate the expected detection error 0.5 probability maximization problem under the required average service time to optimize the transmit probability at Alice.
+Specifically, the optimization problem is given by P 1 max ξ∗ p ¯ (24) s.t.
+Then, we can solve the optimization qδ problem in two cases based on the construction of (21), i.e., 1 1 1 and 1 <1, respectively.
+Based on the analysis in Case I, the (cid:16) (cid:17) (cid:2) (cid:3) optimal value and optimal solution for 1,1 is ξ′=θ1 and 2 2 p′=1, respectively.
+The required average service time versus: (a) the optimal transmit probability of information signal with P B = 10 d B; (b) the optimal expected detection error probability with P A = 0 d B After some algebra calculations, we present the solution to the optimization problem (24) in Theorem 4.
+NUMERICAL RESULTS In this section, we present the numerical results and study the performance of the considered system.
+We also observe that there may be no feasible solution to this optimization problem as δ decreases.
+CONCLUSION In this letter, we proposed a framework for achieving covert communications with the requirement of information freshness, i.e., achieving the maximum expected detection error probability with constrained average Ao I.
+Our analysis proved that transmit probability of 0.5 is not It means that the optimal value of τ should be the lowest always the best choice in the considered framework, which is value or the highest value, respectively, i.e., σ2 + h 2 P W AW A | | different from the common equal prior probabilities assump- or + .
+Bobrowski, Functional Analysis for Probability and Stochastic Pro- (cid:26) 2 W cesses: An Introduction, Cambridge University Press, 2005.
+
+Key sentences:
+- To the best of our knowledge, this question and mation freshness in covert communications for the first time.
+- the average age of information (Ao I) constraint to optimize the In this letter, we consider a covert communication system in transmit probability of information signal.
+- In particular, the transmit probability not only represents the generation rate of block Rayleigh fading channels, where a FD receiver always information signal but also represents the prior probability of the transmits AN to shield the potential information transmission alternative hypothesis in covert communications, which builds with status updates.
+- For the first time, we propose a framework up a bridge between information freshness and communication of covert communications with the requirement of information covertness.
+- Our analysis shows that the best transmit probability is not always 0.5, which differs from the equal prior probabilities freshness, i.e., adjusting the transmit probability of information assumption in most related works on covert communications.
+- Our analysis shows that the strict limitation of the average As an emerging security solution in wireless communi- Ao I forces the transmitter to transmit information signal with a cations, covert communication is immune to the detection larger probability, even larger than 0.5, which is different from from a warden and thus can enable communication even the equal prior probabilities assumption in existing works (e.g., when it is prohibited [1].
+- In general, the performance of [3–6]).
+- In the literature, [3] introduced does not exist in the case without the constraint on information the artificial noise (AN) generated from a jammer to expand freshness.
+- SYSTEM MODEL in covert communications, which could be eliminated at the We consider a covert wireless communicationsystem, where receiver by interference cancellation techniques.
+- covert communications application scenarios, e.g., business We denote the transmit power of Alice and Bob as P and A activities, telehealth monitoring, or military actions, etc.
+- It is noted that And we consider the channels within the system follow block improving first-order metrics such as, providing high through- Rayleigh fading.
+- Recently, a new metric termed as Age one time slot to another.
+- W W Let t represent the instant of the i-th transmission with the i status update at Alice and t = 0.
+- ANALYSIS OF THE AVERAGE AGE OF INFORMATION information decoding and the aforementioned discard pattern, the information with the status update generated at Alice is In this section, we analyze the average Ao I at Bob.
+- Thus, we denote end, we first present Lemma 1 for the subsequent derivation t′ as the instant of the k-th successful information decoding of the Ao I performance.
+- 1 k| k E (X )= , (10) For the ease of understanding the Ao I evolution at Bob, we k pq further introduce some variables to simplify the calculation of the Ao I.
+- (11) information decoding at Bob till t, given by k (pq) 2 (cid:0) (cid:1) N =max(k t′ <t), (4) Proof: The detailed proof is presented in Appendix A.
+- (cid:0) (cid:1) 2 0 − PB (cid:16) (cid:17) With the help of Lemma 1 and (14), the average Ao I can Proof: The detailed proof is presented in Appendix B.
+- Covert Communications Design 1 From the perspective of the covert communication pair, i.e., Alice and Bob, we formulate the expected detection error 0.5 probability maximization problem under the required average service time to optimize the transmit probability at Alice.
+- Specifically, the optimization problem is given by P 1 max ξ∗ p ¯ (24) s.t.
+- Then, we can solve the optimization qδ problem in two cases based on the construction of (21), i.e., 1 1 1 and 1 <1, respectively.
+- Based on the analysis in Case I, the (cid:16) (cid:17) (cid:2) (cid:3) optimal value and optimal solution for 1,1 is ξ′=θ1 and 2 2 p′=1, respectively.
+- The required average service time versus: (a) the optimal transmit probability of information signal with P B = 10 d B; (b) the optimal expected detection error probability with P A = 0 d B After some algebra calculations, we present the solution to the optimization problem (24) in Theorem 4.
+- NUMERICAL RESULTS In this section, we present the numerical results and study the performance of the considered system.
+- We also observe that there may be no feasible solution to this optimization problem as δ decreases.
+- CONCLUSION In this letter, we proposed a framework for achieving covert communications with the requirement of information freshness, i.e., achieving the maximum expected detection error probability with constrained average Ao I.
+- Our analysis proved that transmit probability of 0.5 is not It means that the optimal value of τ should be the lowest always the best choice in the considered framework, which is value or the highest value, respectively, i.e., σ2 + h 2 P W AW A | | different from the common equal prior probabilities assump- or + .
+- Bobrowski, Functional Analysis for Probability and Stochastic Pro- (cid:26) 2 W cesses: An Introduction, Cambridge University Press, 2005.
+
+Important terms: technique, framework, model, analysis, study, results, propose, present, introduce, design, optimization, performance
+Focus: Research study
+Contribution: Provides comparative analysis

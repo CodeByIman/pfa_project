@@ -1,0 +1,129 @@
+Title: TransVG++: End-to-End Visual Grounding with Language Conditioned Vision Transformer
+Authors: Jiajun Deng, Zhengyuan Yang, Daqing Liu, Tianlang Chen, Wengang Zhou
+Year: 2022
+Paper ID: http://arxiv.org/abs/2206.06619v1
+Link: http://arxiv.org/pdf/2206.06619v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Improves existing methods
+LINES COUNT: 55
+TERMS: method, approach, algorithm, technique, framework, model, analysis, study, evaluation, experiment
+
+BODY:
+The previous methods generally address the core problem of visual grounding, i.e., multi-modal fusion and reasoning, with manually-designed mechanisms.
+Such heuristic designs are not only complicated but also make models easily overfit specific data distributions.
+We empirically show that complicated fusion modules can be replaced by a simple stack of Transformer encoder layers with higher performance.
+In general, these attempts are ered by human beings and visual contents in the physical efficient, but lead to sub-optimal results, especially when world.
+Specifically, [14], [15], and multi-modal tree [10], [16] are designed two-stage approaches [1], [2] first generate a set of region to improve multi-modal relationships modeling.
+(email: liudq.ustc@gmail.com) predictions are made out of candidates, their performance • T.
+In this work, we explore an alternative approach in 2202 nu J 41 ]VC.sc[ 1 v 91660.6022:vi Xra IEEETRANS.ONPATTERNRECOGNITIONANDMACHINEINTELLIGENCE,VOL.X,NO.X,JUNE 2022 2 A white cushion chair A white cushion chair Language Encoder Language Encoder with a grey pillow on it with a grey pillow on it Region-Expression Vision-Language CNN CNN Matching Fusion Best matching Dense Prediction with Region Proposals proposal Predictions max score (a) Two-stage pipeline (b) One-stage pipeline A white cushion chair LL aanngguuaaggee A white cushion chair Language with a grey pillow on it TT rraannssffoorrmmeerr with a grey pillow on it Transformer Vision-Language Transformer Direct Coordinates Language Conditioned TT rraannssffoorrmmeerr CNN Regression Vision Transformer ((VV iissiioonn)) Direct Coordinates Patch Embedding Regression (c) Trans VG (preliminary version) (d) Trans VG++ (advanced version) Fig.
+Particularly, we use Transformer (vision) to represent a stack of Transformer encoder layers built on the top of a convolutional neural network (CNN), distinguished from Vision Transformer [8], a specific model in the literature.
+fusion module design, and re-formulate the prediction pro- To this end, we further introduce an advanced version cessing back to a simple regression problem.
+We first present framework, namely Trans VG++, to remove the stand-alone Trans VG, the preliminary version framework to address fusion Transformer, and instead performs vision-language the problem of visual grounding with Transformers.
+Built on a fully Transformer network and language Transformer built on word embed- architecture and waiving the external fusion Transformer, dings are applied in these two branches to model the global Trans VG++ achieves consistently better performance with cues in vision and language domains, respectively.
+We empirically prediction step, Trans VG directly outputs 4-dim coordinates show that larger LV i T models consistently lead to betof a bounding box to localize the referred region, instead of ter Trans VG++ variants, and expect the trend to hold for making predictions based on a set of candidates.
+We benchmark the proposed frameworks on five preva Although Transformers have been leveraged to establish lent datasets, including Ref COCO [17], Ref COCO+ [17], multi-modal dependencies, Trans VG shares the same meta Ref COCO g [18], Refer It Game [19], Flickr 30 K Entities [20].
+architecture with previous two-stage and one-stage meth Our preliminary framework respectively achieves 83.38%, ods, which include two independent uni-modal feature en 59.24%, 68.71%, 70.73% and 79.10% accuracy on the test coders, a stand-alone multi-modal fusion or matching modset of these five datasets, consistently outperforming the ule, and a prediction module.
+• We propose the first purely Transformer-based frame IEEETRANS.ONPATTERNRECOGNITIONANDMACHINEINTELLIGENCE,VOL.X,NO.X,JUNE 2022 3 work to address the problem of visual grounding, and to maximize the similarity between the positive object-query re-formulate the prediction process to directly regress pairs.
+proposes to incorporate visual comparison based context • We conduct extensive experiments to validate the mer- into referring expression models, which demonstrates the its of our method, and show significantly improved significance of involving out-of-object information for visual results on several prevalent benchmarks.
+Matt Net [12] introduces the modular design and The preliminary version of this work is published in [21].
+improves the grounding accuracy by better modeling the We have made significant improvements and extensions to subject, location, and relation-related language description.
+The fused image-text feature maps are then fully Transformer-based framework in this field, without leveraged to perform bounding box prediction in a slidingintroducing any inductive bias.
+The early work FAOA [7] encodes the lanperiemental results, the advanced framework outperforms guage expression into a language vector, and fuses the lanthe preliminary one by a large margin, and meanwhile guage vector into the YOLO v 3 detector [38] to ground the achieves better efficiency on model size and computation referred region.
+According to the differences in the fusion study, we alternatively explore how to remove the standmodule, current visual grounding methods can be broadly alone fusion module, and re-use the vision feature encoder categorized into two directions, i.e., two-stage methods [2], (i.e., a plain Vi T [8] in our Trans VG++) to perform vision- [10], [12], [13], [14], [16], [22], [23], [24] and one-stage meth- language fusion.
+Second, the unified vision encoder design facilimulti-modal feature fusion at all spatial locations, waiving tates the model to benefit from the advances in computer the requirements of region proposals.
+2: An overview of our proposed Trans VG and Trans VG++ frameworks.
+It introduces a set of learnable learn a generalizable vision-language representation with object queries, reasons global context and object relations large-scale data.
+In contrast, we focus on exploring novel with attention mechanism, and outputs the final set of Transformer-based visual grounding frameworks.
+Vi T [8] and Dei T [50] show that a Vi T has has also shown its power in other vision-language pure Transformer can achieve excellent accuracy for image tasks, while mainly as the backbone of vision encoder [63], classification.
+An overview of our proposed frameworks are illustrated in Fig.
+Motivated by the framework, namely Trans VG, performs vision-language feapowerful pre-trained model of BERT [55], some researchers ture fusion with a simply stack of Transformer encoder start to investigate visual-linguistic pre-training (VLP) [56], layers, getting rid of manually designed mechanisms.
+Moreover, different from previous methods that rely works [61], [62], [63], [64] further improve the model to on candidate boxes selection or refinement, both of our make use of raw image patches.
+Besides following the proposed frameworks introduce a learnable [REG] token, pretext tasks of BERT, MDETR [65] explores using object de- and localize the referred region by directly regressing the tection as the pretext task to help improve the performance box coordiantes with the output state of [REG] token.
+3: An illustration of two varieties of Transformer encoder In this subsection, we present Trans VG, the preliminary layers, including (a) a post-normalization encoder layer and version framework based on a stack of Transformer encoder (b) a pre-normalization encoder layer.
+Then, we consturct the model design of the preliminary version (Sec.
+3.4, vision and langauge feature embedding together, and apwe introduce the training objectives of our frameworks.
+Finally, the output state of [REG] Before detailing our proposed frameworks, we first deliver token is leveraged to directly predict 4-dim coordinates of a a background overview of attention modules and encoder referred region in the prediction head.
+Typically, the output state vision input of our Trans VG++ is no longer the whole of the [REG] token develops a consolidated representation images, but equally divided raw image patches.
+Specifically, a standard Vi T model is composed of 12 token from the V-L module as the input of our prediction pre-normalization Transformer encoder layers.
+Here, the parameters of the FFN to generate prompt tokens are 4 EXPERIMENTS randomly initialized, and those of other compnents make In this section, we present extensive experiments to validate use of parameters from the corresponding original vision the merits of our proposed Trans VG/Trans VG++ frameencoder layer of a pre-trained Vi T backbone network.
+4.4, we present the attention (MHCA) module between the MHSA module main results of our models, and compare them with other and FFN of the original vision encoder layer.
+4.6, we show some ule, namely language adapt tokens, are the aggregation of qualitative results to help validation and analysis.
+Similar to the language prompter, the parameters of We conduct experiments on five prevalent datasets and the MHCA module are randomly initialized, and those of follow the standard protocol to evaluate our framework other parts are initialized with corresponding parameters in terms of accuracy.
+model, while achieving infusive performance improvements Ref COCO+ [17] contains 19,992 images with 49,856 reagainst our preliminary version with stand-alone fusion ferred objects and 141,564 referring expressions.
+number of multi-head attention modules is set as 8, and the Since our proposed frameworks directly output the box hidden dimension in FFN is set as 2048.
+In our advanced framework, the patch embedding layer 4.3 Ablative Experiments divides a 640 × 640 image into patches of equal size, each with 16×16 pixels.
+The feature designs and analysis as follows: dimension of our language adapter and language prompter — Average pooled vision tokens.
+IEEETRANS.ONPATTERNRECOGNITIONANDMACHINEINTELLIGENCE,VOL.X,NO.X,JUNE 2022 9 TABLE 1: Ablative experiments on the design of [REG] TABLE 3: Performance comparison between different stratetoken’s initial state in Trans VG.
+leveraging this preliminary strategies, the model achieves In this setting, the [CLS] token out of the V-L module 71.00% accuracy and 67.24% accuracy on Refer It Game and is fed into the prediction head.
+alone Transformer encoder layers, which demonstrates the Our proposed design to exploit a learnable embedding advantage of fusion in backbone against fusion with exterachieves 72.50% and 69.76% on the validation test set of nal modules.
+We experiment with four different types of Refer It Game, which is the best performance among all the language prompters to generate language prompt tokens, designs.
+In this model, designs achieve similar performance with using MHCA the vision branch has 30.18 M parameters and the visionmodule when processing language expressions with simple language fusion module has 7.52 M parameters.
+Note that Vi T-tiny’s capability this setting as our default one, and report the performance for image classification and object detection lags behind of models with this setting in our main results.
+Besides, the In Table 4, we study where language conditioned vision better performance of (b) demonstrates the advantage of encoder layers should be located (i.e., applying language fully Transformer-based framework.
+The results are Model (c) leverages dilation convolution [82] in the last evaluated on Ref COCO g-google dataset.
+As shown in the table, our the performance difference between model (a) and model default setting ranks the first among these configurations.
+Table 5 presents our ablation studies on how many language Model (d) uses the same structure as model (a) for vision conditioned vision encoder layers should be exploited.
+In this model, a language adapter is encoder layers from 2 to 4, the accuracy is consistently added to each Transformer encoder layer, converting the improved from 70.13% to 70.60%.
+
+Key sentences:
+- The previous methods generally address the core problem of visual grounding, i.e., multi-modal fusion and reasoning, with manually-designed mechanisms.
+- Such heuristic designs are not only complicated but also make models easily overfit specific data distributions.
+- We empirically show that complicated fusion modules can be replaced by a simple stack of Transformer encoder layers with higher performance.
+- In general, these attempts are ered by human beings and visual contents in the physical efficient, but lead to sub-optimal results, especially when world.
+- Specifically, [14], [15], and multi-modal tree [10], [16] are designed two-stage approaches [1], [2] first generate a set of region to improve multi-modal relationships modeling.
+- (email: liudq.ustc@gmail.com) predictions are made out of candidates, their performance • T.
+- In this work, we explore an alternative approach in 2202 nu J 41 ]VC.sc[ 1 v 91660.6022:vi Xra IEEETRANS.ONPATTERNRECOGNITIONANDMACHINEINTELLIGENCE,VOL.X,NO.X,JUNE 2022 2 A white cushion chair A white cushion chair Language Encoder Language Encoder with a grey pillow on it with a grey pillow on it Region-Expression Vision-Language CNN CNN Matching Fusion Best matching Dense Prediction with Region Proposals proposal Predictions max score (a) Two-stage pipeline (b) One-stage pipeline A white cushion chair LL aanngguuaaggee A white cushion chair Language with a grey pillow on it TT rraannssffoorrmmeerr with a grey pillow on it Transformer Vision-Language Transformer Direct Coordinates Language Conditioned TT rraannssffoorrmmeerr CNN Regression Vision Transformer ((VV iissiioonn)) Direct Coordinates Patch Embedding Regression (c) Trans VG (preliminary version) (d) Trans VG++ (advanced version) Fig.
+- Particularly, we use Transformer (vision) to represent a stack of Transformer encoder layers built on the top of a convolutional neural network (CNN), distinguished from Vision Transformer [8], a specific model in the literature.
+- fusion module design, and re-formulate the prediction pro- To this end, we further introduce an advanced version cessing back to a simple regression problem.
+- We first present framework, namely Trans VG++, to remove the stand-alone Trans VG, the preliminary version framework to address fusion Transformer, and instead performs vision-language the problem of visual grounding with Transformers.
+- Built on a fully Transformer network and language Transformer built on word embed- architecture and waiving the external fusion Transformer, dings are applied in these two branches to model the global Trans VG++ achieves consistently better performance with cues in vision and language domains, respectively.
+- We empirically prediction step, Trans VG directly outputs 4-dim coordinates show that larger LV i T models consistently lead to betof a bounding box to localize the referred region, instead of ter Trans VG++ variants, and expect the trend to hold for making predictions based on a set of candidates.
+- We benchmark the proposed frameworks on five preva Although Transformers have been leveraged to establish lent datasets, including Ref COCO [17], Ref COCO+ [17], multi-modal dependencies, Trans VG shares the same meta Ref COCO g [18], Refer It Game [19], Flickr 30 K Entities [20].
+- architecture with previous two-stage and one-stage meth Our preliminary framework respectively achieves 83.38%, ods, which include two independent uni-modal feature en 59.24%, 68.71%, 70.73% and 79.10% accuracy on the test coders, a stand-alone multi-modal fusion or matching modset of these five datasets, consistently outperforming the ule, and a prediction module.
+- • We propose the first purely Transformer-based frame IEEETRANS.ONPATTERNRECOGNITIONANDMACHINEINTELLIGENCE,VOL.X,NO.X,JUNE 2022 3 work to address the problem of visual grounding, and to maximize the similarity between the positive object-query re-formulate the prediction process to directly regress pairs.
+- proposes to incorporate visual comparison based context • We conduct extensive experiments to validate the mer- into referring expression models, which demonstrates the its of our method, and show significantly improved significance of involving out-of-object information for visual results on several prevalent benchmarks.
+- Matt Net [12] introduces the modular design and The preliminary version of this work is published in [21].
+- improves the grounding accuracy by better modeling the We have made significant improvements and extensions to subject, location, and relation-related language description.
+- The fused image-text feature maps are then fully Transformer-based framework in this field, without leveraged to perform bounding box prediction in a slidingintroducing any inductive bias.
+- The early work FAOA [7] encodes the lanperiemental results, the advanced framework outperforms guage expression into a language vector, and fuses the lanthe preliminary one by a large margin, and meanwhile guage vector into the YOLO v 3 detector [38] to ground the achieves better efficiency on model size and computation referred region.
+- According to the differences in the fusion study, we alternatively explore how to remove the standmodule, current visual grounding methods can be broadly alone fusion module, and re-use the vision feature encoder categorized into two directions, i.e., two-stage methods [2], (i.e., a plain Vi T [8] in our Trans VG++) to perform vision- [10], [12], [13], [14], [16], [22], [23], [24] and one-stage meth- language fusion.
+- Second, the unified vision encoder design facilimulti-modal feature fusion at all spatial locations, waiving tates the model to benefit from the advances in computer the requirements of region proposals.
+- 2: An overview of our proposed Trans VG and Trans VG++ frameworks.
+- It introduces a set of learnable learn a generalizable vision-language representation with object queries, reasons global context and object relations large-scale data.
+- In contrast, we focus on exploring novel with attention mechanism, and outputs the final set of Transformer-based visual grounding frameworks.
+- Vi T [8] and Dei T [50] show that a Vi T has has also shown its power in other vision-language pure Transformer can achieve excellent accuracy for image tasks, while mainly as the backbone of vision encoder [63], classification.
+- An overview of our proposed frameworks are illustrated in Fig.
+- Motivated by the framework, namely Trans VG, performs vision-language feapowerful pre-trained model of BERT [55], some researchers ture fusion with a simply stack of Transformer encoder start to investigate visual-linguistic pre-training (VLP) [56], layers, getting rid of manually designed mechanisms.
+- Moreover, different from previous methods that rely works [61], [62], [63], [64] further improve the model to on candidate boxes selection or refinement, both of our make use of raw image patches.
+- Besides following the proposed frameworks introduce a learnable [REG] token, pretext tasks of BERT, MDETR [65] explores using object de- and localize the referred region by directly regressing the tection as the pretext task to help improve the performance box coordiantes with the output state of [REG] token.
+- 3: An illustration of two varieties of Transformer encoder In this subsection, we present Trans VG, the preliminary layers, including (a) a post-normalization encoder layer and version framework based on a stack of Transformer encoder (b) a pre-normalization encoder layer.
+- Then, we consturct the model design of the preliminary version (Sec.
+- 3.4, vision and langauge feature embedding together, and apwe introduce the training objectives of our frameworks.
+- Finally, the output state of [REG] Before detailing our proposed frameworks, we first deliver token is leveraged to directly predict 4-dim coordinates of a a background overview of attention modules and encoder referred region in the prediction head.
+- Typically, the output state vision input of our Trans VG++ is no longer the whole of the [REG] token develops a consolidated representation images, but equally divided raw image patches.
+- Specifically, a standard Vi T model is composed of 12 token from the V-L module as the input of our prediction pre-normalization Transformer encoder layers.
+- Here, the parameters of the FFN to generate prompt tokens are 4 EXPERIMENTS randomly initialized, and those of other compnents make In this section, we present extensive experiments to validate use of parameters from the corresponding original vision the merits of our proposed Trans VG/Trans VG++ frameencoder layer of a pre-trained Vi T backbone network.
+- 4.4, we present the attention (MHCA) module between the MHSA module main results of our models, and compare them with other and FFN of the original vision encoder layer.
+- 4.6, we show some ule, namely language adapt tokens, are the aggregation of qualitative results to help validation and analysis.
+- Similar to the language prompter, the parameters of We conduct experiments on five prevalent datasets and the MHCA module are randomly initialized, and those of follow the standard protocol to evaluate our framework other parts are initialized with corresponding parameters in terms of accuracy.
+- model, while achieving infusive performance improvements Ref COCO+ [17] contains 19,992 images with 49,856 reagainst our preliminary version with stand-alone fusion ferred objects and 141,564 referring expressions.
+- number of multi-head attention modules is set as 8, and the Since our proposed frameworks directly output the box hidden dimension in FFN is set as 2048.
+- In our advanced framework, the patch embedding layer 4.3 Ablative Experiments divides a 640 × 640 image into patches of equal size, each with 16×16 pixels.
+- The feature designs and analysis as follows: dimension of our language adapter and language prompter — Average pooled vision tokens.
+- IEEETRANS.ONPATTERNRECOGNITIONANDMACHINEINTELLIGENCE,VOL.X,NO.X,JUNE 2022 9 TABLE 1: Ablative experiments on the design of [REG] TABLE 3: Performance comparison between different stratetoken’s initial state in Trans VG.
+- leveraging this preliminary strategies, the model achieves In this setting, the [CLS] token out of the V-L module 71.00% accuracy and 67.24% accuracy on Refer It Game and is fed into the prediction head.
+- alone Transformer encoder layers, which demonstrates the Our proposed design to exploit a learnable embedding advantage of fusion in backbone against fusion with exterachieves 72.50% and 69.76% on the validation test set of nal modules.
+- We experiment with four different types of Refer It Game, which is the best performance among all the language prompters to generate language prompt tokens, designs.
+- In this model, designs achieve similar performance with using MHCA the vision branch has 30.18 M parameters and the visionmodule when processing language expressions with simple language fusion module has 7.52 M parameters.
+- Note that Vi T-tiny’s capability this setting as our default one, and report the performance for image classification and object detection lags behind of models with this setting in our main results.
+- Besides, the In Table 4, we study where language conditioned vision better performance of (b) demonstrates the advantage of encoder layers should be located (i.e., applying language fully Transformer-based framework.
+- The results are Model (c) leverages dilation convolution [82] in the last evaluated on Ref COCO g-google dataset.
+- As shown in the table, our the performance difference between model (a) and model default setting ranks the first among these configurations.
+- Table 5 presents our ablation studies on how many language Model (d) uses the same structure as model (a) for vision conditioned vision encoder layers should be exploited.
+- In this model, a language adapter is encoder layers from 2 to 4, the accuracy is consistently added to each Transformer encoder layer, converting the improved from 70.13% to 70.60%.
+
+Important terms: method, approach, algorithm, technique, framework, model, analysis, study, evaluation, experiment, results, propose, present, introduce, develop, design, implement, deep learning, neural network, classification, prediction, optimization, performance, accuracy
+Focus: Methodological approach
+Contribution: Improves existing methods

@@ -6,7 +6,8 @@ from pathlib import Path
 
 from ..core.agent.orchestrator import run_pipeline, get_data_dir
 from ..core.evaluation.metrics import log_human_feedback
-from ..core.generation.structured_pdf_summarizer import download_and_process_pdf, StructuredSummary
+from ..core.generation.structured_pdf_summarizer import download_and_process_pdf, download_and_process_pdf_with_details, StructuredSummary
+from ..core.generation.new_ollama_summary import summarize_with_new_prompt
 
 
 class SearchRequest(BaseModel):
@@ -31,6 +32,20 @@ class PDFSummaryResponse(BaseModel):
 	short_summary: str
 	long_summary: Dict[str, str]
 	abstractive_summary: str
+	status: str
+	sections_text: Dict[str, str] | None = None
+
+
+class NewOllamaSummaryRequest(BaseModel):
+	text: str
+	title: Optional[str] = None
+	authors: List[str] | None = None
+	year: Optional[str] = None
+	model: Optional[str] = 'mistral'
+
+
+class NewOllamaSummaryResponse(BaseModel):
+	summary: str
 	status: str
 
 
@@ -111,8 +126,8 @@ def summarize_pdf(req: PDFSummaryRequest) -> PDFSummaryResponse:
 			pdf_url = f"https://arxiv.org/pdf/{arxiv_id}.pdf"
 		
 		# Process the PDF
-		cache_dir = get_data_dir() / "cache" / "pdfs"
-		structured_summary = download_and_process_pdf(
+		cache_dir = get_data_dir() / "pdfs"
+		structured_summary, validation = download_and_process_pdf_with_details(
 			pdf_url=pdf_url,
 			title=req.title,
 			authors=req.authors,
@@ -131,7 +146,8 @@ def summarize_pdf(req: PDFSummaryRequest) -> PDFSummaryResponse:
 				"future_work": structured_summary.future_work
 			},
 			abstractive_summary=structured_summary.abstractive_summary,
-			status="success"
+			status="success",
+			sections_text=validation.get('sections_text', {}) if isinstance(validation, dict) else {}
 		)
 		
 	except Exception as e:
@@ -146,11 +162,32 @@ def summarize_pdf(req: PDFSummaryRequest) -> PDFSummaryResponse:
 				"future_work": "Error occurred"
 			},
 			abstractive_summary="PDF processing failed",
-			status="error"
+			status="error",
+			sections_text={}
 		)
+
+
+@app.post('/new_ollama_summary')
+def new_ollama_summary(req: NewOllamaSummaryRequest) -> NewOllamaSummaryResponse:
+    """Generate a long, well-structured summary using the new fixed prompt on provided text."""
+    try:
+        if not req.text or len(req.text.strip()) < 30:
+            raise HTTPException(status_code=400, detail='Text is required and must be sufficiently long')
+        result = summarize_with_new_prompt(
+            text=req.text,
+            title=req.title,
+            authors=req.authors or [],
+            year=req.year,
+            model=req.model or 'mistral'
+        )
+        return NewOllamaSummaryResponse(summary=result, status='success')
+    except HTTPException:
+        raise
+    except Exception as e:
+        return NewOllamaSummaryResponse(summary=f'Error: {e}', status='error')
 
 
 @app.post('/feedback')
 def feedback(req: FeedbackRequest) -> Dict[str, Any]:
-	log_human_feedback(get_data_dir(), req.query, req.paper_id, req.relevant, req.notes or '')
-	return {'status': 'recorded'} 
+    log_human_feedback(get_data_dir(), req.query, req.paper_id, req.relevant, req.notes or '')
+    return {'status': 'recorded'} 

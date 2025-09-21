@@ -1,0 +1,51 @@
+Title: A Unified Benchmark of Federated Learning with Kolmogorov-Arnold Networks for Medical Imaging
+Authors: Youngjoon Lee, Jinu Gong, Joonhyuk Kang
+Year: 2025
+Paper ID: http://arxiv.org/abs/2504.19639v2
+Link: http://arxiv.org/pdf/2504.19639v2
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Provides comparative analysis
+LINES COUNT: 16
+TERMS: method, approach, algorithm, technique, framework, model, analysis, study, evaluation, experiment
+
+BODY:
+In Fed Speed, KAN-1 layer this paper, we evaluate Kolmogorov–Arnold Networks (KAN) architectures against traditional MLP across six state-of-the-art FL algorithms on a blood cell classification dataset.
+Notably, our experiments demonstrate that KAN can effectively replace MLP in federated environments, achieving superior performance with simpler architectures.
+Introduction circles) and MLP-3 layer (unfilled circles) performance across SOTA FL methods in an IID setting, plotting Convergence Recent years have seen major progress in AI for healthcare, Round versus Top-1 Test Accuracy (%).
+Thus, comprehensive testing of KAN across recent FL meth Therefore, studying effective model designs for FL remains ods is essential.
+To evaluate KAN’s applicability to FL, we compare The Kolmogorov–Arnold Networks (KAN) [10], [11], retheir performance against MLP-based models across various cently proposed as a potential alternative to Multi-Layer Percutting-edge FL methods, as shown in Fig.
+This comparison ceptrons (MLP) [12], can theoretically represent continuous shows that KAN models, even in their simplest form, perform functions without using traditional activation functions like as well as deeper MLP networks when used with various other neural networks.
+|B| presents our comprehensive benchmark results across various (𝑥 𝑖 ,𝑦 𝑖)∈B state-of-the-art FL algorithms.
+all devices: FL with Kolmogorov–Arnold Networks Algorithm 1: 𝑁 1 ∑︁ min 𝐹(𝜃 𝑔 ) ≜ 𝑓 𝑛 (𝜃 𝑔 ) , Initialize global model parameters 𝜃(0) 𝜃 𝑔∈Θ 𝑁 1 𝑔 𝑛=1 for global round 𝑔 = 1,2,...,𝐺 do 2 𝑟 where 𝐹 denotes the global objective aggregated at the server, Server randomly selects a subset of devices 3 and each local objective 𝑓 𝑛 on device 𝑛 is given by: S 𝑔 ⊆ {1,2,..., 𝑁} 𝑟 𝑓 (𝜃 ) ≜ 1 ∑︁ L (cid:0)𝜃 ;𝑥 , 𝑦 (cid:1) , 4 Server broadcasts 𝜃 𝑔 (𝑔 𝑟−1) to all devices in S 𝑔 𝑟 𝑛 𝑛 |D𝑛| 𝑛 𝑖 𝑖 5 for device 𝑛 ∈ S 𝑔 do in parallel 𝑟 (𝑥 𝑖 ,𝑦 𝑖)∈D𝑛 Initialize local model: 𝜃(𝑔 𝑟 ,1) ← 𝜃(𝑔 𝑟−1) 6 𝑛 𝑔 with L representing the per-sample loss (e.g., cross-entropy) for local epoch 𝑒 = 1,2,..., 𝐸 do 7 for predicting label 𝑦 𝑖 from image 𝑥 𝑖 .
+2: Test accuracy comparison of KAN-1 layer versus MLP architectures (1-3 layers) across six FL algorithms on the blood cell classification dataset with Non-IID distribution (𝛼 = 1.0).
+We examine six state-of-the-art FL algorithms: Fed Avg [4], Furthermore, the single-layer KAN not only achieves higher Fed Dyn [24], Fed SAM [25], Fed Gamma [26], Fed SMOO [27], accuracy than single-layer MLP but also surpasses the perand Fed Speed [28] to comprehensively evaluate performance formance of deeper MLP architectures while exhibiting more across different federated optimization techniques.
+Results indicate 1 1 𝑑 [5, 5, 5] 𝜔 [125] that increasing data heterogeneity (lower 𝛼) negatively affects 3 3 𝑑 [5, 5, 5, 5, 5] 𝜔 [3125] test accuracy across all FL methods.
+Moreover, specific FL methods, such as Fed Gamma layer) actually outperform deeper variants (3 and 5 layers) in and Fed Speed, shows notable synergy with larger grid configuour experiments.
+These findings underscore that appropriately selecting performance, with the medium configuration (125 parameters) the grid size is essential for optimizing KAN performance in achieving optimal test accuracy compared to both narrow (5 diverse federated learning environments.
+Ablation Study while keeping depth minimal for enhanced KAN performance We perform an ablation study using vanilla Fed Avg to deter- in FL scenarios.
+Fig.4:Testaccuracycomparisonof KAN variantswithdifferent [16] S.N.Zelekeand M.Bochicchio,“Federatedkolmogorov-arnoldnetworks forhealthdataanalysis:Astudyusingecgsignal,”in Proc.IEEEB ig Data, depths (top) and widths (bottom) across global rounds.
+to conventional design principles, our studies reveal that in- [22] A.Acevedo,A.Merino,S.Alfe´rez,A´.Molina,L.Boldu´,and J.Rodellar, “A dataset of microscopic peripheral blood cell images for development creasing KAN widthyieldsmorebenefitsthanincreasingdepth ofautomaticrecognitionsystems,”Data Br.,vol.30,June 2020.
+
+Key sentences:
+- In Fed Speed, KAN-1 layer this paper, we evaluate Kolmogorov–Arnold Networks (KAN) architectures against traditional MLP across six state-of-the-art FL algorithms on a blood cell classification dataset.
+- Notably, our experiments demonstrate that KAN can effectively replace MLP in federated environments, achieving superior performance with simpler architectures.
+- Introduction circles) and MLP-3 layer (unfilled circles) performance across SOTA FL methods in an IID setting, plotting Convergence Recent years have seen major progress in AI for healthcare, Round versus Top-1 Test Accuracy (%).
+- Thus, comprehensive testing of KAN across recent FL meth Therefore, studying effective model designs for FL remains ods is essential.
+- To evaluate KAN’s applicability to FL, we compare The Kolmogorov–Arnold Networks (KAN) [10], [11], retheir performance against MLP-based models across various cently proposed as a potential alternative to Multi-Layer Percutting-edge FL methods, as shown in Fig.
+- This comparison ceptrons (MLP) [12], can theoretically represent continuous shows that KAN models, even in their simplest form, perform functions without using traditional activation functions like as well as deeper MLP networks when used with various other neural networks.
+- |B| presents our comprehensive benchmark results across various (𝑥 𝑖 ,𝑦 𝑖)∈B state-of-the-art FL algorithms.
+- all devices: FL with Kolmogorov–Arnold Networks Algorithm 1: 𝑁 1 ∑︁ min 𝐹(𝜃 𝑔 ) ≜ 𝑓 𝑛 (𝜃 𝑔 ) , Initialize global model parameters 𝜃(0) 𝜃 𝑔∈Θ 𝑁 1 𝑔 𝑛=1 for global round 𝑔 = 1,2,...,𝐺 do 2 𝑟 where 𝐹 denotes the global objective aggregated at the server, Server randomly selects a subset of devices 3 and each local objective 𝑓 𝑛 on device 𝑛 is given by: S 𝑔 ⊆ {1,2,..., 𝑁} 𝑟 𝑓 (𝜃 ) ≜ 1 ∑︁ L (cid:0)𝜃 ;𝑥 , 𝑦 (cid:1) , 4 Server broadcasts 𝜃 𝑔 (𝑔 𝑟−1) to all devices in S 𝑔 𝑟 𝑛 𝑛 |D𝑛| 𝑛 𝑖 𝑖 5 for device 𝑛 ∈ S 𝑔 do in parallel 𝑟 (𝑥 𝑖 ,𝑦 𝑖)∈D𝑛 Initialize local model: 𝜃(𝑔 𝑟 ,1) ← 𝜃(𝑔 𝑟−1) 6 𝑛 𝑔 with L representing the per-sample loss (e.g., cross-entropy) for local epoch 𝑒 = 1,2,..., 𝐸 do 7 for predicting label 𝑦 𝑖 from image 𝑥 𝑖 .
+- 2: Test accuracy comparison of KAN-1 layer versus MLP architectures (1-3 layers) across six FL algorithms on the blood cell classification dataset with Non-IID distribution (𝛼 = 1.0).
+- We examine six state-of-the-art FL algorithms: Fed Avg [4], Furthermore, the single-layer KAN not only achieves higher Fed Dyn [24], Fed SAM [25], Fed Gamma [26], Fed SMOO [27], accuracy than single-layer MLP but also surpasses the perand Fed Speed [28] to comprehensively evaluate performance formance of deeper MLP architectures while exhibiting more across different federated optimization techniques.
+- Results indicate 1 1 𝑑 [5, 5, 5] 𝜔 [125] that increasing data heterogeneity (lower 𝛼) negatively affects 3 3 𝑑 [5, 5, 5, 5, 5] 𝜔 [3125] test accuracy across all FL methods.
+- Moreover, specific FL methods, such as Fed Gamma layer) actually outperform deeper variants (3 and 5 layers) in and Fed Speed, shows notable synergy with larger grid configuour experiments.
+- These findings underscore that appropriately selecting performance, with the medium configuration (125 parameters) the grid size is essential for optimizing KAN performance in achieving optimal test accuracy compared to both narrow (5 diverse federated learning environments.
+- Ablation Study while keeping depth minimal for enhanced KAN performance We perform an ablation study using vanilla Fed Avg to deter- in FL scenarios.
+- Fig.4:Testaccuracycomparisonof KAN variantswithdifferent [16] S.N.Zelekeand M.Bochicchio,“Federatedkolmogorov-arnoldnetworks forhealthdataanalysis:Astudyusingecgsignal,”in Proc.IEEEB ig Data, depths (top) and widths (bottom) across global rounds.
+- to conventional design principles, our studies reveal that in- [22] A.Acevedo,A.Merino,S.Alfe´rez,A´.Molina,L.Boldu´,and J.Rodellar, “A dataset of microscopic peripheral blood cell images for development creasing KAN widthyieldsmorebenefitsthanincreasingdepth ofautomaticrecognitionsystems,”Data Br.,vol.30,June 2020.
+
+Important terms: method, approach, algorithm, technique, framework, model, analysis, study, evaluation, experiment, results, findings, propose, present, introduce, develop, design, machine learning, neural network, classification, prediction, optimization, performance, accuracy
+Focus: Methodological approach
+Contribution: Provides comparative analysis

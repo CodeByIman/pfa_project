@@ -1,0 +1,41 @@
+Title: Optimizing Memory Efficiency for Convolution Kernels on Kepler GPUs
+Authors: Xiaoming Chen, Jianxu Chen, Danny Z. Chen, Xiaobo Sharon Hu
+Year: 2017
+Paper ID: http://arxiv.org/abs/1705.10591v1
+Link: http://arxiv.org/pdf/1705.10591v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Research study
+CONTRIBUTION: Improves existing methods
+KEY SENTENCES COUNT: 5
+TERMS: model, experiment, introduce, develop, design, implement, deep learning, neural network, performance
+
+BODY:
+Recent successes of convolutional neural networks in various deep learning applications put even higher demand on fast convolution. This paper introduces a general model to address the mismatch between the memory bank width
+
+of GPUs and computation data width of threads. Based on this model, we develop two convolution kernels, one for the general case and the other for a special case with one input channel.
+
+By carefully optimizing memory access patterns and computation patterns, we design a communication-optimized kernel for the special case and a communication-reduced kernel for the general case. Experimental data based
+
+on implementations on Kepler GPUs show that our kernels achieve 5.16X and 35.5% average performance improvement over the latest cuDNN library, for the special case and the general case, respectively.
+
+Key sentences:
+- Recent successes of
+convolutional neural networks in various deep learning applications put even
+higher demand on fast convolution.
+- This
+paper introduces a general model to address the mismatch between the memory
+bank width of GPUs and computation data width of threads.
+- Based on this model,
+we develop two convolution kernels, one for the general case and the other for
+a special case with one input channel.
+- By carefully optimizing memory access
+patterns and computation patterns, we design a communication-optimized kernel
+for the special case and a communication-reduced kernel for the general case.
+- Experimental data based on implementations on Kepler GPUs show that our kernels
+achieve 5.16X and 35.5% average performance improvement over the latest cuDNN
+library, for the special case and the general case, respectively.
+
+Important terms: model, experiment, introduce, develop, design, implement, deep learning, neural network, performance
+Focus: Research study
+Contribution: Improves existing methods

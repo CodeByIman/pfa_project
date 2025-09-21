@@ -1,0 +1,105 @@
+Title: Divert More Attention to Vision-Language Tracking
+Authors: Mingzhe Guo, Zhipeng Zhang, Heng Fan, Liping Jing
+Year: 2022
+Paper ID: http://arxiv.org/abs/2207.01076v1
+Link: http://arxiv.org/pdf/2207.01076v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Provides comparative analysis
+LINES COUNT: 43
+TERMS: method, approach, algorithm, framework, model, analysis, study, evaluation, experiment, results
+
+BODY:
+The essence lies in learning novel unified-adaptive VL representations with our modality mixer (Moda Mixer) and asymmetrical Conv Net search.
+Besides empirical results, we theoretically analyze our approach to evidence its effectiveness.
+Having observed the above, we introduce a novel unified-adaptive vision-language representation, aiming for SOTA VL tracking without using Transformer 2.
+Specifically, we first present modality mixer, or Moda Mixer, a conceptually simple but effective module for VL interaction.
+The selected feature is then fused with the original feature, using a special asymmetrical design (analyzed later in experiments), to generate the final unified VL representation.
+To mitigate the gap, we propose an asymmetrical searching strategy (ASS) to adapt the unified VL representation for improvements.
+Eventually, with the unified-adaptive representation, we implement the first pure CNN-based VL tracker that shows SOTA results comparable and even better than Transformer-based solutions, without bells and whistles.
+Besides empirical results, we provide theoretical analysis to evidence the effectiveness of our method.
+Head Vision-Language Representation Learning Localization Vision Search Figure 2: The proposed vision-language tracking framework.
+The semantic information of language description is injected to vision from shallow to deep layers of the asymmetrical modeling architecture to learn unified-adaptive vision-language representation.
+In summary, our contributions are four-fold: (i) we introduce a novel unified-adaptive vision-language representation for SOTA VL tracking; (ii) we propose the embarrassingly simple yet effective Moda Mixer for unified VL representation learning; (iii) we present ASS to adapt mixed VL representation for better tracking and (iv) using pure CNN architecture, we achieve SOTA results on multiple benchmarks .
+Recently, Transformer [48] has been introduced to Siamese tracking for better interactions of visual features and greatly pushed the standard of state-of-the-art performance [7, 51, 45, 9, 33].
+The work [32] first introduces linguistic description to tracking and shows that language enhances the robustness of vision-based method.
+Different from these VL trackers that regard vision and language as independent cues with weak connections only at result fusion, we propose Moda Mixer to unleash the power of VL tracking by learning unified VL representation.
+Neural architecture search (NAS) aims at finding the optimal design of deep network architectures [62, 40, 35, 25] and has been introduced to tracking [54, 59].
+In specific, we first describe the proposed modality mixer for generating unified multimodal representation and then asymmetrical network which searches for learning adaptive VL representation.
+Afterwards, we illustrate the proposed tracking framework, followed by theoretical analysis of our method.
+In this work, we propose the modality mixer (dubbed Moda Mixer) to demonstrate a compact way to learn a unified vision-language representation for tracking.
+3.2 Asymmetrical Search for Adaptive Vision-Language Representation Besides the fusion module, the other crucial key for vision-language tracking is how to construct the basic modeling structure.
+We adopt a popular NAS model, in particular the single-path one-shot method SPOS [25], for searching the optimal structure of our purpose.
+3.3 Tracking Framework With the proposed Moda Mixer and the searched asymmetrical networks, we construct a new visionlanguage tracking framework, as shown in Fig.
+5 3.4 A Theoretical Explanation This section presents a theoretical explanation of our method, following the analysis in [28].
+Furthermore, the Rademacher complexity R (F) is proportional to the network n complexity, which demonstrates that heterogeneous network would theoretically rise the upper (cid:16) (cid:17) (cid:16) (cid:17) ˆ ˆ bound of r θ −r θ , and also exhibits that our asymmetrical design has larger optimiza M S tion space when learning with |M| modalities compared to |S| modalities (|M| > |S|).
+4 Experiment 4.1 Implementation Details We apply our method to both CNN-based Siam CAR [22] (dubbed VLT ) and Transformer-based SCAR Trans T [7] (dubbed VLT ).
+The proposed ASS aims to find a more flexible modeling structure for visionlanguage tracking (VLT).
+2 presents the results and comparisons of our trackers with other SOTA s on La SOT [16], La SOT [15], TNL 2 K [52], OTB 99-LANG [32] and GOT-10 K [27].
+Moreover, our VLT outperforms Trans T in terms of both accuracy and speed.
+Notably, our VLT outperforms the current best VL tracker SNLT [19] for 11.2%/18.5% SCAR on La SOT/La SOT , showing that the unified-adaptive vision-language representation is more Ext robust for VL tracking and is superior to simply fusing tracking results of different modalities.
+4.3 Component-wise Ablation We analyze the influence of each component in our method to show the effectiveness and rationality of the proposed Moda Mixer and ASS.
+The ablation experiments are conducted on VLT , and SCAR results are presented in Tab.
+La SOT La SOT TNL 2 K GOT-10 k OTB 99-L Ext Method Setting SUC P SUC P SUC P AO SR SR SUC P 0.5 0.75 0-tensor 65.2 69.1 41.2 47.5 48.3 46.6 61.4 72.4 52.3 72.7 88.8 VLT SCAR template 63.9 67.9 44.7 51.6 49.8 51.1 61.0 70.8 52.2 73.9 89.8 Table 5: Evaluating different settings on La SOT: (a) the influence of symmetrical and our asymmetrical design, (b) adopting fixed Shuffle Net block or searching the post-processing block in Moda Mixer, and (c) removing language description or using caption generated by [38] during inference.
+5 c presents the results by removing the description and using that generated with an recent advanced image-caption method [38] (in ICML 2021).
+The results show that, without language description, performance heavily degrades (65.2% → 53.4% SUC on La SOT), verifying that the high-level semantics in language do help in improving robustness.
+More visualization results are presented in appendix due to limited space.
+In experiments, our approach surprisingly boosts a pure CNN-based Siamese tracker to achieve competitive or even better performances compared to recent SOTA s.
+9 A Appendix The appendix presents additional details of our tracker in terms of design and experiments, as follows.
+• A.2 Different Language Models We analyze and compare different language embedding models (i.e., BERT [14] and GPT 2 [39]) in our method.
+• A.3 Details of The Proposed Asymmetrical Searching Strategy (ASS) We present more details about the pipeline of our proposed ASS.
+• A.6 Activation Analysis of Different Language Descriptions We study the impact of different language descriptions on tracking performance by visualizing their activation maps.
+• A.7 Attribute-based Performance Analysis We conductattribute-based performance analysis on La SOT [16], andthe resultsdemonstrate the robustness of our tracker in various complex scenarios.
+A.1 Volume of Language-Annotated Training Data Language-annotated data is crucial for our proposed tracker in learning the robust vision-language representations.
+We analyze the influence of training with different volumes of language-annotated data and the results are presented in Tab.
+To show the influence of different language models, we compare the results of using BERT [14] and GPT-2 [39], as shown in Tab.
+
+Key sentences:
+- The essence lies in learning novel unified-adaptive VL representations with our modality mixer (Moda Mixer) and asymmetrical Conv Net search.
+- Besides empirical results, we theoretically analyze our approach to evidence its effectiveness.
+- Having observed the above, we introduce a novel unified-adaptive vision-language representation, aiming for SOTA VL tracking without using Transformer 2.
+- Specifically, we first present modality mixer, or Moda Mixer, a conceptually simple but effective module for VL interaction.
+- The selected feature is then fused with the original feature, using a special asymmetrical design (analyzed later in experiments), to generate the final unified VL representation.
+- To mitigate the gap, we propose an asymmetrical searching strategy (ASS) to adapt the unified VL representation for improvements.
+- Eventually, with the unified-adaptive representation, we implement the first pure CNN-based VL tracker that shows SOTA results comparable and even better than Transformer-based solutions, without bells and whistles.
+- Besides empirical results, we provide theoretical analysis to evidence the effectiveness of our method.
+- Head Vision-Language Representation Learning Localization Vision Search Figure 2: The proposed vision-language tracking framework.
+- The semantic information of language description is injected to vision from shallow to deep layers of the asymmetrical modeling architecture to learn unified-adaptive vision-language representation.
+- In summary, our contributions are four-fold: (i) we introduce a novel unified-adaptive vision-language representation for SOTA VL tracking; (ii) we propose the embarrassingly simple yet effective Moda Mixer for unified VL representation learning; (iii) we present ASS to adapt mixed VL representation for better tracking and (iv) using pure CNN architecture, we achieve SOTA results on multiple benchmarks .
+- Recently, Transformer [48] has been introduced to Siamese tracking for better interactions of visual features and greatly pushed the standard of state-of-the-art performance [7, 51, 45, 9, 33].
+- The work [32] first introduces linguistic description to tracking and shows that language enhances the robustness of vision-based method.
+- Different from these VL trackers that regard vision and language as independent cues with weak connections only at result fusion, we propose Moda Mixer to unleash the power of VL tracking by learning unified VL representation.
+- Neural architecture search (NAS) aims at finding the optimal design of deep network architectures [62, 40, 35, 25] and has been introduced to tracking [54, 59].
+- In specific, we first describe the proposed modality mixer for generating unified multimodal representation and then asymmetrical network which searches for learning adaptive VL representation.
+- Afterwards, we illustrate the proposed tracking framework, followed by theoretical analysis of our method.
+- In this work, we propose the modality mixer (dubbed Moda Mixer) to demonstrate a compact way to learn a unified vision-language representation for tracking.
+- 3.2 Asymmetrical Search for Adaptive Vision-Language Representation Besides the fusion module, the other crucial key for vision-language tracking is how to construct the basic modeling structure.
+- We adopt a popular NAS model, in particular the single-path one-shot method SPOS [25], for searching the optimal structure of our purpose.
+- 3.3 Tracking Framework With the proposed Moda Mixer and the searched asymmetrical networks, we construct a new visionlanguage tracking framework, as shown in Fig.
+- 5 3.4 A Theoretical Explanation This section presents a theoretical explanation of our method, following the analysis in [28].
+- Furthermore, the Rademacher complexity R (F) is proportional to the network n complexity, which demonstrates that heterogeneous network would theoretically rise the upper (cid:16) (cid:17) (cid:16) (cid:17) ˆ ˆ bound of r θ −r θ , and also exhibits that our asymmetrical design has larger optimiza M S tion space when learning with |M| modalities compared to |S| modalities (|M| > |S|).
+- 4 Experiment 4.1 Implementation Details We apply our method to both CNN-based Siam CAR [22] (dubbed VLT ) and Transformer-based SCAR Trans T [7] (dubbed VLT ).
+- The proposed ASS aims to find a more flexible modeling structure for visionlanguage tracking (VLT).
+- 2 presents the results and comparisons of our trackers with other SOTA s on La SOT [16], La SOT [15], TNL 2 K [52], OTB 99-LANG [32] and GOT-10 K [27].
+- Moreover, our VLT outperforms Trans T in terms of both accuracy and speed.
+- Notably, our VLT outperforms the current best VL tracker SNLT [19] for 11.2%/18.5% SCAR on La SOT/La SOT , showing that the unified-adaptive vision-language representation is more Ext robust for VL tracking and is superior to simply fusing tracking results of different modalities.
+- 4.3 Component-wise Ablation We analyze the influence of each component in our method to show the effectiveness and rationality of the proposed Moda Mixer and ASS.
+- The ablation experiments are conducted on VLT , and SCAR results are presented in Tab.
+- La SOT La SOT TNL 2 K GOT-10 k OTB 99-L Ext Method Setting SUC P SUC P SUC P AO SR SR SUC P 0.5 0.75 0-tensor 65.2 69.1 41.2 47.5 48.3 46.6 61.4 72.4 52.3 72.7 88.8 VLT SCAR template 63.9 67.9 44.7 51.6 49.8 51.1 61.0 70.8 52.2 73.9 89.8 Table 5: Evaluating different settings on La SOT: (a) the influence of symmetrical and our asymmetrical design, (b) adopting fixed Shuffle Net block or searching the post-processing block in Moda Mixer, and (c) removing language description or using caption generated by [38] during inference.
+- 5 c presents the results by removing the description and using that generated with an recent advanced image-caption method [38] (in ICML 2021).
+- The results show that, without language description, performance heavily degrades (65.2% → 53.4% SUC on La SOT), verifying that the high-level semantics in language do help in improving robustness.
+- More visualization results are presented in appendix due to limited space.
+- In experiments, our approach surprisingly boosts a pure CNN-based Siamese tracker to achieve competitive or even better performances compared to recent SOTA s.
+- 9 A Appendix The appendix presents additional details of our tracker in terms of design and experiments, as follows.
+- • A.2 Different Language Models We analyze and compare different language embedding models (i.e., BERT [14] and GPT 2 [39]) in our method.
+- • A.3 Details of The Proposed Asymmetrical Searching Strategy (ASS) We present more details about the pipeline of our proposed ASS.
+- • A.6 Activation Analysis of Different Language Descriptions We study the impact of different language descriptions on tracking performance by visualizing their activation maps.
+- • A.7 Attribute-based Performance Analysis We conductattribute-based performance analysis on La SOT [16], andthe resultsdemonstrate the robustness of our tracker in various complex scenarios.
+- A.1 Volume of Language-Annotated Training Data Language-annotated data is crucial for our proposed tracker in learning the robust vision-language representations.
+- We analyze the influence of training with different volumes of language-annotated data and the results are presented in Tab.
+- To show the influence of different language models, we compare the results of using BERT [14] and GPT-2 [39], as shown in Tab.
+
+Important terms: method, approach, algorithm, framework, model, analysis, study, evaluation, experiment, results, propose, present, introduce, design, implement, neural network, optimization, performance, accuracy
+Focus: Methodological approach
+Contribution: Provides comparative analysis

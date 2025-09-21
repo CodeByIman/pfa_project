@@ -1,0 +1,42 @@
+Title: Prior Knowledge Injection into Deep Learning Models Predicting Gene Expression from Whole Slide Images
+Authors: Max Hallemeesch, Marija Pizurica, Paloma Rabaey, Olivier Gevaert, Thomas Demeester
+Year: 2025
+Paper ID: http://arxiv.org/abs/2501.14056v1
+Link: http://arxiv.org/pdf/2501.14056v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Machine Learning methodology
+CONTRIBUTION: Improves existing methods
+KEY SENTENCES COUNT: 5
+TERMS: method, framework, model, study, experiment, findings, design, deep learning, prediction, performance
+
+BODY:
+Recent advances in Deep Learning allow to predict molecular information from morphological features within Whole Slide Images (WSIs), offering a cost-effective proxy of the molecular markers. Here we aim to improve existing methods by introducing a
+
+model-agnostic framework that allows to inject prior knowledge on gene-gene interactions into Deep Learning architectures, thereby increasing accuracy and robustness. We design the framework to be generic and flexibly adaptable to a wide range of architectures.
+
+In a case study on breast cancer, our strategy leads to an average increase of 983 significant genes (out of 25,761) across all 18 experiments, with 14 generalizing to an
+
+increase on an independent dataset. Our findings reveal a high potential for injection of prior knowledge to increase gene expression prediction performance from WSIs across a wide range of architectures.
+
+Key sentences:
+- Recent advances in Deep Learning allow to
+predict molecular information from morphological features within Whole Slide
+Images (WSIs), offering a cost-effective proxy of the molecular markers.
+- Here we aim to improve existing methods by introducing a
+model-agnostic framework that allows to inject prior knowledge on gene-gene
+interactions into Deep Learning architectures, thereby increasing accuracy and
+robustness.
+- We design the framework to be generic and flexibly adaptable to a
+wide range of architectures.
+- In a case study on breast cancer, our strategy
+leads to an average increase of 983 significant genes (out of 25,761) across
+all 18 experiments, with 14 generalizing to an increase on an independent
+dataset.
+- Our findings reveal a high potential for injection of prior knowledge
+to increase gene expression prediction performance from WSIs across a wide
+range of architectures.
+
+Important terms: method, framework, model, study, experiment, findings, design, deep learning, prediction, performance, accuracy
+Focus: Machine Learning methodology
+Contribution: Improves existing methods

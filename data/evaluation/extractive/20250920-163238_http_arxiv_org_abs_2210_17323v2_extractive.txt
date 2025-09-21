@@ -1,0 +1,111 @@
+Title: GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers
+Authors: Elias Frantar, Saleh Ashkboos, Torsten Hoefler, Dan Alistarh
+Year: 2022
+Paper ID: http://arxiv.org/abs/2210.17323v2
+Link: http://arxiv.org/pdf/2210.17323v2
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Introduces novel approach
+LINES COUNT: 46
+TERMS: method, approach, algorithm, technique, framework, model, analysis, study, evaluation, experiment
+
+BODY:
+While there is emerging work on relieving this pressure via model compression, the applicability and performance of existing compression techniques is limited by the scale and complexity of GPT models.
+In this paper, we address this challenge, and propose GPTQ, a new one-shot weight quantization method based on approximate second-order information, that is both highlyaccurate and highly-efficient.
+Ourmethodmorethandoublesthecompressiongainsrelative to previously-proposed one-shot quantization methods, preserving accuracy, allowing us for the first time to execute an 175 billion-parameter model inside a single GPU for generative inference.
+Moreover, we also show that our method can still provide reasonable accuracy in the extreme quantization regime, in which weights are quantized to 2-bit or even ternary quantization levels.
+We show experimentally that these improvements can be leveraged for end-to-end inference speedupsover FP 16, ofaround 3.25 xwhenusinghigh-end GPU s(NVIDIAA 100) and 4.5 x when using more cost-effective ones (NVIDIA A 6000).
+Although a standard approach to eliminating these overheads is model compression, e.g.
+One reason is that more complex methods for low-bitwidth quantization or model pruning usually require model retraining, which is extremely expensive for billion-parameter models.
+In this paper, we present a new post-training quantization method, called GPTQ,1 which is efficient enough to execute on models with hundreds of billions of parameters in at most a few hours, and precise enough to compress such models to 3 or 4 bits per parameter without significant loss of accuracy.
+Further, we show that our model can also provide robust results in the extreme quantization regime, in which models are quantized to 2 bits per component, or even ternary values.
+On the practical side, we develop an execution harness which allows us to execute the resulting compressed models efficiently for generative tasks.
+To our knowledge, we are the first to show that extremely accurate language models with hundreds of billions of parameters can be quantized to 3-4 bits/component: prior post-training methods only remain accurate at 8 bits (Yao et al., 2022; Dettmers et al., 2022), while prior training-based techniqueshaveonlytackledmodelsthataresmallerbyonetotwoordersofmagnitude(Wuetal.,2022).
+This high degree of compression may appear natural, as these networks are overparametrized; yet, as we discuss in our detailed analysis of results, compression induces non-trivial tradeoffs between the accuracy of the language modeling (perplexity), bit-width, and the size of the original model.
+Moreover, our current results do not include activation quantization, as they are not a significant bottleneck in our target scenarios; however, this can be supported using orthogonal techniques (Yao et al., 2022).
+By contrast, post-training (“one-shot”) methods quantize a pre 1 Thismergesthenameofthe OPT modelfamilywiththeabbreviationforpost-trainingquantization(PTQ).
+Post-training approaches are particularly interesting for massive models, for which full model training or even finetuning can be expensive.
+While these approaches can produce good results for models up to ≈ 100 million parameters in a few GPU hours, scaling them to networks orders of magnitude larger is challenging.
+With the recent open-source releases of language models like BLOOM (Laurenc¸on et al., 2022) or OPT-175 B (Zhang et al., 2022), researchers have started to develop affordable methods for compressing such giant networks for inference.
+Zero Quant further proposes layer-wise knowledge distillation, similar to Ada Quant, but the largest model it can apply this approach to has only 1.3 billion parameters.
+LLM.int 8() observes that activation outliers in a few feature dimensions break the quantization of larger models, and proposes to fix this problem by keeping those dimensions in higher precision.
+Relative to this line of work, we show that a significantly more complex and accurate quantizer can be implemented efficiently at large model scale.
+Specifically, GPTQ more than doubles the amount of compression relative to these prior techniques, at similar accuracy.
+Our approach builds on the recently-proposed Optimal Brain Quanization (OBQ) method (Frantar et al., 2022) for solving the layer-wise quantization problem defined above, to which we perform a series of major modifications, which allow it to scale to large language models, providing more than three orders of magnitude computational speedup.
+(3) −q [H−1] :,q q,: qq −p This method comes with a vectorized implementation, handling multiple rows of W in parallel.
+Eventually, the algorithm can achieve reasonable runtimes on medium-sized models: for instance, it can fully quantize the Res Net-50 model (25 M parameters) in ≈ 1 hour on a single GPU, which is roughly in line with other post-training methods achieving state-of-the-art accuracy (Frantar et al., 2022).
+First, a direct implementation of the scheme described previously will not be fast in practice, because the algorithm has a relatively low compute-to-memory-access ratio.
+This provides an order of magnitude speedup for very large models in practice, making it a critical component of our algorithm.
+Finally, we present the full pseudocode for GPTQ in Algorithm 1, including the optimizations discussed above.
+We begin our experiments by validating the accuracy of GPTQ relative to other accuratebut-expensive quantizers, on smaller models, for which these methods provide reasonable runtimes.
+Then, we present 3- and 4-bit quantization results for the entire BLOOM and OPT model families, evaluated via perplexity on challenging language generation tasks.
+To complement this perplexity analysis, we also evaluate the resulting quantized models on a series of standard zeroshot tasks.
+Finally, we focus on the two largest (and interesting) openly-available models, Bloom 176 B and OPT-175 B, where we perform a detailed evaluation on several tasks.
+For these models, we also present practical improvements, namely reducing the number of GPU s required for inference as well as end-to-end speedups for generative tasks.
+Nevertheless, we also show that GPTQ is competitive with such methods for small models, while scaling to huge ones like OPT-175 B as well.
+As a first ablation study, we compare GPTQ’s performance relative to state-of-the-art post-training quantization (PTQ) methods, on Res Net 18 and Res Net 50, which are standard PTQ benchmarks, in the same setup as (Frantar et al., 2022).
+Further, we compare against the full greedy OBQ method on two smaller language models: BERT-base (Devlinetal.,2019)and OPT-125 M.Theresultsareshownin Appendix Table 8.
+We suspect that this is because some of the additional heuristics used by OBQ, such as early outlier rounding, might require careful adjustments for optimal performance on non-vision models.
+Next we measure the full model quantization time (on a single NVIDIA A 100 GPU) via GPTQ; the results are shown in Table 2.
+BLOOM shows a similar pattern: the gaps between methods are however usually a bit smaller, indicating that this model family might be easier to quantize.
+We observe that, at 4 bits, GPTQ models reach only ≤ 0.25 lower perplexity than the full-precision versions, with a large gap to RTN results on OPT-175 B.
+Figure 3 visualizes model performance on LAMBADA (and see also “Lamb.” results in Table 5).
+Table 7 shows results on Wiki Text 2 when quantizing the biggest models to 2-bit with varying group-sizes.
+In summary, these results are an encouraging first step towards pushing highly-accurate one-shot compression of very large language models, even lower than 3 bits per value on average.
+6 SUMMARY AND LIMITATIONS We have presented GPTQ, an approximate second-order method for quantizing truly large language models.
+We hope that our method will make these models accessible to more researchers and practitioners.
+These are natural directions for future work, and we believe this can be achieved with carefully-designed GPU kernels and existing techniques (Yao et al., 2022; Wu et al., 2022).
+7 ETHICS STATEMENT Our work introduces a general method for compressing large language models (LLM s) via quantization, with little-to-no accuracy loss in terms of standard accuracy metrics such as perplexity.
+
+Key sentences:
+- While there is emerging work on relieving this pressure via model compression, the applicability and performance of existing compression techniques is limited by the scale and complexity of GPT models.
+- In this paper, we address this challenge, and propose GPTQ, a new one-shot weight quantization method based on approximate second-order information, that is both highlyaccurate and highly-efficient.
+- Ourmethodmorethandoublesthecompressiongainsrelative to previously-proposed one-shot quantization methods, preserving accuracy, allowing us for the first time to execute an 175 billion-parameter model inside a single GPU for generative inference.
+- Moreover, we also show that our method can still provide reasonable accuracy in the extreme quantization regime, in which weights are quantized to 2-bit or even ternary quantization levels.
+- We show experimentally that these improvements can be leveraged for end-to-end inference speedupsover FP 16, ofaround 3.25 xwhenusinghigh-end GPU s(NVIDIAA 100) and 4.5 x when using more cost-effective ones (NVIDIA A 6000).
+- Although a standard approach to eliminating these overheads is model compression, e.g.
+- One reason is that more complex methods for low-bitwidth quantization or model pruning usually require model retraining, which is extremely expensive for billion-parameter models.
+- In this paper, we present a new post-training quantization method, called GPTQ,1 which is efficient enough to execute on models with hundreds of billions of parameters in at most a few hours, and precise enough to compress such models to 3 or 4 bits per parameter without significant loss of accuracy.
+- Further, we show that our model can also provide robust results in the extreme quantization regime, in which models are quantized to 2 bits per component, or even ternary values.
+- On the practical side, we develop an execution harness which allows us to execute the resulting compressed models efficiently for generative tasks.
+- To our knowledge, we are the first to show that extremely accurate language models with hundreds of billions of parameters can be quantized to 3-4 bits/component: prior post-training methods only remain accurate at 8 bits (Yao et al., 2022; Dettmers et al., 2022), while prior training-based techniqueshaveonlytackledmodelsthataresmallerbyonetotwoordersofmagnitude(Wuetal.,2022).
+- This high degree of compression may appear natural, as these networks are overparametrized; yet, as we discuss in our detailed analysis of results, compression induces non-trivial tradeoffs between the accuracy of the language modeling (perplexity), bit-width, and the size of the original model.
+- Moreover, our current results do not include activation quantization, as they are not a significant bottleneck in our target scenarios; however, this can be supported using orthogonal techniques (Yao et al., 2022).
+- By contrast, post-training (“one-shot”) methods quantize a pre 1 Thismergesthenameofthe OPT modelfamilywiththeabbreviationforpost-trainingquantization(PTQ).
+- Post-training approaches are particularly interesting for massive models, for which full model training or even finetuning can be expensive.
+- While these approaches can produce good results for models up to ≈ 100 million parameters in a few GPU hours, scaling them to networks orders of magnitude larger is challenging.
+- With the recent open-source releases of language models like BLOOM (Laurenc¸on et al., 2022) or OPT-175 B (Zhang et al., 2022), researchers have started to develop affordable methods for compressing such giant networks for inference.
+- Zero Quant further proposes layer-wise knowledge distillation, similar to Ada Quant, but the largest model it can apply this approach to has only 1.3 billion parameters.
+- LLM.int 8() observes that activation outliers in a few feature dimensions break the quantization of larger models, and proposes to fix this problem by keeping those dimensions in higher precision.
+- Relative to this line of work, we show that a significantly more complex and accurate quantizer can be implemented efficiently at large model scale.
+- Specifically, GPTQ more than doubles the amount of compression relative to these prior techniques, at similar accuracy.
+- Our approach builds on the recently-proposed Optimal Brain Quanization (OBQ) method (Frantar et al., 2022) for solving the layer-wise quantization problem defined above, to which we perform a series of major modifications, which allow it to scale to large language models, providing more than three orders of magnitude computational speedup.
+- (3) −q [H−1] :,q q,: qq −p This method comes with a vectorized implementation, handling multiple rows of W in parallel.
+- Eventually, the algorithm can achieve reasonable runtimes on medium-sized models: for instance, it can fully quantize the Res Net-50 model (25 M parameters) in ≈ 1 hour on a single GPU, which is roughly in line with other post-training methods achieving state-of-the-art accuracy (Frantar et al., 2022).
+- First, a direct implementation of the scheme described previously will not be fast in practice, because the algorithm has a relatively low compute-to-memory-access ratio.
+- This provides an order of magnitude speedup for very large models in practice, making it a critical component of our algorithm.
+- Finally, we present the full pseudocode for GPTQ in Algorithm 1, including the optimizations discussed above.
+- We begin our experiments by validating the accuracy of GPTQ relative to other accuratebut-expensive quantizers, on smaller models, for which these methods provide reasonable runtimes.
+- Then, we present 3- and 4-bit quantization results for the entire BLOOM and OPT model families, evaluated via perplexity on challenging language generation tasks.
+- To complement this perplexity analysis, we also evaluate the resulting quantized models on a series of standard zeroshot tasks.
+- Finally, we focus on the two largest (and interesting) openly-available models, Bloom 176 B and OPT-175 B, where we perform a detailed evaluation on several tasks.
+- For these models, we also present practical improvements, namely reducing the number of GPU s required for inference as well as end-to-end speedups for generative tasks.
+- Nevertheless, we also show that GPTQ is competitive with such methods for small models, while scaling to huge ones like OPT-175 B as well.
+- As a first ablation study, we compare GPTQ’s performance relative to state-of-the-art post-training quantization (PTQ) methods, on Res Net 18 and Res Net 50, which are standard PTQ benchmarks, in the same setup as (Frantar et al., 2022).
+- Further, we compare against the full greedy OBQ method on two smaller language models: BERT-base (Devlinetal.,2019)and OPT-125 M.Theresultsareshownin Appendix Table 8.
+- We suspect that this is because some of the additional heuristics used by OBQ, such as early outlier rounding, might require careful adjustments for optimal performance on non-vision models.
+- Next we measure the full model quantization time (on a single NVIDIA A 100 GPU) via GPTQ; the results are shown in Table 2.
+- BLOOM shows a similar pattern: the gaps between methods are however usually a bit smaller, indicating that this model family might be easier to quantize.
+- We observe that, at 4 bits, GPTQ models reach only ≤ 0.25 lower perplexity than the full-precision versions, with a large gap to RTN results on OPT-175 B.
+- Figure 3 visualizes model performance on LAMBADA (and see also “Lamb.” results in Table 5).
+- Table 7 shows results on Wiki Text 2 when quantizing the biggest models to 2-bit with varying group-sizes.
+- In summary, these results are an encouraging first step towards pushing highly-accurate one-shot compression of very large language models, even lower than 3 bits per value on average.
+- 6 SUMMARY AND LIMITATIONS We have presented GPTQ, an approximate second-order method for quantizing truly large language models.
+- We hope that our method will make these models accessible to more researchers and practitioners.
+- These are natural directions for future work, and we believe this can be achieved with carefully-designed GPU kernels and existing techniques (Yao et al., 2022; Wu et al., 2022).
+- 7 ETHICS STATEMENT Our work introduces a general method for compressing large language models (LLM s) via quantization, with little-to-no accuracy loss in terms of standard accuracy metrics such as perplexity.
+
+Important terms: method, approach, algorithm, technique, framework, model, analysis, study, evaluation, experiment, results, propose, present, introduce, develop, design, implement, classification, optimization, performance, accuracy
+Focus: Methodological approach
+Contribution: Introduces novel approach

@@ -1,0 +1,32 @@
+Title: Moving Object Proposals with Deep Learned Optical Flow for Video Object Segmentation
+Authors: Ge Shi, Zhili Yang
+Year: 2024
+Paper ID: http://arxiv.org/abs/2402.08882v1
+Link: http://arxiv.org/pdf/2402.08882v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Research study
+CONTRIBUTION: Introduces novel approach
+KEY POINTS: In this work, we propose a state of
+art architecture of neural networks to accurately and efficiently get the
+moving object proposals (MOP) We developed the
+codes with TensorFlow, and executed the training and evaluation processes on an
+AWS EC2 instance We first train an unsupervised convolutional
+neural network (UnFlow) to generate optical flow estimation
+TERMS: model, evaluation, propose, develop, neural network
+
+Key sentences:
+- In this work, we propose a state of
+art architecture of neural networks to accurately and efficiently get the
+moving object proposals (MOP)
+- We developed the
+codes with TensorFlow, and executed the training and evaluation processes on an
+AWS EC2 instance
+- We first train an unsupervised convolutional
+neural network (UnFlow) to generate optical flow estimation
+- Then we render the
+output of optical flow net to a fully convolutional SegNet model
+
+Important terms: model, evaluation, propose, develop, neural network, performance
+Focus: Research study
+Contribution: Introduces novel approach

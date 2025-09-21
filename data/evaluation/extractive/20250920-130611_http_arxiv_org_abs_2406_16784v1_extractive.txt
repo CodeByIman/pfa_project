@@ -1,0 +1,27 @@
+Title: The Progression of Transformers from Language to Vision to MOT: A Literature Review on Multi-Object Tracking with Transformers
+Authors: Abhi Kamboj
+Year: 2024
+Paper ID: http://arxiv.org/abs/2406.16784v1
+Link: http://arxiv.org/pdf/2406.16784v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Machine Learning methodology
+CONTRIBUTION: Presents findings
+KEY SENTENCES COUNT: 1
+TERMS: method, model, deep learning, neural network
+
+BODY:
+We then focus specifically on
+Multi-Object Tracking (MOT) and discuss how transformers are increasingly
+becoming competitive in state-of-the-art MOT works, yet still lag behind
+traditional deep learning methods.
+
+Key sentences:
+- We then focus specifically on
+Multi-Object Tracking (MOT) and discuss how transformers are increasingly
+becoming competitive in state-of-the-art MOT works, yet still lag behind
+traditional deep learning methods.
+
+Important terms: method, model, deep learning, neural network
+Focus: Machine Learning methodology
+Contribution: Presents findings

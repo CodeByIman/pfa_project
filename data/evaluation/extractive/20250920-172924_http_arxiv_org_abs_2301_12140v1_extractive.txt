@@ -1,0 +1,163 @@
+Title: Multilingual Sentence Transformer as A Multilingual Word Aligner
+Authors: Weikang Wang, Guanhua Chen, Hanqing Wang, Yue Han, Yun Chen
+Year: 2023
+Paper ID: http://arxiv.org/abs/2301.12140v1
+Link: http://arxiv.org/pdf/2301.12140v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Provides comparative analysis
+LINES COUNT: 72
+TERMS: method, approach, algorithm, framework, model, analysis, evaluation, experiment, results, propose
+
+BODY:
+However, these methods usually start from m BERT or XLM-R.
+Red We demonstrate that the vanilla La BSE boxes denote the gold alignments.
+outperforms other m PLM s currently used in the alignment task, and then propose to finetune La BSE on parallel corpus for further (Garg et al., 2019; Li et al., 2019; Zenkel et al., improvement.
+Experiment results on seven 2019, 2020; Chen et al., 2020 b; Zhang and van Genlanguage pairs show that our best aligner abith, 2021; Chen et al., 2021 a) induce alignments outperforms previous state-of-the-art models from NMT model or its variants.
+In addition, our aligner supports different language pairs in a single bilingual models only support the language pair model, and even achieves new state-of-the-art involved in the training process.
+They also treat the on zero-shot language pairs that does not source and target side differently, thus two models appear in the finetuning process.
+gual pretrained language model (Wu and Dredze, It is useful in a variety of natural language process- 2019; Conneau et al., 2020, m PLM).
+Thanks to ing (NLP) applications such as noisy parallel cor- the language-agnostic representations learned with pus filtering (Kurfalı and Östling, 2019), bilingual multilingual masked language modeling task, these lexicon induction (Shi et al., 2021), code-switching methods are capable of inducing word alignments corpus building (Lee et al., 2019; Lin et al., 2020) even for language pairs without any parallel corpus.
+and incorporating lexical constraints into neural Different from previous methods, in this pamachine translation (NMT) models (Hasler et al., per we present Acc Align, a more accurate mul 2018; Chen et al., 2021 b).
+tilingual word aligner with the multilingual sen Recently, neural word alignment approaches tence Transformer La BSE (Feng et al., 2022, see have developed rapidly and outperformed statistical Figure 1).
+Specifically, we first direct induce word alignments from La BSE and demonstrate that La BSE outperforms other m PLM s currently used in the alignment task.
+Then we propose a simple and effective finetuning method to further improve performance.
+Empirical results on seven language pairs show that our best aligner outperforms previous SOTA models of all varieties.
+In addition, our aligner supports different language pairs in a single model, and even achieves new SOTA on zero-shot language pairs that does not appear in finetuning process.1 Figure 2: The framework of adapter-based finetuning.
+S is treated as the probability matrix as model for the cross-lingual sentence retrieval task.
+xy xy its i-th row represents the probabilities of aligning Given an input sentence, the model can retrieve the x to all tokens in y.
+Taking intersection of the two probtion of masked language modeling (Devlin et al., ability matrices yields the final alignment matrix: 2019) and translation language modeling (Conneau and Lample, 2019) tasks.
+The above method induces i j La BSE does not include any word-level training alignments on the subword level, which are conloss when finetuning with contrastive loss, it is unverted into word-level alignments by aligning two clear whether the model has learned high-quality words if any of their subwords are aligned followlanguage-agnostic word-level embeddings, which ing (Zenkel et al., 2020; Jalili Sabet et al., 2020).
+2.3 Finetuning La BSE for Better Alignments 2.2 Alignment Induction from La BSE Inspired by (Dou and Neubig, 2021), we propose a To investigate whether La BSE is a strong multilinfinetuning method to further improve performance gual word aligner, we first induce word alignments given parallel corpus with alignment labels.
+Specifically, consider tuning (Houlsby et al., 2019; Bapna and Firat, 2019; a bilingual sentence pair x = (cid:104)x ,x ,...,x (cid:105) and 1 2 n He et al., 2021) is not only parameter-efficient, y = (cid:104)y ,x ,...,y (cid:105), we denote the contextual em 1 2 m but also benefits model performance, especially beddings from La BSE as h = (cid:104)h ,...,h (cid:105) and x x x 1 n for low-resource and cross-lingual tasks (He et al., h = (cid:104)h ,...,h (cid:105), respectively.
+Figure 2 illustrates our overall framework, vious work (Dou and Neubig, 2021; Jalili Sabet where the adapters are adopted from (Houlsby et al., et al., 2020), we get the similarity matrix from the 2019).
+For each layer of La BSE, we introduce contextual embeddings: an adapter for each sublayer, which maps the in T S = h x h y .
+Let h and h(cid:48) denote the input and output vector, Model Setting de-en sv-en fr-en ro-en ja-en zh-en fa-en avg Bilingual Statistical Methods fast-align (Dyer et al., 2013) 27.0 - 10.5 32.1 51.1 38.1 - - eflomal (Östling and Tiedemann, 2016) scratch 22.6 - 8.2 25.1 47.5 28.7 - - GIZA++ (Och and Ney, 2003) 20.6 - 5.9 26.4 48.0 35.1 - - Bilingual Neural Methods MTL-FULLC-GZ (Garg et al., 2019) 16.0 - 4.6 23.1 - - - - BAO-GUIDE (Zenkel et al., 2020) 16.3 - 5.0 23.4 - - - - SHIFT-AET (Chen et al., 2020 b) scratch 15.4 - 4.7 21.2 - 17.2 - - MASK-ALIGN (Chen et al., 2021 a) 14.4 - 4.4 19.5 - 13.8 - - BTBA-FCBO-SST (Zhang and van Genabith, 2021) 14.3 - 6.7 18.5 - - - - Multilingual Neural Methods Sim Align (Jalili Sabet et al., 2020) no ft 18.8 11.2 7.6 27.2 46.6 21.6 32.7 23.7 no ft 17.4 9.7 5.6 27.9 45.6 18.1 33.0 22.5 Awesome Align (Dou and Neubig, 2021) self-sup ft 15.9 7.9 4.4 26.2 42.4 14.9 27.1 19.8 sup ft 15.2 7.2 4.0 25.5 40.6 13.4 25.8 18.8 no ft 16.0 7.3 4.5 20.8 43.3 16.2 23.4 18.8 Acc Align self-sup ft 14.3 5.8 3.9 21.6 39.2 13.0 22.6 17.2 sup ft 13.6 5.2 2.8 20.8 36.9 11.5 22.2 16.1 Table 1: AER comparison between Acc Align and the baselines on test set of 7 language pairs.
+self-sup and sup mean finetuning the model with parallel corpus of self-supervised and human-annotated alignment labels, respectively.
+We use L = A + , (4) ij 2 n m Alignment Error Rate (AER) as the evaluation metij ric.
+Our model is not directly comparable to the where S and S are the alignment probabilxy yx bilingual baselines, as they build model for each ity matrices, n and m are the length of sentence test language pair using large scale parallel corpus x and y, respectively.
+In contrast, our method is encourages the gold aligned words to have closer more efficient as it supports all language pairs in contextualized representations.
+In addition, as both a single model and our finetuning only requires S and ST are encouraged to be close to A ˆ , it imxy yx 3,362 sentence pairs.
+Appendix B show more plicitly encourages the two alignment probability dataset, model, baselines and other setup details.
+Our framework can be easily extended to cases 3.2 Main Results where alignment labels are unavailable, by replac Table 1 shows the comparison of our methods ˆ ing A with pseudo labels A (Equation 2) and trainagainst baselines.
+Acc Align 3 Experiments is also simpler than Awesome Align, which is the 3.1 Setup best existing multilingual word aligner, as Awe As we aim at building an accurate multilingual some Align finetunes with a combination of five word aligner, we evaluate Acc Align on a di- objectives, while Acc Align only has one objective.
+sup ft 36.7 71.7 Table 2: AER comparison between Acc Align and mul- Bilingual Finetuning To better understand our tilingual baselines on non-English zero-shot language method, we compare with Awesome Align under pairs.
+The best AER for each column is bold and unbilingual finetuning setup where the model is finederlined.
+Our finetuning method is ef- larger for zero-shot language pairs (21.3 vs.
+fective as well, improving Acc Align-noft by 1.6 The results demonstrate that Acc Align is an effecand 2.7 AER with self-supervised and supervised tive zero-shot aligner, as La BSE has learned more alignment labels, respectively.
+Our model improves language-agnostic representations which benefit multilingual baselines even more significantly on cross-lingual transfer.
+See Table 2 of ap Different Multilingual Pretrained Models We pendix for detailed results.
+investigate the performance of Acc Align-noft when 3.3 Analysis replacing La BSE with other m PLM s, including XLM-R, m BERT and four other multilingual sen Performance on non-English Language Pair tence Transformer from Hugging Face.
+La BSE out We conduct experiments to evaluate Acc Align performs other m PLM s by 3.5 to 9.6 averaged AER.
+The fi-el (Finnish-Greek) and fi-he (Finnish-Hebrew) test set contains 791 and 2,230 Performance across Layer We investigate the annotated sentence pairs, respectively.
+Both test performance of Acc Align-noft when extracts alignsets are from Imani Googhari et al.
+Layer 6, which is the results are shown in Table 2.
+As can be seen, Aclayer we use for all experiments, outperforms other c Align in all three settings significantly improves layers by 0.1 to 26.0 averaged AER.
+much larger compared with zero-shot English language pairs, demonstrating the effectiveness of Ac- Representation Analysis To succeed in multic Align on non-English language pairs.
+Therefore, we analyze the embeddings from dif Compared with full finetuning, adapter-based fineferent layers of Acc Align under different settings tuning updates much less parameters and obtains by computing cosine similarity for aligned word better performance under both supervised and selfpairs and word pairs randomly sampled from the supervised settings, demonstrating its efficiency same sentence, denoted as s and s (see apbi mono and effectiveness for zero-shot word alignments.
+14.2 3.8 21.0 38.0 13.8 18.2 Acc Align zero-shot langs (avg.) 14.8 3.9 20.7 40.5 13.8 18.8 Table 4: AER results with bilingual finetuning.
+At the same time, our proposed method only supports languages included in La BSE.
+Future explorations are needed to rapidly The results on de-en test set are presented in Figadapt Acc Align to new languages (Neubig and Hu, ure 3.
+In addition, adapter-based fine- This project was supported by National Natural tuning improves performance mainly by making Science Foundation of China (No.
+4 Conclusion In this paper, we introduce Acc Align, a novel multi References lingual word aligner based on multilingual sentence Niraj Aswani and Robert Gaizauskas.
+The best proposed approach words in english-hindi parallel corpora.
+A simple, fast, and effective reparametertional Conference on Language Resources and Eval- ization of IBM model 2.
+A simple framework for contrastive learning of visual representations.
+Fangxiaoyu Feng, Yinfei Yang, Daniel Cer, Naveen In International conference on machine learning, Arivazhagan, and Wei Wang.
+ings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP), pages Xavier Garcia, Noah Constant, Ankur Parikh, and 566–576, Online.
+Jointly learning to align ciation for Computational Linguistics, pages 8440– and translate with transformer models.
+Association for Computational Linings of the 2019 Conference on Empirical Methods guistics.
+In Proceedings of the 2019 Conference ceedings of the Sixth International Conference on of the North American Chapter of the Association Language Resources and Evaluation (LREC’08).
+On the effectiveness of adapter- Zehui Lin, Xiao Pan, Mingxuan Wang, Xipeng Qiu, based tuning for pretrained language model adap- Jiangtao Feng, Hao Zhou, and Lei Li.
+In 7 th Neil Houlsby, Andrei Giurgiu, Stanislaw Jastrzebski, conference on International Language Resources Bruna Morrone, Quentin De Laroussilhe, Andrea and Evaluation (LREC 2010), pages 3369–3374.
+Sim Align: High qual- nition via effective annotation and representation ity word alignments without parallel training data us- projection.
+Asystematic allel corpus filtering through projected word embed- comparison of various statistical alignment models.
+For adapter-based finetunxi yj ing, we set the hidden dimension of the adapters to Note that a margin b is introduced to improve the be 128.
+We use the Adam W optimizer with learning rate of 1 e-4, B Experiments Setup and do not use warmup or dropout.
+We use a single NVIDIA V 100 GPU for all We refer to the language information in Table 1 of experiments.
+It trains similarly as paraphrase-xlmmodel improves over Sim Align by designing new r-multilingual-v 1, but with different teacher and alignment induction method and proposing to furstudent model initialization.
+We re-implement Sim Align and Awe- transformers/paraphrase-xlm-r-multilingual-v 1 some Align, while quote the results from (Dou and 6 https://huggingface.co/sentencetransformers/paraphrase-multilingual-Mini LM-L 12-v 2 Neubig, 2021) for the three statistical baselines and 7 https://huggingface.co/sentencethe corresponding paper for other baselines.
+For Awesome-align, we follow the setup in their paper, while for Acc Align, we use the same hyperparameters as the main experiments.
+B.7 Representation Analysis We conduct representation analysis on de-en test set.
+mono C Experiment Results Detailed results for each test language in Section 3.3 are shown in Table 7 to Table 10.
+The results where the model is trained and tested on the same language pair are bold and underlined.
+We determine the best layer of alignment induction for each model using the validation set.
+
+Key sentences:
+- However, these methods usually start from m BERT or XLM-R.
+- Red We demonstrate that the vanilla La BSE boxes denote the gold alignments.
+- outperforms other m PLM s currently used in the alignment task, and then propose to finetune La BSE on parallel corpus for further (Garg et al., 2019; Li et al., 2019; Zenkel et al., improvement.
+- Experiment results on seven 2019, 2020; Chen et al., 2020 b; Zhang and van Genlanguage pairs show that our best aligner abith, 2021; Chen et al., 2021 a) induce alignments outperforms previous state-of-the-art models from NMT model or its variants.
+- In addition, our aligner supports different language pairs in a single bilingual models only support the language pair model, and even achieves new state-of-the-art involved in the training process.
+- They also treat the on zero-shot language pairs that does not source and target side differently, thus two models appear in the finetuning process.
+- gual pretrained language model (Wu and Dredze, It is useful in a variety of natural language process- 2019; Conneau et al., 2020, m PLM).
+- Thanks to ing (NLP) applications such as noisy parallel cor- the language-agnostic representations learned with pus filtering (Kurfalı and Östling, 2019), bilingual multilingual masked language modeling task, these lexicon induction (Shi et al., 2021), code-switching methods are capable of inducing word alignments corpus building (Lee et al., 2019; Lin et al., 2020) even for language pairs without any parallel corpus.
+- and incorporating lexical constraints into neural Different from previous methods, in this pamachine translation (NMT) models (Hasler et al., per we present Acc Align, a more accurate mul 2018; Chen et al., 2021 b).
+- tilingual word aligner with the multilingual sen Recently, neural word alignment approaches tence Transformer La BSE (Feng et al., 2022, see have developed rapidly and outperformed statistical Figure 1).
+- Specifically, we first direct induce word alignments from La BSE and demonstrate that La BSE outperforms other m PLM s currently used in the alignment task.
+- Then we propose a simple and effective finetuning method to further improve performance.
+- Empirical results on seven language pairs show that our best aligner outperforms previous SOTA models of all varieties.
+- In addition, our aligner supports different language pairs in a single model, and even achieves new SOTA on zero-shot language pairs that does not appear in finetuning process.1 Figure 2: The framework of adapter-based finetuning.
+- S is treated as the probability matrix as model for the cross-lingual sentence retrieval task.
+- xy xy its i-th row represents the probabilities of aligning Given an input sentence, the model can retrieve the x to all tokens in y.
+- Taking intersection of the two probtion of masked language modeling (Devlin et al., ability matrices yields the final alignment matrix: 2019) and translation language modeling (Conneau and Lample, 2019) tasks.
+- The above method induces i j La BSE does not include any word-level training alignments on the subword level, which are conloss when finetuning with contrastive loss, it is unverted into word-level alignments by aligning two clear whether the model has learned high-quality words if any of their subwords are aligned followlanguage-agnostic word-level embeddings, which ing (Zenkel et al., 2020; Jalili Sabet et al., 2020).
+- 2.3 Finetuning La BSE for Better Alignments 2.2 Alignment Induction from La BSE Inspired by (Dou and Neubig, 2021), we propose a To investigate whether La BSE is a strong multilinfinetuning method to further improve performance gual word aligner, we first induce word alignments given parallel corpus with alignment labels.
+- Specifically, consider tuning (Houlsby et al., 2019; Bapna and Firat, 2019; a bilingual sentence pair x = (cid:104)x ,x ,...,x (cid:105) and 1 2 n He et al., 2021) is not only parameter-efficient, y = (cid:104)y ,x ,...,y (cid:105), we denote the contextual em 1 2 m but also benefits model performance, especially beddings from La BSE as h = (cid:104)h ,...,h (cid:105) and x x x 1 n for low-resource and cross-lingual tasks (He et al., h = (cid:104)h ,...,h (cid:105), respectively.
+- Figure 2 illustrates our overall framework, vious work (Dou and Neubig, 2021; Jalili Sabet where the adapters are adopted from (Houlsby et al., et al., 2020), we get the similarity matrix from the 2019).
+- For each layer of La BSE, we introduce contextual embeddings: an adapter for each sublayer, which maps the in T S = h x h y .
+- Let h and h(cid:48) denote the input and output vector, Model Setting de-en sv-en fr-en ro-en ja-en zh-en fa-en avg Bilingual Statistical Methods fast-align (Dyer et al., 2013) 27.0 - 10.5 32.1 51.1 38.1 - - eflomal (Östling and Tiedemann, 2016) scratch 22.6 - 8.2 25.1 47.5 28.7 - - GIZA++ (Och and Ney, 2003) 20.6 - 5.9 26.4 48.0 35.1 - - Bilingual Neural Methods MTL-FULLC-GZ (Garg et al., 2019) 16.0 - 4.6 23.1 - - - - BAO-GUIDE (Zenkel et al., 2020) 16.3 - 5.0 23.4 - - - - SHIFT-AET (Chen et al., 2020 b) scratch 15.4 - 4.7 21.2 - 17.2 - - MASK-ALIGN (Chen et al., 2021 a) 14.4 - 4.4 19.5 - 13.8 - - BTBA-FCBO-SST (Zhang and van Genabith, 2021) 14.3 - 6.7 18.5 - - - - Multilingual Neural Methods Sim Align (Jalili Sabet et al., 2020) no ft 18.8 11.2 7.6 27.2 46.6 21.6 32.7 23.7 no ft 17.4 9.7 5.6 27.9 45.6 18.1 33.0 22.5 Awesome Align (Dou and Neubig, 2021) self-sup ft 15.9 7.9 4.4 26.2 42.4 14.9 27.1 19.8 sup ft 15.2 7.2 4.0 25.5 40.6 13.4 25.8 18.8 no ft 16.0 7.3 4.5 20.8 43.3 16.2 23.4 18.8 Acc Align self-sup ft 14.3 5.8 3.9 21.6 39.2 13.0 22.6 17.2 sup ft 13.6 5.2 2.8 20.8 36.9 11.5 22.2 16.1 Table 1: AER comparison between Acc Align and the baselines on test set of 7 language pairs.
+- self-sup and sup mean finetuning the model with parallel corpus of self-supervised and human-annotated alignment labels, respectively.
+- We use L = A + , (4) ij 2 n m Alignment Error Rate (AER) as the evaluation metij ric.
+- Our model is not directly comparable to the where S and S are the alignment probabilxy yx bilingual baselines, as they build model for each ity matrices, n and m are the length of sentence test language pair using large scale parallel corpus x and y, respectively.
+- In contrast, our method is encourages the gold aligned words to have closer more efficient as it supports all language pairs in contextualized representations.
+- In addition, as both a single model and our finetuning only requires S and ST are encouraged to be close to A ˆ , it imxy yx 3,362 sentence pairs.
+- Appendix B show more plicitly encourages the two alignment probability dataset, model, baselines and other setup details.
+- Our framework can be easily extended to cases 3.2 Main Results where alignment labels are unavailable, by replac Table 1 shows the comparison of our methods ˆ ing A with pseudo labels A (Equation 2) and trainagainst baselines.
+- Acc Align 3 Experiments is also simpler than Awesome Align, which is the 3.1 Setup best existing multilingual word aligner, as Awe As we aim at building an accurate multilingual some Align finetunes with a combination of five word aligner, we evaluate Acc Align on a di- objectives, while Acc Align only has one objective.
+- sup ft 36.7 71.7 Table 2: AER comparison between Acc Align and mul- Bilingual Finetuning To better understand our tilingual baselines on non-English zero-shot language method, we compare with Awesome Align under pairs.
+- The best AER for each column is bold and unbilingual finetuning setup where the model is finederlined.
+- Our finetuning method is ef- larger for zero-shot language pairs (21.3 vs.
+- fective as well, improving Acc Align-noft by 1.6 The results demonstrate that Acc Align is an effecand 2.7 AER with self-supervised and supervised tive zero-shot aligner, as La BSE has learned more alignment labels, respectively.
+- Our model improves language-agnostic representations which benefit multilingual baselines even more significantly on cross-lingual transfer.
+- See Table 2 of ap Different Multilingual Pretrained Models We pendix for detailed results.
+- investigate the performance of Acc Align-noft when 3.3 Analysis replacing La BSE with other m PLM s, including XLM-R, m BERT and four other multilingual sen Performance on non-English Language Pair tence Transformer from Hugging Face.
+- La BSE out We conduct experiments to evaluate Acc Align performs other m PLM s by 3.5 to 9.6 averaged AER.
+- The fi-el (Finnish-Greek) and fi-he (Finnish-Hebrew) test set contains 791 and 2,230 Performance across Layer We investigate the annotated sentence pairs, respectively.
+- Both test performance of Acc Align-noft when extracts alignsets are from Imani Googhari et al.
+- Layer 6, which is the results are shown in Table 2.
+- As can be seen, Aclayer we use for all experiments, outperforms other c Align in all three settings significantly improves layers by 0.1 to 26.0 averaged AER.
+- much larger compared with zero-shot English language pairs, demonstrating the effectiveness of Ac- Representation Analysis To succeed in multic Align on non-English language pairs.
+- Therefore, we analyze the embeddings from dif Compared with full finetuning, adapter-based fineferent layers of Acc Align under different settings tuning updates much less parameters and obtains by computing cosine similarity for aligned word better performance under both supervised and selfpairs and word pairs randomly sampled from the supervised settings, demonstrating its efficiency same sentence, denoted as s and s (see apbi mono and effectiveness for zero-shot word alignments.
+- 14.2 3.8 21.0 38.0 13.8 18.2 Acc Align zero-shot langs (avg.) 14.8 3.9 20.7 40.5 13.8 18.8 Table 4: AER results with bilingual finetuning.
+- At the same time, our proposed method only supports languages included in La BSE.
+- Future explorations are needed to rapidly The results on de-en test set are presented in Figadapt Acc Align to new languages (Neubig and Hu, ure 3.
+- In addition, adapter-based fine- This project was supported by National Natural tuning improves performance mainly by making Science Foundation of China (No.
+- 4 Conclusion In this paper, we introduce Acc Align, a novel multi References lingual word aligner based on multilingual sentence Niraj Aswani and Robert Gaizauskas.
+- The best proposed approach words in english-hindi parallel corpora.
+- A simple, fast, and effective reparametertional Conference on Language Resources and Eval- ization of IBM model 2.
+- A simple framework for contrastive learning of visual representations.
+- Fangxiaoyu Feng, Yinfei Yang, Daniel Cer, Naveen In International conference on machine learning, Arivazhagan, and Wei Wang.
+- ings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP), pages Xavier Garcia, Noah Constant, Ankur Parikh, and 566–576, Online.
+- Jointly learning to align ciation for Computational Linguistics, pages 8440– and translate with transformer models.
+- Association for Computational Linings of the 2019 Conference on Empirical Methods guistics.
+- In Proceedings of the 2019 Conference ceedings of the Sixth International Conference on of the North American Chapter of the Association Language Resources and Evaluation (LREC’08).
+- On the effectiveness of adapter- Zehui Lin, Xiao Pan, Mingxuan Wang, Xipeng Qiu, based tuning for pretrained language model adap- Jiangtao Feng, Hao Zhou, and Lei Li.
+- In 7 th Neil Houlsby, Andrei Giurgiu, Stanislaw Jastrzebski, conference on International Language Resources Bruna Morrone, Quentin De Laroussilhe, Andrea and Evaluation (LREC 2010), pages 3369–3374.
+- Sim Align: High qual- nition via effective annotation and representation ity word alignments without parallel training data us- projection.
+- Asystematic allel corpus filtering through projected word embed- comparison of various statistical alignment models.
+- For adapter-based finetunxi yj ing, we set the hidden dimension of the adapters to Note that a margin b is introduced to improve the be 128.
+- We use the Adam W optimizer with learning rate of 1 e-4, B Experiments Setup and do not use warmup or dropout.
+- We use a single NVIDIA V 100 GPU for all We refer to the language information in Table 1 of experiments.
+- It trains similarly as paraphrase-xlmmodel improves over Sim Align by designing new r-multilingual-v 1, but with different teacher and alignment induction method and proposing to furstudent model initialization.
+- We re-implement Sim Align and Awe- transformers/paraphrase-xlm-r-multilingual-v 1 some Align, while quote the results from (Dou and 6 https://huggingface.co/sentencetransformers/paraphrase-multilingual-Mini LM-L 12-v 2 Neubig, 2021) for the three statistical baselines and 7 https://huggingface.co/sentencethe corresponding paper for other baselines.
+- For Awesome-align, we follow the setup in their paper, while for Acc Align, we use the same hyperparameters as the main experiments.
+- B.7 Representation Analysis We conduct representation analysis on de-en test set.
+- mono C Experiment Results Detailed results for each test language in Section 3.3 are shown in Table 7 to Table 10.
+- The results where the model is trained and tested on the same language pair are bold and underlined.
+- We determine the best layer of alignment induction for each model using the validation set.
+
+Important terms: method, approach, algorithm, framework, model, analysis, evaluation, experiment, results, propose, present, introduce, develop, design, implement, machine learning, optimization, performance
+Focus: Methodological approach
+Contribution: Provides comparative analysis

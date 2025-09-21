@@ -12,6 +12,26 @@ export interface SearchRequest {
   use_abstractive?: boolean  // New parameter for ultra-fast mode
 }
 
+export interface NewOllamaSummaryRequest {
+  text: string
+  title?: string
+  authors?: string[]
+  year?: string
+  model?: string
+}
+
+export interface NewOllamaSummaryResponse {
+  summary: string
+  status: string
+}
+
+export interface NewOllamaSummaryRequest {
+  text: string
+  title?: string
+  authors?: string[]
+  year?: string
+  model?: string
+}
 export interface SearchResponse {
   query_language: string
   intent: string
@@ -57,6 +77,7 @@ export interface PDFSummaryResponse {
   }
   abstractive_summary: string
   status: string
+  sections_text?: { [key: string]: string }
 }
 
 export interface FeedbackRequest {
@@ -102,6 +123,16 @@ class ApiClient {
     } catch (error) {
       console.error('PDF Summary API error:', error)
       throw new Error('Erreur lors du résumé PDF. Veuillez réessayer.')
+    }
+  }
+
+  async newOllamaSummary(params: NewOllamaSummaryRequest): Promise<NewOllamaSummaryResponse> {
+    try {
+      const response = await this.client.post('/new_ollama_summary', params)
+      return response.data
+    } catch (error) {
+      console.error('New Ollama Summary API error:', error)
+      throw new Error("Erreur lors du 'New Ollama Result'.")
     }
   }
 

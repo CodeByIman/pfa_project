@@ -284,32 +284,88 @@ def summarize_mistral(text: str, max_length: int = 150) -> str:
 	except requests.exceptions.RequestException as e:
 		print(f"Ollama connection error: {e}, falling back to transformer-based summarizer")
 		return summarize_abstractive(text, max_length)
-	except Exception as e:
-		print(f"Mistral summarization error: {e}, falling back to transformer-based summarizer")
-		return summarize_abstractive(text, max_length)
 
 
 def get_available_models() -> list:
-	"""
-	Get list of available summarization models.
-	
-	Returns:
-		List of model names that can be used
-	"""
-	models = []
-	
-	# Add Mistral if Ollama is available
-	if _check_ollama_availability():
-		models.append('mistral')
-	
-	# Add transformer models if available
-	if has_tf:
-		models.extend([
-			't5-small',
-			'facebook/bart-base', 
-			'google/pegasus-xsum',
-			'facebook/bart-large-cnn',
-			't5-base'
-		])
-	
-	return models
+    """
+    Get list of available summarization models.
+    
+    Returns:
+        List of model names that can be used
+    """
+    models = []
+    
+    # Add Mistral if Ollama is available
+    if _check_ollama_availability():
+        models.append('mistral')
+    
+    # Add transformer models if available
+    if has_tf:
+        models.extend([
+            't5-small',
+            'facebook/bart-base', 
+            'google/pegasus-xsum',
+            'facebook/bart-large-cnn',
+            't5-base'
+        ])
+    
+    return models
+
+
+def rewrite_extractive_with_mistral(extractive_summary: str) -> str:
+    """
+    Rewrite an extractive summary into a fluent academic summary (2–4 paragraphs) using Mistral via Ollama.
+    Falls back to the original extractive summary if Mistral is unavailable or fails.
+    """
+    if not extractive_summary or not extractive_summary.strip():
+        return ''
+    
+    if not _check_ollama_availability():
+        return extractive_summary
+    
+    # Limit to a reasonable length to keep response fast
+    text = extractive_summary.strip()
+    if len(text) > 2000:
+        text = text[:2000]
+    
+    prompt = (
+    "The following extractive summary may be incomplete, fragmented, or unclear. "
+    "Rewrite it into a well-structured, fluent academic summary in 2–4 paragraphs.\n\n"
+    "Your task:\n"
+    "- Clarify and reorganize the content into a logical flow.\n"
+    "- Identify and explain (as best as possible) the problem being addressed.\n"
+    "- Summarize the methodology in plain academic language.\n"
+    "- Highlight the main results and findings.\n"
+    "- Mention any limitations or future work if suggested or implied.\n"
+    "- Emphasize why this research is important.\n\n"
+    "If the extractive text is noisy or ambiguous, make reasonable academic inferences "
+    "to produce a readable and informative summary.\n\n"
+    "Extractive summary:\n<<<\n"
+    f"{text}\n"
+    ">>>\n"
+ )
+
+    
+    try:
+        response = requests.post(
+            'http://localhost:11434/api/generate',
+            json={
+                'model': 'mistral',
+                'prompt': prompt,
+                'stream': False,
+                'options': {
+                    'temperature': 0.5,
+                    'top_p': 0.9,
+                    'max_tokens': 500
+                }
+            },
+            timeout=20
+        )
+        if response.status_code == 200:
+            result = response.json().get('response', '').strip()
+            if result:
+                return result
+    except Exception:
+        pass
+    
+    return extractive_summary

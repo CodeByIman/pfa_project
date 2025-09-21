@@ -1,0 +1,42 @@
+Title: Classification and Prediction of Heart Diseases using Machine Learning Algorithms
+Authors: Akua Sekyiwaa Osei-Nkwantabisa, Redeemer Ntumy
+Year: 2024
+Paper ID: http://arxiv.org/abs/2409.03697v1
+Link: http://arxiv.org/pdf/2409.03697v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Machine Learning methodology
+CONTRIBUTION: Presents findings
+KEY SENTENCES COUNT: 5
+TERMS: approach, algorithm, technique, study, experiment, machine learning, neural network, prediction
+
+BODY:
+Creating reliable, effective, and precise predictions for these diseases is one of the biggest issues facing the medical world today. This experiment examined a range of machine learning approaches, including Logistic Regression, K-Nearest Neighbor, Support Vector Machine, and
+
+Artificial Neural Networks, to determine which machine learning algorithm was most effective at predicting heart diseases. One of the most often utilized data sets for this purpose, the UCI heart disease repository provided the data set for this study.
+
+The K-Nearest Neighbor technique was shown to be the most effective machine learning algorithm for determining whether a patient has heart
+
+disease. It will be beneficial to conduct further studies on the application of additional machine learning algorithms for heart disease prediction.
+
+Key sentences:
+- Creating reliable, effective, and precise
+predictions for these diseases is one of the biggest issues facing the medical
+world today.
+- This experiment examined a range of machine learning approaches,
+including Logistic Regression, K-Nearest Neighbor, Support Vector Machine, and
+Artificial Neural Networks, to determine which machine learning algorithm was
+most effective at predicting heart diseases.
+- One of the most often utilized
+data sets for this purpose, the UCI heart disease repository provided the data
+set for this study.
+- The K-Nearest Neighbor technique was shown to be the most
+effective machine learning algorithm for determining whether a patient has
+heart disease.
+- It will be beneficial to conduct further studies on the
+application of additional machine learning algorithms for heart disease
+prediction.
+
+Important terms: approach, algorithm, technique, study, experiment, machine learning, neural network, prediction
+Focus: Machine Learning methodology
+Contribution: Presents findings

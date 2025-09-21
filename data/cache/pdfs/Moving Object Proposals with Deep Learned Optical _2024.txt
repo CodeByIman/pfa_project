@@ -1,0 +1,347 @@
+Moving Object Proposals with Deep Learned Optical Flow for Video Object
+Segmentation
+GeShi ZhiliYang
+UmassAmherst UmassAmherst
+140GovernorsDr 140GovernorsDr
+geshi@umass.cs.edu zhiliyang@umass.cs.edu
+Abstract
+Dynamicsceneunderstandingisoneofthemostconspic-
+uous field of interest among computer vision community.
+In order to enhance dynamic scene understanding, pixel-
+wisesegmentationwithneuralnetworksiswidelyaccepted.
+Thelatestresearchesonpixel-wisesegmentationcombined
+semantic and motion information and produced good per-
+formance. In this work, we propose a state of art archi-
+tecture of neural networks to accurately and efficiently get Figure1.Fusionstaticobjectinformationandmotioninformation
+themovingobjectproposals(MOP[12]). Wefirsttrainan tosegmentimages.
+unsupervisedconvolutionalneuralnetwork(UnFlow[11])
+to generate optical flow estimation. Then we render the
+output of optical flow net to a fully convolutional SegNet video, but the variational information with respect to time
+model.Themaincontributionofourworkis(1)Fine-tuning basealsofacilitatesbetterunderstandingofobjectindepen-
+thepretrainedopticalflowmodelonthebrandnewDAVIS dence. Thetraditionalmethodssolvingthisproblem[22,3]
+Dataset[14];(2)Leveragingfullyconvolutionalneuralnet- relies on hand-crafted features without leveraging CNN to
+works with Encoder-Decoder architecture to segment ob- learn video representation. Recently, proposal of regions
+jects. We developed the codes with TensorFlow, and exe- thatlikelycontainsindependentobjectsandusingCNNcur-
+cutedthetrainingandevaluationprocessesonanAWSEC2 rently dominate object detection in static images. Object
+instance. segmentation[17]isonthebasisofproposedregionsofin-
+terest object. When it comes to segmentation of moving
+objects in videos, [7] came up with a paradigm for detect-
+ing moving objects in videos by introducing moving ob-
+1.Introduction
+jectproposals(MOP).MOP[12]isamotionbasedproposal
+The Convolutional Neural Networks (CNN [13]) has methodtogenerateasetofregionproposalsineachframe
+achievedgreatsuccessinlearningimagefeatures. Through usingsegmentationsonopticalflow[19]. Togetimpressive
+Encoder-Decodermodel,theconvolutionalneuralnetworks results in objects segmentation in video, many advanced
+can preserve spatial information when extracting general works [4, 10, 16, 11] unites optical flow boundaries com-
+feature maps. This model greatly promoted the perfor- ingfrommotioninformationandstaticboundariescoming
+manceofconvolutionneuralnetworkswhenhandlingpixel- fromstaticobjectproposals.
+wise segmentation [1] and object detection [15] tasks. SegNet [1] is a deep fully convolutional neural net-
+Pixel-wisesegmentation[6]istoassigneachpixelanclass workarchitectureforsemanticpixel-wisesegmentation,for
+based on its semantic meaning or which object it belongs whichthemodelcanbedividedintotwoparts,encoderand
+to. decoder (Figure 2). The encoder contains the 13 convo-
+Videoobjectsegmentation[5,8]isthetaskofextracting lutional layers adapted from VGG16 [18] network, which
+spatial regions corresponding to objects from a sequence iscommonlyusedinmanysegmentationarchitectures; the
+of image frames (Figure 1). This is not just a process to decoderusespoolingindicescomputedinthemax-pooling
+apply image segmentation algorithm to all frames in the stepofthecorrespondingencodertoperformnon-linearup-
+1
+4202
+beF
+41
+]VC.sc[
+1v28880.2042:viXra
+Figure2.Convolutionanddeconvolutionlayers
+sampling. Inourproject,insteadofsemanticsegmentation, and outputs a dense optical flow map using an encoder-
+weadaptedthesourcecodestoachievemovingobjectseg- decoder architecture. For supervised training, a large syn-
+mentationinvideos. theticdatasetwasgeneratedfromstaticbackgroundimages
+Optical flow is another traditional computer vision re- and renderings of animated 3D chairs. A follow up work
+search area which estimates the relative motion of objects [10]introducedthemoreaccurate,butalsoslowerandmore
+and edges in a visual scene. The algorithms utilizing neu- complexFlowNet2familyofsupervisednetworks.
+ral networks to address the task have been invented re- UnFlow: [11] built on the previous FlowNet-based net-
+cently. Researchers explored both innovative supervised works and extend it unsupervised video segmentation set-
+and unsupervised structures of optical flow learning net- tings. First, they designed a symmetric, occlusion-aware
+works. FlowNet [4] and UnFlow [11] are representatives lossbasedonbidirectional(i.e.,forwardandbackward)op-
+ofthem. tical flow estimates. Second, they trained FlowNetC with
+Inthiswork,wedecidedtodevelopaneuralnetworksto their comprehensive unsupervised loss to estimate bidirec-
+segment objects in video leveraging unsupervised learning tionalflow. Third,theymadeuseofiterativerefinementby
+neuralnetworkstotrainopticalflowandfeedtheoutputsof stacking multiple FlowNet networks. Optionally, they can
+opticalflowestimationtointoaSegNetmodel. alsouseasupervisedlossforfine-tuningtheirnetworkson
+We choose DAVIS 2017 [14] as the dataset for training sparsegroundtruthdataafterunsupervisedtraining.
+and evaluation, which contains 50 high quality video se-
+2.2.MethodsforObjectSegmentation
+quencesandsoasthecorrespondinggroundtruthforeval-
+uation. Eachvideoofthedatasetisnotlimitedinonespe-
+PCM [2]: In this work, a likelihood function uses a novel
+cificobject,insteaditmightcontainmultipleobjectsinone
+combinationoftheangleandmagnitudeoftheopticalflow
+frameandeachofthemareannotatedinthegroundtruth.
+tomaximizetheinformationaboutthetruthmotionsofob-
+jectsisderived. Itisusedforassessingtheprobabilityofan
+2.RelatedWorks opticalflowvectorgiventhe3Dmotiondirection.
+MP-Net[20]: MP-Netlearnstorecognizemotionpatterns
+2.1.MethodsforEstimatingOpticalFlow
+in a flow field. Despite its decent performance, it is lim-
+FlowNet [4]: End-to-end supervised learning of convolu- ited by its frame-based nature and also overlooks appear-
+tional networks for optical flow was first introduced with ancefeaturesofobjects.
+FlowNet. Thenetworktakestwoconsecutiveinputimages ConvGRU-Net [21]: ConvGRU-Net is a novel approach
+2
+methods(Figure3),
+(cid:90)
+min { (|∇u(x,y)|2+|∇v(x,y)|2)dΩ+
+u(x),v(x) Ω
+(cid:90)
+λ (I +I u(x,y)+I v(x,y))dΩ}
+t x y
+Ω
+where Ω is the image domain. The improvement of ba-
+sicvariationalenergyfunctionhasbeenexhaustivelystud-
+ied by researchers. We adopt the the Charbonnier penalty
+(cid:112)
+Ψ(x)= (x2+ϵ2)andhereϵis0.001.Thenwehavetwo
+termsoflossfunction.
+Figure3.Unsupervisedlearningmodelbasedonvariationalcon-
+straint. (cid:90)
+l =λ Ψ(I (x,y)−I (x+u(x,y),y+v(x,y)))+
+d 1 2
+Ω
+for video object segmentation. It combines two comple-
+Ψ(∇I )+Ψ(∇I )dΩ
+x y
+mentary sources of information: appearance and motion,
+(cid:90)
+with a visual memory module, realized as a bidirectional
+l = Ψ(u(x,y)−u(x+1,y))+Ψ(u(x,y+1)−u(x,y))+
+s
+convolutionalgatedrecurrentunit. TheConvGRUmodule Ω
+encodesspatio-temporalevolutionofobjectsinavideoand Ψ(v(x,y)−v(x+1,y))+Ψ(v(x,y+1)−v(x,y))dΩ
+usesthisencodingtoimprovemotionsegmentation.
+l take the warped first image and second image as input
+d
+andminimizethedifference. l
+3.TechnicalApproach s
+3.2.MovingObjectProposals
+Our method to segment moving objects can be sepa-
+ratedastwosteps: (1)traininganunsupervisedneuralnet- Weproposeatemporalstablemovingobjectdetectorus-
+workstolearnopticalflow;(2)feedingaSegNetmodelwith ingSegNetarchitecture. AswecanseefromFigure4,Seg-
+thelearnedoutputfromopticalflownetworksandgenerate Net is separated into two different parts, encoder and de-
+movingobjectsegmentation. Thedetailsareasfollowing. coder. Basically,theencoderusesthefirst13convolutional
+layers from the VGG16 networks that designed for object
+3.1.OpticalFlow
+classification. And in the decoder part, each layer has a
+Since suggested [9], most dense approaches estimating corresponding layer in the encoder, therefore, it also con-
+optical flow are based on the variational formulation. Ac- tains13layersastheencoder. Attheend,theoutputofde-
+cording to the optical flow constraint, the gray value of a coder is fed to a multi-class soft-max classifier to produce
+movingpixelstaysconstantovertime,i.e. class probability for each pixel. In our project, since our
+goal is producing segmentation for moving objects rather
+I(x,y,t)=I(x+u,y+v,t+1) thansemanticsegmentation; aftergettingtheinputimages
+fromtheopticalflowmodel,theSegNetmodelonlyneeds
+where(u,v)istheopticalflowvectorofapixel(x,y)from to consider the foreground objects and the background in
+time t to time t +1. Using the first-order Taylor approxi- each image. Therefore, we only need two classes in soft-
+mation,thelinearizedversionoftheimagefunctioncanbe maxfunction.
+derived.
+I(x,y,t)≈I(x,y,t+1)+∇I(x,y,t+1)T(u,v)
+0=I(x,y,t+1)−I(x,y,t)+∇I(x,y,t+1)T(u,v)
+Thepartialderivativesoftheimagefunctioncanbedenoted
+asI ,I ,andI . Theopticalflowconstraintequationhas
+t x y
+inherentdependencyontheimageposition(x,y).
+Figure4.SegNetArchitecture
+0=I +I u+I v.
+t x y
+In each encoder layer, it performs convolutional with a
+The smoothness penalty which penalizes the derivative of filterbank,andfollowedbybatchnormalizationandReLu,
+the optical flow field, was introduced by the variational what’smore,max-poolingisalsousedattheendtoachieve
+3
+translation invariance over small spatial shifts in the in- each250iterations.Figure6.displaysthelossesalongwith
+put image. However, max-pooling causes boundary detail theiterations. Aswecansee,thetraininglossdroppeddra-
+loses. As a solution, the SegNet model stores the max- matically at the beginning, but it stopped reducing at 400.
+poolingindicesforeachencoderlayer,andineachdecoder Inthemiddleofthetrainingprocess,wetriedtoreducethe
+layer,itcanusecorrespondingindicesforupsampling. learningrateto0.25e−6andevensmaller,butthetraining
+In the training procedure, we train all the variants with lossstillcouldnotreduce. Itmightbeduetotheotherhy-
+AdamOptimizerandthecorss-entropylossfunction. perparameters that take significant roles in the model. But
+we did not get enough time and resource to have a further
+3.3.ExpectedresultsandEvaluation
+test.
+We decide to evaluate our results by applying the inter-
+section over union overlap (IoU) between the final results 4.1.3 SuccessfulApproach
+andthegroundtruth. WecancomputeIoUaccordingtothe
+Instead of training everything from scratch, we finally de-
+formulabelow,
+cided to move to a pretrained model that has been fine-
+IoU =A∩B/A∪B tuned.Aftermodifyingthecodesofevaluation,wesuccess-
+fullyadaptedourDAVIS2017intothepretrainedmodel.
+where A denotes the area covered on the expected outputs
+andB denotestheareaannotatedongroundtruth. Accord-
+4.1.4 ResultsEvaluation
+ingtotheformula,IoU simplymeanstheproportionofthe
+overlapareawithintheunionareaofthemodel’soutputand Although, the pretrained model could provide us with rel-
+thecorrespondinggroundtruth. atively better outputs than our original model, the outputs
+Baselines: For the evaluation, we decide to compare our still consist a lot of glitches that might affect the final re-
+methodwithanadvancedmethodsPCM[2]. sults of the whole model. We summarize some common
+errorsoccuramongthoseoutputsinFigure7.
+4.Experiment Obstacles: AswecanseefromtheexampleDogagilityin
+Figure7,theunflowoutputsincludesthepillarsasmoving
+Our model consists of two parts: (1) Unflow net (Un- objects, which might make sense because while the dog is
+supervised Learning of Optical Flow); (2) SegNet: A crossing those pillars, it might also cause the pillars keep
+DeepConvolutionalEncoder-DecoderArchitectureforIm- vibrating in different frames. As a result, those vibrating
+ageSegmentation.Inourimplementation,wecombinedthe pillarsarealsodetected.
+twomodels,andmodifiedthesourcecodesfortrainingthe Reflections: Reflections are another common features in
+datasetDAVIS2017[14]. Theevaluationdetailsareasfol- images, for example, in flamingo, the reflection of the
+lowing. flamingoonthewaterisalsoincludedintheoutput.
+Edges: It is easy for the model to recognize the body of
+4.1.UnflowExperiment
+anobject,butdetectingedge’sinformationalwaysbeabig
+Inourimplementation,wemodifiedtheinputandtrain- problemforthemodel. Wecanfindthisproblemalmostin
+ing codes to import the DAVIS 2017 as our training and allexamplesinFigure7,suchasthemissingarmsandlegs
+evaluationdataset.Inthetrainingprocess,onlyfirsttwoim- indancetwirlandtennis,themissingwheelsinbusandcar
+agesineachclasses(50classes)werechosentobetrained, shadow.
+thetrainingiterationsforeachclasswassetas250.
+4.2.SegNetExperiment
+4.1.1 Pre-processing 4.2.1 TrainingDetails
+First,wedividetheimagesineachclassintoapairoflists, WetrainedtheSegNetwithAdamOptimizerfor10000it-
+eachpairofimagesareconsecutiveframes,therefore,they erations. β1 = 0.9, β2 = 0.999, the start learning rate is
+could be stacked and fed as inputs into the model. What’s 5e−4, with a decay of 0.5 times every 2000 global steps.
+more, all images need to be reshaped to 448 × 832, then WefedtheopticalflowestimationfromUnflowandground
+appliednormalization. truthsegmentationintoSegNetandthegetthemovingob-
+jectsegmentation.
+4.1.2 Earlyattemptsandfailures
+4.2.2 QualitativeAnalysis
+At the beginning, we decided to train our modified model
+fromscratch. Thelearningratewas0.25e−5,andthesave WeevaluateourresultsontheevaluationdatasetofDAVIS
+interval=250, sothatacheckpointwouldbegeneratedin for the lack of test data. The Figure 8 shows the loss de-
+4
+Figure5.SegNetandUnflowpredictionsofthesamplesfromDAVIS2017
+Measure PCM CVOS KEY NLC FST Ours
+MeanIOU 40.1 48.2 49.8 55.1 55.8 41.9
+Table 1. Our method compared to other state-of-the-art methods
+onDAVIS.
+ertiesofUnflownetworks. Also,wefoundintrainingpro-
+cess, the segmentation boundaries of moving object tends
+toshrinkwiththeincreasingoftrainingsteps.
+5.Conclusion
+Figure6.Unflowtrainingloss
+5.1.Insights
+creasing with global steps growing. We compared out ap-
+proachwithTable1comparesourapproachtothestate-of- This paper introduces a novel approach for video mov-
+the-artmethodsonDAVIS.Themeasuretoevaluateresults ing object segmentation. In general, we tried to combine
+ismeanIOU.Becauseourapproachonlyconsiderthemo- UnflowandSegNettogetthemotionsegmentationandthe
+tioninformationwithoutsemanticinformation,theresultof basic idea is working. However, limited by time and re-
+ourscanonlybealittlebetterthanPCM.Whenitisputon sources,wecannottrainthenetworkswithalotmoreglobal
+thetestdata,weassumeitwouldbeworsetosomeextent. stepsandelaborateparameters. Inthiswork,weleveraged
+thestate-of-the-artunsupervisedopticalflowestimationap-
+proach and fine-tuned it on the novel DAVIS 2017 dataset
+4.2.3 QuantitativeAnalysis
+in which we learned the constrained optical flow formula
+Based on the results of our experiment, we found our net- withsmoothnesspenalty. Besides,westudiedtheEncoder-
+worksismoresuitableforsegmentmonolithicmovingob- Decoder architecture and the advantages of up-sampling
+jectswithgentlemotion.Thiscomefromtheintrinsicprop- andup-convolutionallayers.
+5
+Figure7.Thepredictedoutputsgeneratedbyfine-tunedmodelofUnflow
+video learning tasks, detached CNN cannot preserve the
+learned features from the previous frames. To solve this
+problem, ConvLSTM is developed with the motivation to
+unify CNN and LSTM in one model. ConvLSTM is one
+kindofLSTMwhichisspeciallydesignedtoaidimagesse-
+quence learning with convolutional layer as input process-
+ing cell. The most recent research adopted this model in
+videoobjectsegmentationandoutperformspreviouswork.
+TheconvLSTMlayercanbeinsertedbetweentheEncoder
+andDecoderlayer.
+5.2.2 InvolvingSemanticInformation
+Currently,ourworkfeedstheoutputofUnflownetworksto
+SegNet,butthetwonetworkarchitecturecanbesimplified
+Figure8.SegNettrainingloss byunifyingthosetwo. Weassumetheinputimagecanbe
+renderedintotwobranchesoflocalnetwork. OneistheEn-
+coderpartofsemanticnetworksandtheotheristhedilated
+5.2.FutureImprovement
+convolution layers of Unflow. Than take both tensors into
+Theanalysisofresultsinspiresustomakeimprovement theDecoderarchitecture. Atthelossend, opticalflowun-
+intheflowingways. supervised loss and segmentation supervised loss are both
+considered. In this process, not only the networks can be
+simplified by removing redundancy but also the semantic
+5.2.1 AddingLSTMModel
+informationistakenintoconsider.
+Normal convolutional neural networks deal with indepen-
+dent images in an impressive way. However, in sequential
+6
+References ceedingsoftheIEEEconferenceoncomputervisionandpat-
+ternrecognition,pages779–788,2016.
+[1] V.Badrinarayanan, A.Kendall, andR.Cipolla. Segnet: A
+[16] Z.Ren,J.Yan,B.Ni,B.Liu,X.Yang,andH.Zha. Unsu-
+deep convolutional encoder-decoder architecture for image
+perviseddeeplearningforopticalflowestimation. InPro-
+segmentation. IEEE transactions on pattern analysis and
+ceedings of the AAAI conference on artificial intelligence,
+machineintelligence,39(12):2481–2495,2017.
+volume31,2017.
+[2] P.BideauandE.Learned-Miller. It’smoving! aprobabilis-
+[17] X.Shi, Z.Chen, H.Wang, D.-Y.Yeung, W.-K.Wong, and
+ticmodelforcausalmotionsegmentationinmovingcamera
+W.-c.Woo.Convolutionallstmnetwork:Amachinelearning
+videos. In Computer Vision–ECCV 2016: 14th European
+approachforprecipitationnowcasting. Advancesinneural
+Conference, Amsterdam, The Netherlands, October 11-14,
+informationprocessingsystems,28,2015.
+2016, Proceedings, Part VIII 14, pages 433–449. Springer,
+[18] K. Simonyan and A. Zisserman. Very deep convolutional
+2016.
+networksforlarge-scaleimagerecognition. arXivpreprint
+[3] H.-D.Cheng,X.H.Jiang,Y.Sun,andJ.Wang.Colorimage
+arXiv:1409.1556,2014.
+segmentation: advancesandprospects. Patternrecognition,
+[19] D. Sun, S. Roth, and M. J. Black. Secrets of optical flow
+34(12):2259–2281,2001.
+estimationandtheirprinciples. In2010IEEEcomputerso-
+[4] A. Dosovitskiy, P. Fischer, E. Ilg, P. Hausser, C. Hazirbas,
+cietyconferenceoncomputervisionandpatternrecognition,
+V. Golkov, P. Van Der Smagt, D. Cremers, and T. Brox.
+pages2432–2439.IEEE,2010.
+Flownet:Learningopticalflowwithconvolutionalnetworks.
+[20] P.Tokmakov,K.Alahari,andC.Schmid. Learningmotion
+InProceedingsoftheIEEEinternationalconferenceoncom-
+patternsinvideos.InProceedingsoftheIEEEconferenceon
+putervision,pages2758–2766,2015.
+computervisionandpatternrecognition,pages3386–3394,
+[5] S.DuttJain,B.Xiong,andK.Grauman. Fusionseg: Learn-
+2017.
+ing to combine motion and appearance for fully automatic
+[21] P.Tokmakov,K.Alahari,andC.Schmid.Learningvideoob-
+segmentationofgenericobjectsinvideos.InProceedingsof
+jectsegmentationwithvisualmemory.InProceedingsofthe
+theIEEEconferenceoncomputervisionandpatternrecog-
+IEEE International Conference on Computer Vision, pages
+nition,pages3664–3673,2017.
+4481–4490,2017.
+[6] M.Fayyaz,M.H.Saffar,M.Sabokrou,M.Fathy,R.Klette,
+andF.Huang. Stfcn:spatio-temporalfcnforsemanticvideo [22] Y.J.Zhang. Asurveyonevaluationmethodsforimageseg-
+segmentation. arXivpreprintarXiv:1608.05971,2016. mentation. Patternrecognition,29(8):1335–1346,1996.
+[7] K.Fragkiadaki,P.Arbelaez,P.Felsen,andJ.Malik. Learn-
+ing to segment moving objects in videos. In Proceedings
+of the IEEE Conference on Computer Vision and Pattern
+Recognition,pages4083–4090,2015.
+[8] N. Haque, N. D. Reddy, and K. M. Krishna. Joint seman-
+ticandmotionsegmentationfordynamicscenesusingdeep
+convolutional networks. arXiv preprint arXiv:1704.08331,
+2017.
+[9] B. K. Horn and B. G. Schunck. Determining optical flow.
+Artificialintelligence,17(1-3):185–203,1981.
+[10] E.Ilg,N.Mayer,T.Saikia,M.Keuper,A.Dosovitskiy,and
+T.Brox. Flownet2.0: Evolutionofopticalflowestimation
+withdeepnetworks. InProceedingsoftheIEEEconference
+on computer vision and pattern recognition, pages 2462–
+2470,2017.
+[11] S.Meister,J.Hur,andS.Roth.Unflow:Unsupervisedlearn-
+ingofopticalflowwithabidirectionalcensusloss. InPro-
+ceedings of the AAAI conference on artificial intelligence,
+volume32,2018.
+[12] P. O. O Pinheiro, R. Collobert, and P. Dolla´r. Learning to
+segmentobjectcandidates. Advancesinneuralinformation
+processingsystems,28,2015.
+[13] K. O’Shea and R. Nash. An introduction to convolutional
+neuralnetworks. arXivpreprintarXiv:1511.08458,2015.
+[14] J.Pont-Tuset,F.Perazzi,S.Caelles,P.Arbela´ez,A.Sorkine-
+Hornung, and L. Van Gool. The 2017 davis chal-
+lenge on video object segmentation. arXiv preprint
+arXiv:1704.00675,2017.
+[15] J. Redmon, S. Divvala, R. Girshick, and A. Farhadi. You
+onlylookonce: Unified,real-timeobjectdetection. InPro-
+7

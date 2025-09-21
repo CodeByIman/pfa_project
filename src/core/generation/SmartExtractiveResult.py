@@ -10,6 +10,16 @@ from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 from datetime import datetime
 import re
+import unicodedata
+from pathlib import Path
+
+# PDF helpers from existing modules
+try:
+    from ..pdf_processing.downloader import download_pdf
+    from ..pdf_processing.extractor import extract_text_from_pdf
+except Exception:
+    download_pdf = None
+    extract_text_from_pdf = None
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +33,44 @@ class SmartExtractiveResult:
     structured_summary: str  # Well-formatted for Ollama
 
 
-def smart_extractive_for_ollama(text: str, max_sentences: int = 4) -> SmartExtractiveResult:
+def _robust_sentence_split(text: str) -> List[str]:
+    """
+    Split text into sentences while handling common academic patterns:
+    - Abbreviations (e.g., e.g., i.e., Dr., Prof., et al.)
+    - Citations like [12], (Smith et al., 2020)
+    - Decimal numbers and acronyms
+    - Preserve punctuation at end of sentence
+    """
+    if not text:
+        return []
+    # Normalize whitespace
+    t = unicodedata.normalize('NFKC', text)
+    # Protect common abbreviations by temporarily replacing the period
+    abbrev = [
+        'e.g.', 'i.e.', 'et al.', 'Fig.', 'Eq.', 'Dr.', 'Prof.', 'Mr.', 'Ms.', 'Inc.', 'Ltd.', 'vs.', 'al.'
+    ]
+    for a in abbrev:
+        t = t.replace(a, a.replace('.', '∯'))
+    # Split on sentence end punctuation followed by whitespace and a capital or digit
+    parts = re.split(r'(?<=[.!?])\s+(?=[A-Z0-9"\(])', t)
+    sentences = []
+    for p in parts:
+        s = p.replace('∯', '.').strip()
+        if len(s) >= 20:
+            sentences.append(s)
+    return sentences
+
+
+def smart_extractive_for_ollama(
+    text: str,
+    max_sentences: int = 500,
+    target_ratio: float = 0.17,
+    min_paragraphs: int = 8,
+    max_chars: int = 20000,
+    min_lines: int = 30,
+    max_lines: int = 100,
+    min_line_chars: int = 300
+) -> SmartExtractiveResult:
     """
     Smart extractive summarization optimized to feed Ollama effectively.
     Extracts key information in a structured way that Ollama can process well.
@@ -46,8 +93,8 @@ def smart_extractive_for_ollama(text: str, max_sentences: int = 4) -> SmartExtra
     
     # Clean and prepare text
     text = text.strip()
-    sentences = re.split(r'[.!?]+', text)
-    sentences = [s.strip() for s in sentences if len(s.strip()) > 20]
+    # Robust sentence split to avoid mid-sentence breaks
+    sentences = _robust_sentence_split(text)
     
     # Extract important terms (keywords that indicate research focus)
     research_indicators = [
@@ -93,13 +140,26 @@ def smart_extractive_for_ollama(text: str, max_sentences: int = 4) -> SmartExtra
         
         return score
     
-    # Select best sentences
-    if len(sentences) <= max_sentences:
-        key_sentences = sentences
-    else:
-        scored_sentences = [(score_sentence(s), s) for s in sentences]
-        scored_sentences.sort(reverse=True, key=lambda x: x[0])
-        key_sentences = [s for _, s in scored_sentences[:max_sentences]]
+    # Select sentences to meet target size (~target_ratio of original) but capped by max_chars
+    # Score then choose top-K while preserving original order for coherence
+    original_len = len(text)
+    target_chars = min(max(int(original_len * target_ratio), 800), max_chars)
+    scored_sentences = [(score_sentence(s), idx, s) for idx, s in enumerate(sentences)]
+    scored_sentences.sort(reverse=True, key=lambda x: x[0])
+    chosen = []
+    chosen_char_count = 0
+    for sc, idx, s in scored_sentences:
+        if s in chosen:
+            continue
+        chosen.append(s)
+        chosen_char_count += len(s) + 1
+        if chosen_char_count >= target_chars:
+            break
+        if len(chosen) >= max(3*max_sentences, 200):
+            # hard stop to avoid too many sentences
+            break
+    # Restore original order
+    key_sentences = sorted(chosen, key=lambda s: sentences.index(s)) if chosen else sentences[:max_sentences]
     
     # Identify paper focus and contribution
     paper_focus = "Research study"
@@ -125,14 +185,38 @@ def smart_extractive_for_ollama(text: str, max_sentences: int = 4) -> SmartExtra
         elif any(word in sentence_lower for word in ['evaluate', 'compare', 'analysis']):
             contribution = "Provides comparative analysis"
     
-    # Create structured summary optimized for Ollama
-    structured_summary = f"""
-FOCUS: {paper_focus}
-CONTRIBUTION: {contribution}
-KEY POINTS: {' '.join(key_sentences[:3])}
-TERMS: {', '.join(important_terms[:5])}
-""".strip()
-    
+    # Build paragraphs by grouping sentences sequentially to preserve flow
+    # Aim for natural paragraph sizes (4-7 sentences), respecting max_chars
+    para_min, para_max = 4, 7
+    paragraphs: List[str] = []
+    total = 0
+    i = 0
+    while i < len(key_sentences) and total < max_chars:
+        group_size = min(para_max, max(para_min, (len(key_sentences) - i) // max(min_paragraphs, 1) or para_min))
+        group = key_sentences[i:i+group_size]
+        para = ' '.join(group)
+        if total + len(para) + 2 > max_chars:
+            break
+        paragraphs.append(para)
+        total += len(para) + 2
+        i += group_size
+
+    # Ensure minimum paragraph count when possible
+    if len(paragraphs) < min_paragraphs:
+        # Split longer paragraphs or add remaining sentences one by one
+        remaining = key_sentences[i:]
+        for s in remaining:
+            if len(paragraphs) >= min_paragraphs:
+                break
+            if total + len(s) + 2 > max_chars:
+                break
+            paragraphs.append(s)
+            total += len(s) + 2
+
+    body_text = '\n\n'.join(paragraphs)
+
+    # Create structured summary optimized for Ollama (keep metadata header + long body)
+    structured_summary = body_text 
     return SmartExtractiveResult(
         key_sentences=key_sentences,
         important_terms=important_terms,
@@ -140,7 +224,6 @@ TERMS: {', '.join(important_terms[:5])}
         contribution=contribution,
         structured_summary=structured_summary
     )
-
 
 def generate_ollama_final_summary(
     title: str,
@@ -150,18 +233,7 @@ def generate_ollama_final_summary(
     query_context: str = ""
 ) -> str:
     """
-    Generate final human-readable summary using Ollama with structured extractive input.
-    This is where the AI magic happens - Ollama transforms extractive data into natural language.
-    
-    Args:
-        title: Paper title
-        authors: List of authors
-        year: Publication year
-        extractive_result: Smart extractive summary
-        query_context: Original user query for context
-    
-    Returns:
-        Natural language summary from Ollama
+    Generate final human-readable summary using Ollama with improved prompt structure.
     """
     
     def _check_ollama() -> bool:
@@ -176,31 +248,57 @@ def generate_ollama_final_summary(
         authors_str = ', '.join(authors[:2]) + ('...' if len(authors) > 2 else '')
         return f"""This paper "{title}" by {authors_str} ({year}) focuses on {extractive_result.paper_focus.lower()}. {extractive_result.contribution}. Key aspects include: {', '.join(extractive_result.key_sentences[:2])}."""
     
-    # Prepare optimized prompt for Ollama
+    # Prepare authors
     authors_str = ', '.join(authors[:3]) + ('...' if len(authors) > 3 else '')
-    
-    # Context-aware prompt
+
     context_hint = ""
     if query_context and len(query_context.strip()) > 3:
-        context_hint = f"User is interested in: {query_context}. "
-    
-    prompt = f"""Write a clear, engaging 2-3 sentence summary of this research paper.
+        context_hint = f"\nUSER QUERY CONTEXT: {query_context}\nMake sure to address aspects relevant to this query.\n"
+
+    # Clean the extractive text more gently
+    cleaned_extractive = _clean_extractive_text_gentle(extractive_result.structured_summary)
+
+    # Prompt with explicit content markers to avoid prompt bleed
+    prompt = f"""You are an expert research paper summarizer. Write a comprehensive, coherent summary of this research paper using ONLY the information provided below.
+
+PAPER DETAILS:
+Title: {title}
+Authors: {authors_str}
+Year: {year}
 
 {context_hint}
 
-Paper: "{title}" by {authors_str} ({year})
+REQUIREMENTS:
+- Write 4-6 complete paragraphs (not bullet points)
+- Start with: "This paper..."
+- Cover: problem/context, methodology, results, and implications
+- Use clear, academic language
+- Stay strictly within the provided information
+- Make it flow naturally as a cohesive narrative
 
-Research Summary:
-- Focus: {extractive_result.paper_focus}
-- Contribution: {extractive_result.contribution}
-- Key findings: {' '.join(extractive_result.key_sentences[:2])}
-- Important concepts: {', '.join(extractive_result.important_terms[:5])}
+EXTRACTED CONTENT TO SUMMARIZE (between <<< and >>>):
+<<<
+{cleaned_extractive}
+>>>
 
-Write in natural language starting with "This paper" or "This research". Make it informative but accessible."""
+Now write the comprehensive summary following the requirements above:"""
 
     try:
         logger.info(f"🦙 Generating Ollama summary for: {title[:50]}...")
         
+        # Save the exact prompt for debugging/audit
+        try:
+            data_root = Path(__file__).resolve().parents[3] / 'data'
+            prompt_dir = data_root / 'evaluation' / 'prompts'
+            prompt_dir.mkdir(parents=True, exist_ok=True)
+            ts = datetime.now().strftime('%Y%m%d-%H%M%S')
+            safe_title = re.sub(r'[^a-zA-Z0-9_-]+', '_', title)[:60]
+            prompt_file = prompt_dir / f"prompt_{ts}_{safe_title}.txt"
+            with prompt_file.open('w', encoding='utf-8') as pf:
+                pf.write(prompt)
+        except Exception:
+            pass
+
         response = requests.post(
             'http://localhost:11434/api/generate',
             json={
@@ -208,18 +306,24 @@ Write in natural language starting with "This paper" or "This research". Make it
                 'prompt': prompt,
                 'stream': False,
                 'options': {
-                    'temperature': 0.4,  # Balanced creativity
-                    'top_p': 0.85,
-                    'num_predict': 200,   # Reasonable length
-                    'stop': ['\n\n', 'Paper:', 'Research:']  # Stop at breaks
+                    'temperature': 0.2,
+                    'top_p': 0.9,
+                    'num_predict': 1200,
+                    'num_ctx': 8192,
+                    'repeat_penalty': 1.05,
+                    'presence_penalty': 0.1
                 }
             },
-            timeout=12  # Reasonable timeout
+            timeout=40
         )
         
         if response.status_code == 200:
             result = response.json().get('response', '').strip()
-            if result and len(result) > 50:  # Ensure meaningful response
+            
+            # Clean up the response
+            result = _clean_ollama_response(result)
+            
+            if result and len(result) > 200:  # Ensure substantially long response
                 logger.info(f"✅ Ollama summary generated ({len(result)} chars)")
                 return result
             else:
@@ -233,9 +337,106 @@ Write in natural language starting with "This paper" or "This research". Make it
         logger.error(f"❌ Ollama error: {e}")
     
     # Smart fallback using extractive data
-    return f"""This paper "{title}" by {authors_str} ({year}) presents work on {extractive_result.paper_focus.lower()}. {extractive_result.contribution}. The research {extractive_result.key_sentences[0] if extractive_result.key_sentences else 'contributes to the field'}."""
+    return _create_smart_fallback_summary(title, authors_str, year, extractive_result)
 
 
+def _clean_extractive_text_gentle(text: str) -> str:
+    """
+    Gentle cleaning that preserves readability and context
+    """
+    if not text:
+        return ""
+    
+    # Very light cleaning
+    text = unicodedata.normalize('NFKC', text)
+    
+    # Remove only obvious OCR artifacts
+    text = re.sub(r"\(cid:[^\)]+\)", " ", text)
+    
+    # Remove obvious LaTeX but preserve structure
+    text = re.sub(r"\$\$[^$]{5,}\$\$", " [mathematical expression] ", text)
+    text = re.sub(r"\\[a-z]+\{[^}]*\}", " ", text)  # LaTeX commands
+    
+    # Clean up citation markers but keep context
+    text = re.sub(r"\[[\d,\s]+\]", "", text)
+    
+    # Preserve paragraph structure while cleaning
+    paragraphs = []
+    current_para = []
+    
+    for line in text.split('\n'):
+        line = line.strip()
+        if not line:
+            if current_para:
+                paragraphs.append(' '.join(current_para))
+                current_para = []
+        else:
+            # Only exclude obviously broken lines
+            if len(line) < 10 or line.count(' ') < 2:
+                continue
+            # Skip if mostly symbols
+            symbol_ratio = sum(1 for c in line if not c.isalnum() and c != ' ') / max(len(line), 1)
+            if symbol_ratio > 0.7:
+                continue
+            current_para.append(line)
+    
+    if current_para:
+        paragraphs.append(' '.join(current_para))
+    
+    # Join with proper paragraph separation
+    result = '\n\n'.join(p for p in paragraphs if len(p) > 30)
+    
+    return result[:12000]  # Reasonable limit
+
+
+def _clean_ollama_response(response: str) -> str:
+    """
+    Clean up the Ollama response to remove artifacts
+    """
+    if not response:
+        return ""
+    
+    # Remove any prompt echo or instruction artifacts
+    response = re.sub(r'^.*?This paper', 'This paper', response, flags=re.DOTALL)
+    
+    # Remove any trailing instruction echoes
+    response = re.sub(r'\n\n(Now write|REQUIREMENTS|PAPER DETAILS).*', '', response, flags=re.DOTALL)
+    
+    # Clean up excessive newlines but preserve paragraph structure
+    response = re.sub(r'\n{3,}', '\n\n', response)
+    
+    # Remove any incomplete sentences at the end
+    sentences = response.split('.')
+    if len(sentences) > 1 and len(sentences[-1].strip()) < 10:
+        response = '.'.join(sentences[:-1]) + '.'
+    
+    return response.strip()
+
+
+def _create_smart_fallback_summary(title: str, authors_str: str, year: str, extractive_result: SmartExtractiveResult) -> str:
+    """
+    Create a coherent fallback summary when Ollama fails
+    """
+    # Use the extractive sentences to build a better fallback
+    key_sentences = extractive_result.key_sentences[:4]
+    
+    if len(key_sentences) >= 2:
+        # Create a more natural fallback
+        intro = f'This paper "{title}" by {authors_str} ({year}) '
+        
+        if extractive_result.paper_focus:
+            intro += f"focuses on {extractive_result.paper_focus.lower()}. "
+        
+        content = ' '.join(key_sentences[:3])
+        
+        conclusion = ""
+        if extractive_result.contribution:
+            conclusion = f" {extractive_result.contribution}"
+        
+        return intro + content + conclusion
+    
+    # Basic fallback if not enough sentences
+    return f"""This paper "{title}" by {authors_str} ({year}) presents research on {extractive_result.paper_focus.lower()}. {extractive_result.contribution}. The work contributes to understanding in this field through systematic analysis and methodology."""
 def fast_pipeline_extractive_ollama(
     query: str,
     papers: List[Any],  # Papers from arxiv search
@@ -257,13 +458,44 @@ def fast_pipeline_extractive_ollama(
     logger.info(f"🚀 Fast pipeline processing {min(len(papers), max_papers)} papers")
     
     results = []
+    # Prepare output directory to save extractive summaries used by Ollama
+    try:
+        # Default data directory relative to this file if orchestrator helper is not available
+        data_root = Path(__file__).resolve().parents[3] / 'data'
+        out_dir = data_root / 'evaluation' / 'extractive'
+        out_dir.mkdir(parents=True, exist_ok=True)
+    except Exception:
+        out_dir = None
     
     for i, paper in enumerate(papers[:max_papers]):
         logger.info(f"📄 Processing paper {i+1}/{min(len(papers), max_papers)}: {paper.title[:50]}...")
         
-        # Step 1: Smart extractive summarization
-        abstract = paper.abstract or "No abstract available"
-        extractive_result = smart_extractive_for_ollama(abstract, max_sentences=4)
+        # Step 1: Choose source text: prefer first pages of PDF if available to achieve longer extractive summary
+        source_text = paper.abstract or "No abstract available"
+        if download_pdf and extract_text_from_pdf and getattr(paper, 'pdf_url', None):
+            try:
+                data_root = Path(__file__).resolve().parents[3] / 'data'
+                pdf_dir = data_root / 'pdfs'
+                pdf_dir.mkdir(parents=True, exist_ok=True)
+                pdf_path = download_pdf(paper.pdf_url, pdf_dir)
+                if pdf_path is not None:
+                    extracted_text = extract_text_from_pdf(pdf_path, max_pages=20)
+                    if extracted_text and len(extracted_text.strip()) > 1000:
+                        source_text = extracted_text
+            except Exception as _e:
+                # Fall back to abstract silently
+                pass
+
+        extractive_result = smart_extractive_for_ollama(
+            source_text,
+            max_sentences=800,
+            target_ratio=0.3,
+            min_paragraphs=10,
+            max_chars=22000,
+            min_lines=40,
+            max_lines=120,
+            min_line_chars=400
+        )
         
         # Step 2: Generate final summary with Ollama
         final_summary = generate_ollama_final_summary(
@@ -273,6 +505,29 @@ def fast_pipeline_extractive_ollama(
             extractive_result=extractive_result,
             query_context=query
         )
+
+        # Optionally save extractive summary to disk for inspection
+        if out_dir is not None:
+            try:
+                ts = datetime.now().strftime('%Y%m%d-%H%M%S')
+                safe_id = re.sub(r'[^a-zA-Z0-9_-]+', '_', str(paper.id or 'unknown'))[:60]
+                filename = out_dir / f"{ts}_{safe_id}_extractive.txt"
+                with filename.open('w', encoding='utf-8') as f:
+                    f.write(f"Title: {paper.title}\n")
+                    f.write(f"Authors: {', '.join(paper.authors[:5])}\n")
+                    f.write(f"Year: {paper.year}\n")
+                    f.write(f"Paper ID: {paper.id}\n")
+                    f.write(f"Link: {paper.pdf_url or paper.entry_url}\n")
+                    f.write("\n=== Structured Extractive Summary (used by Ollama) ===\n")
+                    f.write(extractive_result.structured_summary + "\n\n")
+                    f.write("Key sentences:\n")
+                    for s in extractive_result.key_sentences:
+                        f.write(f"- {s}\n")
+                    f.write("\nImportant terms: " + ", ".join(extractive_result.important_terms) + "\n")
+                    f.write("Focus: " + extractive_result.paper_focus + "\n")
+                    f.write("Contribution: " + extractive_result.contribution + "\n")
+            except Exception as e:
+                logger.warning(f"Could not save extractive summary: {e}")
         
         # Create result
         result = {
@@ -284,7 +539,9 @@ def fast_pipeline_extractive_ollama(
             'score': getattr(paper, 'relevance_score', 0.8),  # Default score if not available
             
             # Summaries
-            'original_abstract': abstract,
+            'original_abstract': paper.abstract or "",
+            'source_text': source_text,
+            'source_origin': 'pdf' if (download_pdf and extract_text_from_pdf and getattr(paper, 'pdf_url', None) and source_text != (paper.abstract or "No abstract available")) else 'abstract',
             'extractive_summary': extractive_result.structured_summary,
             'final_ollama_summary': final_summary,  # This is the main one!
             
@@ -302,6 +559,7 @@ def fast_pipeline_extractive_ollama(
                 'combined': final_summary
             },
             'abstractive_summary': final_summary,  # Main display summary
+            
             'final_response': final_summary,
             'method': 'extractive_ollama'
         }

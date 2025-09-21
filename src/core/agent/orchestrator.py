@@ -6,6 +6,7 @@ from pathlib import Path
 import os
 import json
 from datetime import datetime
+import re
 
 from ..query_understanding.language_detection import detect_language, translate_to_english
 from ..query_understanding.intent_extraction import detect_intent
@@ -41,6 +42,7 @@ class OrchestratedResult:
     contribution: str = ""
     key_terms: List[str] = None
     ollama_summary: str = ""  # The main Ollama-generated summary
+    extractive_structured: str = ""  # The structured extractive summary fed to Ollama (if available)
 
 
 def get_data_dir() -> Path:
@@ -58,7 +60,7 @@ def run_pipeline(
     api: str = 'arxiv', 
     use_pdfs: bool = False, 
     summary_mode: str = "auto", 
-    use_mistral_final_response: bool = False,
+    use_mistral_final_response: bool = True,
     use_ollama_fast: bool = True  # New parameter for Ollama fast mode
 ) -> Dict[str, Any]:
     """
@@ -119,7 +121,13 @@ def run_pipeline(
         
         if _check_ollama_availability() and not use_ollama_fast:
             try:
-                extractive_result = smart_extractive_for_ollama(r.paper.abstract or "", max_sentences=4)
+                extractive_result = smart_extractive_for_ollama(
+                    r.paper.abstract or "",
+                    max_sentences=4,
+                    target_ratio=0.17,
+                    min_paragraphs=8,
+                    max_chars=8000
+                )
                 ollama_summary = generate_ollama_final_summary(
                     title=r.paper.title,
                     authors=r.paper.authors,
@@ -130,9 +138,35 @@ def run_pipeline(
                 paper_focus = extractive_result.paper_focus
                 contribution = extractive_result.contribution
                 key_terms = extractive_result.important_terms
+                extractive_structured = extractive_result.structured_summary
+                # Save extractive summary used by Ollama to disk
+                try:
+                    data_dir = get_data_dir()
+                    out_dir = data_dir / 'evaluation' / 'extractive'
+                    out_dir.mkdir(parents=True, exist_ok=True)
+                    ts = datetime.now().strftime('%Y%m%d-%H%M%S')
+                    safe_id = re.sub(r'[^a-zA-Z0-9_-]+', '_', str(r.paper.id or 'unknown'))[:60]
+                    fn = out_dir / f"{ts}_{safe_id}_extractive.txt"
+                    with fn.open('w', encoding='utf-8') as f:
+                        f.write(f"Title: {r.paper.title}\n")
+                        f.write(f"Authors: {', '.join(r.paper.authors[:5])}\n")
+                        f.write(f"Year: {r.paper.year}\n")
+                        f.write(f"Paper ID: {r.paper.id}\n")
+                        f.write(f"Link: {r.paper.pdf_url or r.paper.entry_url}\n\n")
+                        f.write("=== Structured Extractive Summary (used by Ollama) ===\n")
+                        f.write(extractive_result.structured_summary + "\n\n")
+                        f.write("Key sentences:\n")
+                        for s in extractive_result.key_sentences:
+                            f.write(f"- {s}\n")
+                        f.write("\nImportant terms: " + ", ".join(extractive_result.important_terms) + "\n")
+                        f.write("Focus: " + extractive_result.paper_focus + "\n")
+                        f.write("Contribution: " + extractive_result.contribution + "\n")
+                except Exception as e:
+                    print(f"Warning: could not save extractive summary: {e}")
             except Exception as e:
                 print(f"⚠️ Ollama summary generation failed: {e}")
                 ollama_summary = abs_sum  # Fallback to abstractive
+                extractive_structured = ""
         
         results.append(OrchestratedResult(
             paper=r.paper,
@@ -147,7 +181,8 @@ def run_pipeline(
             paper_focus=paper_focus,
             contribution=contribution,
             key_terms=key_terms,
-            ollama_summary=ollama_summary or abs_sum
+            ollama_summary=ollama_summary or abs_sum,
+            extractive_structured=locals().get('extractive_structured', "")
         ))
 
     response = {
@@ -177,7 +212,8 @@ def run_pipeline(
                     'lsa': res.summary_lsa,               # Specific LSA summary
                     'abstractive': res.summary_abstractive, # AI-generated summary
                     'combined': res.summary_combined,       # Combined summary
-                    'ollama': res.ollama_summary          # NEW: Ollama-generated summary
+                    'ollama': res.ollama_summary,          # NEW: Ollama-generated summary
+                    'extractive': res.extractive_structured if getattr(res, 'extractive_structured', '') else ''
                 },
                 'final_response': res.final_response,           # Human-like response from Mistral meta-processor
                 'method': res.method_used,                      # Method used for primary summary

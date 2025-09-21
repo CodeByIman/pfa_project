@@ -1,0 +1,42 @@
+You are an expert research paper summarizer. Write a comprehensive, coherent summary of this research paper using ONLY the information provided below.
+
+PAPER DETAILS:
+Title: Support Vector classifiers for Land Cover Classification
+Authors: Mahesh Pal, Paul M. Mather
+Year: 2008
+
+
+USER QUERY CONTEXT: Machine learning applications 
+Make sure to address aspects relevant to this query.
+
+
+REQUIREMENTS:
+- Write 4-6 complete paragraphs (not bullet points)
+- Start with: "This paper..."
+- Cover: problem/context, methodology, results, and implications
+- Use clear, academic language
+- Stay strictly within the provided information
+- Make it flow naturally as a cohesive narrative
+
+EXTRACTED CONTENT TO SUMMARIZE (between <<< and >>>):
+<<<
+Map India 2003 Image Processing & Interpretation Support Vector classifiers for Land Cover Classification Mahesh Pal Paul M. Introduction Much research effort in the past ten years has been devoted to analysis of the performance of artificial neural networks in image classification (Benediktsson et al., 1990; Heermann and Khazenie, 1992). The preferred algorithm is feedforward multi-layer perceptron using back-propagation, due to its ability to handle any kind of numerical data, and to its freedom from distributional assumptions. Although neural networks may generally be used to classify data at least as accurately as statistical classification approaches a number of studies have reported that users of neural classifiers have problems in setting the choice of various parameters during training (Wilkinson, 1997).
+
+This technique is said to be independent of the dimensionality of feature space as the main idea behind this classification technique is to separate the classes with a surface that maximise the margin between them, using boundary pixels to create the decision surface. Classification Methods Three classification algorithms used for this study are the maximum-likelihood, multi-layer backpropagation neural network and support vector classifier. MLC is a pixelbased method and can be defined as follows: a pixel with an associated observed feature vector X is assigned to class c if j ( ) ( ) ∈ ≠ X c if g X > g X for all j k, j, k = 1,......, N j j k ( ) For multivariate Gaussian distributions g X is given by: k ( ) 1 ∑ − 1( − ) t ∑−1 ( − ) g X =ln(p(c ))- ln X M X M k j k k k k 2 2 where M and ∑ are the sample mean vector and covariance matrix of class k, k k and g is the discriminating function. k Implementation of the MLC involves the estimation of class mean vectors and covariance matrices using training patterns chosen from known examples of each particular class. 2.2 Artificial Neural Network Classifier A feed-forward artificial neural network (ANN) is used in this study.
+
+This is the most widely used neural network model, and its design consists of one input layer, at least one hidden layer, and one output layer. Therefore, a set of input/output pairs is repeatedly presented to the network Map India Conference 2003 © GIS development.net, All rights reserved. In this study we use the network architecture and number of patterns used for training suggested by Kavzoglu (2001). A technique introduced by Boser et al. (1992) maps input data into a high dimensional feature space through some nonlinear mapping.
+
+In this study, a "one against one" approach (Knerr et al., 1990) (In this method, all possible two-class classifiers are evaluated from the training set of n classes, each classifier being trained on only two out of n classes. Kappa values and overall classification accuracies are calculated for each of the classifiers used in this study with ETM+ data, while overall accuracy is calculated for the DAIS hyperspectral data. The Z statistic is also used to test the significance of apparent differences between the three classification algorithms, Map India Conference 2003 © GIS development.net, All rights reserved. Like neural network classifiers the performance of support vector classifier depends on a number of user-defined parameters which may influence the final γ classification accuracy.
+
+Results obtained using ETM+ data suggests that support vector classifier perform well in comparison with neural and statistical classifier (Tables 1 and 2). Classifier used Accuracy (%) Kappa value Maximum likelihood 82.9 0.80 Neural network 85.1 0.83 Support vector 87.9 0.87 Table 2. Classifiers Z value SVM vs. Neural network 2.46 SVM vs. maximum likelihood 5.45 Map India Conference 2003 © GIS development.net, All rights reserved. Results suggest that support vector classifier performance is statistically significant in comparison with NN and ML classifiers.
+
+Classification accuracies obtained with DAIS hyperspectral data using different classification algorithms. Results obtained from analysis of the hyperspectral data suggest that classification accuracy using SVM increases almost continuously as a function of the number of features, with the size of the training data set held constant, whereas the overall classification accuracies produced by the ML, DT and NN classifiers decline slightly once the number of bands exceeds 50 or so. Thus, suggesting that the Map India Conference 2003 © GIS development.net, All rights reserved. )%( ycarucc A Maximumlikelihood neural network Support vector 5 10 15 20 25 30 40 45 50 55 60 65 Maximumlikelihood 66 76.7 82.4 83.7 87.7 89.9 92.7 93.8 94 93.8 93.6 85.8 neural network 47.8 69.8 76.4 82.2 84.7 90.2 91.6 89.9 93.6 92.4 93.4 93 Support vector 67.6 76.1 84.3 86.2 90.3 93.4 94.5 94.5 95 96.1 96.1 95.1 Map India 2003 Image Processing & Interpretation ‘Hughes phenomenon’ (Hughes, 1968) of decreasing classifier performance as the dimensionality of the feature space increases beyond a threshold is not supported by the experiments using the support vector classifiers. Conclusions The objective of this study was to assess the utility of support vector classifiers for land cover classification using multi- and hyper-spectral data sets in comparison with most frequently used ML and NN classifiers.
+
+The results presented above suggest several conclusions. First the support vector classifier outperforms ML and NN classifiers in term of classification accuracy with both data sets. Several user-defined parameters affects the performance of the support vector classifier, but this study suggests that it is easier to find appropriate values for these parameters than it is for parameters defining the NN classifier. The level of classification accuracy achieved with the support vector classifier is better than both ML and NN classifiers when used with small number of training data.
+
+K., 1990, Neural network approaches versus statistical methods in classification of multisource remote sensing data. D., and Khazenie, N., 1992, Classification of multispectral remote sensing data using a back propagation neural network. W., and Lin, C. -J., 2002, A comparison of methods for multi-class support vector machines, IEEE Transactions on Neural Networks, 13, 415-425. Kavzoglu, T., 2001, An Investigation of the Design and Use of Feed-forward Artificial Neural Networks in the Classification of Remotely Sensed Images.
+
+G., 2002, Classification using ASTER data and SVM algorithms; The case study of Beer Sheva, Israel.
+>>>
+
+Now write the comprehensive summary following the requirements above:

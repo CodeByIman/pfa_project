@@ -1,0 +1,40 @@
+Title: Measuring the Quality of Explanations: The System Causability Scale (SCS). Comparing Human and Machine Explanations
+Authors: Andreas Holzinger, André Carrington, Heimo Müller
+Year: 2019
+Paper ID: http://arxiv.org/abs/1912.09024v1
+Link: http://arxiv.org/pdf/1912.09024v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Introduces novel approach
+KEY SENTENCES COUNT: 6
+TERMS: method, approach, algorithm, results, present, introduce, machine learning, neural network
+
+BODY:
+Recent success in Artificial Intelligence (AI) and Machine Learning (ML) allow problem solving automatically without any human intervention. However, in certain domains, e.g., in the medical domain, it is necessary to enable
+
+a domain expert to understand, why an algorithm came up with a certain result. Explainable AI studies transparency and traceability of opaque AI/ML and there are already a huge variety of methods.
+
+For example with layer-wise relevance propagation relevant parts of inputs to, and representations in, a neural network which caused a result, can be highlighted. Interactive ML adds the component of
+
+human expertise to AI/ML processes by enabling them to re-enact and retrace AI/ML results, e.g. In this paper we introduce our System Causability Scale (SCS) to measure the quality of explanations.
+
+Key sentences:
+- Recent success in Artificial Intelligence (AI) and Machine Learning (ML)
+allow problem solving automatically without any human intervention.
+- However, in certain domains, e.g., in the
+medical domain, it is necessary to enable a domain expert to understand, why an
+algorithm came up with a certain result.
+- Explainable AI studies transparency and traceability of opaque AI/ML
+and there are already a huge variety of methods.
+- For example with layer-wise
+relevance propagation relevant parts of inputs to, and representations in, a
+neural network which caused a result, can be highlighted.
+- Interactive ML adds the component of human expertise to AI/ML
+processes by enabling them to re-enact and retrace AI/ML results, e.g.
+- In this paper we introduce our
+System Causability Scale (SCS) to measure the quality of explanations.
+
+Important terms: method, approach, algorithm, results, present, introduce, machine learning, neural network
+Focus: Methodological approach
+Contribution: Introduces novel approach

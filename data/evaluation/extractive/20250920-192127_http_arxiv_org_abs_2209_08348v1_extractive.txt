@@ -1,0 +1,69 @@
+Title: Some Long-Standing Quality Practices in Software Development
+Authors: Sibonile Moyo
+Year: 2022
+Paper ID: http://arxiv.org/abs/2209.08348v1
+Link: http://arxiv.org/pdf/2209.08348v1
+
+=== Structured Extractive Summary (used by Ollama) ===
+Originating from the inception of the traditional software development life cycle (SDLC), through to the object-oriented methods, Iterative development, and now the agile methods, these practices have persisted through different periods. In this paper we review three software development methods representative of the software development history, with the aim of i) identifying key quality practices, ii) identifying the quality role played by the practice in the method, and iii) noting those quality practices that have persisted through the software development history. These results would be useful to method engineers who seek to design high-quality software development methods as these practices serve as candidates for inclusion in their development processes. Software development practitioners seeking to design quality software would also benefit from adopting these practices in developing their software.
+
+Having taught software engineering courses for more than two decades, the author has observed the emphasis in software development shift from a contractual, heavyweight software process to that of a flexible agile approach to building software. Regardless of whether the method under consideration is traditional, agile, or any hybrid of these, the goal in software development is to create an acceptable artifact that meets user requirements, and can easily be integrated with existing systems if need be (Karhapää et al., 2021). Over the years it has been interesting to note some practices and principles appearing in the several new methods that method engineers develop to improve software quality. This paper gives an overview of those practices, techniques, and principles that have penetrated the various periods of the software engineering processes.
+
+We note the practice and highlight the methods that have incorporated it, and the impact of the practice on software quality. In Section 2, we present the views of other authors on the history of software quality. Section 4 presents the results and Section 5 briefly discusses the findings and Section 6 concludes the paper. Background and Related work In seeking to understand the past in comparison with the present, researchers have discussed the history of software development in its various forms.
+
+The authors noted that these three development approaches had a lot in common although homonyms in the naming of practices projected huge differences (Magdaleno et al., 2012). Such a study would be related to ours in the sense that we seek to check whether the current agile methods incorporate quality practices that originated from the traditional methods. Method We carried out an analysis of three software development methodologies. We were interested in identifying quality practices that were designed after 1970, as this is the year that saw the advent of the historic Waterfall model (Boehm, 2006).
+
+A practice was deemed resilient if it was incorporated into the Spiral model and subsequently into any of the two representative agile methods, Scrum (Schwaber, 1997) and XP (Beck, 1999). We then analysed the two methods separately, capturing those practices that were projecting the same principle as a practice in the Spiral model. In the next section, we present the results of our analysis of the practices identified in three methods. Results Table 1 shows the practices that appear in the Spiral model, and still appear either in Scrum or XP or both.
+
+Table 1: Quality practices from participating methods Traditional Methods Practices/Techniques Agile Methods Practices/Techniques Spiral Model (Boehm, 1986) Transition period Scrum XP before agile (Schwaber,1997; (Beck, 1999) Schwaber& Sutherland, 2013) i. The practice first appeared in the traditional methods of software development as a means of understanding user requirements (Batool et al., 2013; IEEE, 2006; Strode & Clark, 2007). In code driven development methods like XP, the practice has assumed a new name, that of spike solution. Another key practice that emerged during the traditional approach to software development and has earned a place in the agile methods is incremental development.
+
+Incremental development is closely linked to iterative development and modular design. The Spiral model is considered a risk-based development approach (Boehm, 1986; Pressman & Maxim, 2015). Discussion The results of our review of the three software development methodologies chosen to represent the two important phases in the progression of software development show that, there are some practices that are generic in the development of software, regardless of the philosophy of the methodology. A prototype helps designers to fully understand the problem, at the same time affording them the opportunity to test the feasibility of the proposed solution.
+
+Prototyping has also been incorporated into other agile methods not considered in this study. Our aim was to show that while method engineers adopt various philosophies in the design of their methods, there is always a meeting point in their methods. Such practices remain the cornerstone of software development and are worth considering when designing software development methods or developing software in an ad hoc manner. Our study considered three methods, further studies could consider more methods for the purposes of creating a pool of the long-standing quality practices that could serve as a source for future method engineers and software developers.
+
+Agile software development methods: Review and analysis. Approaches to promote product quality within software process improvement initiatives: A mapping study. Strategies to manage quality requirements in agile software development: a multiple case study. A Software Development Methodology for Solo Software Developers: Leveraging the Product Quality of Independent Developers (Issue February).
+
+A Novel Lightweight Solo Software Development Methodology with Optimum Security Practices.
+
+Key sentences:
+- Originating from the inception of the traditional software development life cycle (SDLC), through to the object-oriented methods, Iterative development, and now the agile methods, these practices have persisted through different periods.
+- In this paper we review three software development methods representative of the software development history, with the aim of i) identifying key quality practices, ii) identifying the quality role played by the practice in the method, and iii) noting those quality practices that have persisted through the software development history.
+- These results would be useful to method engineers who seek to design high-quality software development methods as these practices serve as candidates for inclusion in their development processes.
+- Software development practitioners seeking to design quality software would also benefit from adopting these practices in developing their software.
+- Having taught software engineering courses for more than two decades, the author has observed the emphasis in software development shift from a contractual, heavyweight software process to that of a flexible agile approach to building software.
+- Regardless of whether the method under consideration is traditional, agile, or any hybrid of these, the goal in software development is to create an acceptable artifact that meets user requirements, and can easily be integrated with existing systems if need be (Karhapää et al., 2021).
+- Over the years it has been interesting to note some practices and principles appearing in the several new methods that method engineers develop to improve software quality.
+- This paper gives an overview of those practices, techniques, and principles that have penetrated the various periods of the software engineering processes.
+- We note the practice and highlight the methods that have incorporated it, and the impact of the practice on software quality.
+- In Section 2, we present the views of other authors on the history of software quality.
+- Section 4 presents the results and Section 5 briefly discusses the findings and Section 6 concludes the paper.
+- Background and Related work In seeking to understand the past in comparison with the present, researchers have discussed the history of software development in its various forms.
+- The authors noted that these three development approaches had a lot in common although homonyms in the naming of practices projected huge differences (Magdaleno et al., 2012).
+- Such a study would be related to ours in the sense that we seek to check whether the current agile methods incorporate quality practices that originated from the traditional methods.
+- Method We carried out an analysis of three software development methodologies.
+- We were interested in identifying quality practices that were designed after 1970, as this is the year that saw the advent of the historic Waterfall model (Boehm, 2006).
+- A practice was deemed resilient if it was incorporated into the Spiral model and subsequently into any of the two representative agile methods, Scrum (Schwaber, 1997) and XP (Beck, 1999).
+- We then analysed the two methods separately, capturing those practices that were projecting the same principle as a practice in the Spiral model.
+- In the next section, we present the results of our analysis of the practices identified in three methods.
+- Results Table 1 shows the practices that appear in the Spiral model, and still appear either in Scrum or XP or both.
+- Table 1: Quality practices from participating methods Traditional Methods Practices/Techniques Agile Methods Practices/Techniques Spiral Model (Boehm, 1986) Transition period Scrum XP before agile (Schwaber,1997; (Beck, 1999) Schwaber& Sutherland, 2013) i.
+- The practice first appeared in the traditional methods of software development as a means of understanding user requirements (Batool et al., 2013; IEEE, 2006; Strode & Clark, 2007).
+- In code driven development methods like XP, the practice has assumed a new name, that of spike solution.
+- Another key practice that emerged during the traditional approach to software development and has earned a place in the agile methods is incremental development.
+- Incremental development is closely linked to iterative development and modular design.
+- The Spiral model is considered a risk-based development approach (Boehm, 1986; Pressman & Maxim, 2015).
+- Discussion The results of our review of the three software development methodologies chosen to represent the two important phases in the progression of software development show that, there are some practices that are generic in the development of software, regardless of the philosophy of the methodology.
+- A prototype helps designers to fully understand the problem, at the same time affording them the opportunity to test the feasibility of the proposed solution.
+- Prototyping has also been incorporated into other agile methods not considered in this study.
+- Our aim was to show that while method engineers adopt various philosophies in the design of their methods, there is always a meeting point in their methods.
+- Such practices remain the cornerstone of software development and are worth considering when designing software development methods or developing software in an ad hoc manner.
+- Our study considered three methods, further studies could consider more methods for the purposes of creating a pool of the long-standing quality practices that could serve as a source for future method engineers and software developers.
+- Agile software development methods: Review and analysis.
+- Approaches to promote product quality within software process improvement initiatives: A mapping study.
+- Strategies to manage quality requirements in agile software development: a multiple case study.
+- A Software Development Methodology for Solo Software Developers: Leveraging the Product Quality of Independent Developers (Issue February).
+- A Novel Lightweight Solo Software Development Methodology with Optimum Security Practices.
+
+Important terms: method, approach, technique, model, analysis, study, results, findings, propose, present, develop, design, implement
+Focus: Methodological approach
+Contribution: Introduces novel approach

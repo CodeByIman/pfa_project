@@ -1,0 +1,42 @@
+You are an expert research paper summarizer. Write a comprehensive, coherent summary of this research paper using ONLY the information provided below.
+
+PAPER DETAILS:
+Title: Proof Driven Development
+Authors: Ben Goodspeed
+Year: 2015
+
+
+USER QUERY CONTEXT: developments
+Make sure to address aspects relevant to this query.
+
+
+REQUIREMENTS:
+- Write 4-6 complete paragraphs (not bullet points)
+- Start with: "This paper..."
+- Cover: problem/context, methodology, results, and implications
+- Use clear, academic language
+- Stay strictly within the provided information
+- Make it flow naturally as a cohesive narrative
+
+EXTRACTED CONTENT TO SUMMARIZE (between <<< and >>>):
+<<<
+Abstract A new workflow for software development (proof-driven development) is presented. An extension of test-driven development, the new workflow utilizes the paradigm of dependently typed programming. The differences in design, complexity and provability of software are discussed, based on the technique used to create the system. Furthermore, the difference in what properties can be expressed in a proofdriven development workflow versus a traditional test-driven development workflow or using test-last development.
+
+1 5102 ce D 7 ]ES.sc[ 1 v 20120.2151:vi Xra Proof-Driven Development B. Many advances have been made recently to the way we construct software, including agile methodologies like test-driven development. Our programming languages have been evolving as well, giving us new paradigms we are only just learning to leverage. Finding defects with a compiler means they are never introduced into a completed build.
+
+This work proposes a merging of these two families of ideas. Implement a system based on the model. In particular, a problematic gap exists where a model (about which proofs exist) is used only as a guide to the implementation. While the cryptographic base framework was proven to be sound (at least as far as conjectures surrounding the difficulty of mathematical problems like integer factorization and the discrete log problem allow), the implementation was not sound.
+
+In this paper, we provide the following central contribution: • We introduce an alternative to the common workflow, which we call “Proof driven development” (PDD). Proof-driven development represents an extension to existing test-driven development workflows, combined with new technology made available by proof assistants and dependently typed languages. We have chosen the language Idris  for our demonstration of the new proof-driven development workflow. In the words of the designer of Idris, it is a “systems programming language with dependent types” , and thus suitable for practical programming.
+
+By design, Idris features: “easy interoperability with C and high level language constructs to support domain specific language implementation. Idris also supports tactic based theorem proving, and has a lightweight Hugs/GHCI style interface.” 3 2 Proof Driven Development The software development lifecycle (SDLC), for both “normal” software, and “mission critical” software requiring the utmost security includes: specification, design, implementation and testing. In waterfall development (described in detail in section 3), the states are not revisited, but progressed through linearly. The numbers for each stage in the figure refer to the artifacts, showing clearly the flow from specifications to mental model to mathematical model to source code.
+
+Here, we make an argument for a mixed approach to secure software construction, as there are important lessons to be learned from both approaches. 3 Waterfall Waterfall assumes that all design decisions can be made before the software/system is constructed. These early approaches were based on electrical and hardware engineering techniques. The authors admitted that it was not an ideal approach due to the differences between these engineering disciplines (being well understood) and the mathematically/algorithmically oriented software engineering discipline which was only just emerging.
+
+However, pre-loading the design and specification phases is very much what tends to happen with secure software systems, especially considering the academic sources of many designs/specifications. Many of the specifications/systems have been proven on paper and published without the original authors intending to implement the systems themselves. 5 4 Agile/TDD Agile itself is a blanket term for many software development processes including Clean Room  – which incorporates the use of formal methods such as model checking, process algebras, and testing, XP , and SCRUM . The core values of Agile systems are embodied by their manifesto: We are uncovering better ways of developing software by doing it and helping others do it.
+
+4 Clearly, there is a large variety of so-called Agile methods, and they all vary from one to the next. However, one key discipline, notable in a great deal of these methods, is called “test-driven development” or TDD. Test-driven development refers to the reversal of the “common” workflow for creating software. Third, the creation of tests up-front force the developers to think of the users of the code (be it other systems or end-users).
+
+These frameworks made TDD approachable to industry, and promoted the “redgreen-refactor” workflow of creating a failing test case (red), making the test case pass by creating the simplest code possible (green), then refactoring the code to make it clean . 5 http://c 2.com/cgi/wiki?Ten Years Of Test Driven Development 6 http://www.tiobe.com/index.php/content/paperinfo/tpci/index.html 7 Even with such statistical sampling, we cannot say the function is correct for any input. The term has been used before by Bird to describe a similar technique used to iteratively refine an algorithm to solve Sudoku puzzles . Using proof-driven development techniques without automation leaves the system (and proofs) vulnerable to regression errors.
+>>>
+
+Now write the comprehensive summary following the requirements above:

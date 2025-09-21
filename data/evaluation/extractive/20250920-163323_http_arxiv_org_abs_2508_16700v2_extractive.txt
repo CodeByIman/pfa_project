@@ -1,0 +1,75 @@
+Title: GPT-OSS-20B: A Comprehensive Deployment-Centric Analysis of OpenAI's Open-Weight Mixture of Experts Model
+Authors: Deepak Kumar, Divakar Yadav, Yash Patel
+Year: 2025
+Paper ID: http://arxiv.org/abs/2508.16700v2
+Link: http://arxiv.org/pdf/2508.16700v2
+
+=== Structured Extractive Summary (used by Ollama) ===
+FOCUS: Methodological approach
+CONTRIBUTION: Introduces novel approach
+LINES COUNT: 28
+TERMS: method, approach, algorithm, technique, framework, model, analysis, study, evaluation, experiment
+
+BODY:
+GPT-OSS-20 B: A Comprehensive Deployment-Centric Analysis of Open AI’s Open-Weight Mixture of Experts Model Deepak Kumar Divakar Yadav Yash Patel dkumar 15@hawk.illinoistech.edu dkyadav@uwm.edu ypatel 3@ltu.edu September 3, 2025 Abstract We present a single-GPU (H 100, bf 16) evaluation of GPT-OSS-20 B (Mixture-of-Experts; 20.9 B total, ∼3.61 B active) against dense baselines Qwen 3-32 B and Yi-34 B across multiple dimensions.
+We do not evaluateaccuracy; thisis adeployment-focusedstudy.
+In this study, we evaluate an open-weight Mo E checkpoint, GPTOSS-20 B, which has approximately 20.9 B total parameters but only ∼3.61 B active at inference (17.3% active fraction) [3].
+The model was released under a permissive open-source license [2] While much prior work emphasizes task accuracy, production deployments are constrained by latency, throughput, memory footprint, and energy.
+We further contextualize results using an Active Parameter Efficiency (APE) lens that normalizes performance by the fraction of parameters active at inference.
+1.1 Motivation The deployment of large language models in production environments requires careful consideration of multiplefactorsbeyondaccuracy,includinglatency,throughput,memoryefficiency,andenergyconsumption.
+Traditional dense models, while achieving high accuracy, often require significant computational resources 1 5202 gu A 13 ]RA.sc[ 2 v 00761.8052:vi Xra that may not be available in resource-constrained environments.
+Mixture-of-Experts (Mo E) architectures offer a promising alternative by activating only a subset of parameters during inference, potentially reducing resource requirements while maintaining competitive performance [11] GPT-OSS-20 Brepresentsthefirstopen-weight 20.9 Bparameter Mo Emodel,makingitanidealcandidate for comprehensive deployment analysis on a single-GPU (H 100, bf 16) setup.
+License and policy overview; we do not claim quantitative safety results.
+2 Related Work 2.1 Mixture of Experts Models Mixtureof Experts(Mo E)modelshaveemergedasapromisingapproachtoscalelanguagemodelsefficiently.
+Optimized frameworks like Deep Speed-Mo E [18] support efficient training and inference for such models.
+[19] provides a taxonomy of Mo E designs, covering algorithmic aspects like gating functions and expert architectures, as well as systemic considerations such as computation, communication, and storage optimizations.
+2 2.2 Efficiency and Compression Techniques for Mo E Models Beyond architectural innovations, recent research has focused on enhancing the efficiency of Mo E models through compression and optimization techniques.
+[20] identify “Super Experts” in Mo E LLM s—a small subset of experts critical for model performance, characterized by extreme activation patterns.
+[21] propose the Mixture Compressor (MC), a training-free method combining mixedprecision quantization and dynamic pruning.
+2.3 Deployment-Centric Evaluation While most evaluations focus on accuracy metrics, deployment characteristics are crucial for real-world applications.
+Distributed serving systems like Orca [41] address scalability for large models, as demonstrated in recent MLP erf results using Tensor RT-LLM.
+Inference optimizations like Flash Attention [14, 28, 29] and Paged Attention [15] have been proposed to reduce memory and latency in transformer-based models, particularly for long contexts.
+[22] reviews LLM evaluation across tasks, methods, and benchmarks, stressing the importance of holistic assessment including efficiency.
+[23] provide a systematic review of LLM efficiency, applications, and future directions, analyzing models like GPT-3 and Codex in terms of hardware setups, parameters, and performance metrics.
+2.4 Open-Weight Model Evaluation Recent evaluations of open-weight models such as Mistral [6], Qwen [7], and Yi [8] have emphasized accuracy benchmarks.
+For instance, evaluations of Llama models [16] highlight scaling laws but often overlook single-GPU energy and memory profiles in production-like settings.
+(2025) explore quantization and pruning techniques, achieving up to 73% energy reduction in NLP tasks by optimizing model compression without significant performance degradation [31].
+[15] Other optimized backends include NVIDIA’s Tensor RT-LLM[34] for high-performance inference for CPU/GPU portability, with optimizations such as CUDA graphs [42].
+Model TPOT (tok/s) Tokens/W J/1 K (J) GPT-OSS-20 B 31.27 0.10 9764.20 Qwen 3-32 B 23.73 0.08 13155.10 Yi-34 B 26.30 0.07 13464.30 Findings (ctx=2 K).
+Model License (class) Policy link Card link Safety features (as documented) GPT-OSS-20 B Apache 2.0 (Permissive) Yes Yes Designed to follow Open AI’s safety policies; harmony response format; governance: Open AI, Safety Advisory Group (SAG) Qwen 3-32 B Qwen License (Restricted) No Yes Safety training during development; governance: Alibaba Yi-34 B Apache 2.0 (Permissive) Yes Yes Data compliance checking during training; governance: 01.AI Key points.
+(2) Usage-policy URL s were not always present; model-card links exist for all.
+These results suggest Mo E models are more viable for single-GPU deployment in production settings than dense models of similar scale.
+
+Key sentences:
+- GPT-OSS-20 B: A Comprehensive Deployment-Centric Analysis of Open AI’s Open-Weight Mixture of Experts Model Deepak Kumar Divakar Yadav Yash Patel dkumar 15@hawk.illinoistech.edu dkyadav@uwm.edu ypatel 3@ltu.edu September 3, 2025 Abstract We present a single-GPU (H 100, bf 16) evaluation of GPT-OSS-20 B (Mixture-of-Experts; 20.9 B total, ∼3.61 B active) against dense baselines Qwen 3-32 B and Yi-34 B across multiple dimensions.
+- We do not evaluateaccuracy; thisis adeployment-focusedstudy.
+- In this study, we evaluate an open-weight Mo E checkpoint, GPTOSS-20 B, which has approximately 20.9 B total parameters but only ∼3.61 B active at inference (17.3% active fraction) [3].
+- The model was released under a permissive open-source license [2] While much prior work emphasizes task accuracy, production deployments are constrained by latency, throughput, memory footprint, and energy.
+- We further contextualize results using an Active Parameter Efficiency (APE) lens that normalizes performance by the fraction of parameters active at inference.
+- 1.1 Motivation The deployment of large language models in production environments requires careful consideration of multiplefactorsbeyondaccuracy,includinglatency,throughput,memoryefficiency,andenergyconsumption.
+- Traditional dense models, while achieving high accuracy, often require significant computational resources 1 5202 gu A 13 ]RA.sc[ 2 v 00761.8052:vi Xra that may not be available in resource-constrained environments.
+- Mixture-of-Experts (Mo E) architectures offer a promising alternative by activating only a subset of parameters during inference, potentially reducing resource requirements while maintaining competitive performance [11] GPT-OSS-20 Brepresentsthefirstopen-weight 20.9 Bparameter Mo Emodel,makingitanidealcandidate for comprehensive deployment analysis on a single-GPU (H 100, bf 16) setup.
+- License and policy overview; we do not claim quantitative safety results.
+- 2 Related Work 2.1 Mixture of Experts Models Mixtureof Experts(Mo E)modelshaveemergedasapromisingapproachtoscalelanguagemodelsefficiently.
+- Optimized frameworks like Deep Speed-Mo E [18] support efficient training and inference for such models.
+- [19] provides a taxonomy of Mo E designs, covering algorithmic aspects like gating functions and expert architectures, as well as systemic considerations such as computation, communication, and storage optimizations.
+- 2 2.2 Efficiency and Compression Techniques for Mo E Models Beyond architectural innovations, recent research has focused on enhancing the efficiency of Mo E models through compression and optimization techniques.
+- [20] identify “Super Experts” in Mo E LLM s—a small subset of experts critical for model performance, characterized by extreme activation patterns.
+- [21] propose the Mixture Compressor (MC), a training-free method combining mixedprecision quantization and dynamic pruning.
+- 2.3 Deployment-Centric Evaluation While most evaluations focus on accuracy metrics, deployment characteristics are crucial for real-world applications.
+- Distributed serving systems like Orca [41] address scalability for large models, as demonstrated in recent MLP erf results using Tensor RT-LLM.
+- Inference optimizations like Flash Attention [14, 28, 29] and Paged Attention [15] have been proposed to reduce memory and latency in transformer-based models, particularly for long contexts.
+- [22] reviews LLM evaluation across tasks, methods, and benchmarks, stressing the importance of holistic assessment including efficiency.
+- [23] provide a systematic review of LLM efficiency, applications, and future directions, analyzing models like GPT-3 and Codex in terms of hardware setups, parameters, and performance metrics.
+- 2.4 Open-Weight Model Evaluation Recent evaluations of open-weight models such as Mistral [6], Qwen [7], and Yi [8] have emphasized accuracy benchmarks.
+- For instance, evaluations of Llama models [16] highlight scaling laws but often overlook single-GPU energy and memory profiles in production-like settings.
+- (2025) explore quantization and pruning techniques, achieving up to 73% energy reduction in NLP tasks by optimizing model compression without significant performance degradation [31].
+- [15] Other optimized backends include NVIDIA’s Tensor RT-LLM[34] for high-performance inference for CPU/GPU portability, with optimizations such as CUDA graphs [42].
+- Model TPOT (tok/s) Tokens/W J/1 K (J) GPT-OSS-20 B 31.27 0.10 9764.20 Qwen 3-32 B 23.73 0.08 13155.10 Yi-34 B 26.30 0.07 13464.30 Findings (ctx=2 K).
+- Model License (class) Policy link Card link Safety features (as documented) GPT-OSS-20 B Apache 2.0 (Permissive) Yes Yes Designed to follow Open AI’s safety policies; harmony response format; governance: Open AI, Safety Advisory Group (SAG) Qwen 3-32 B Qwen License (Restricted) No Yes Safety training during development; governance: Alibaba Yi-34 B Apache 2.0 (Permissive) Yes Yes Data compliance checking during training; governance: 01.AI Key points.
+- (2) Usage-policy URL s were not always present; model-card links exist for all.
+- These results suggest Mo E models are more viable for single-GPU deployment in production settings than dense models of similar scale.
+
+Important terms: method, approach, algorithm, technique, framework, model, analysis, study, evaluation, experiment, results, findings, propose, present, introduce, develop, design, optimization, performance, accuracy
+Focus: Methodological approach
+Contribution: Introduces novel approach
